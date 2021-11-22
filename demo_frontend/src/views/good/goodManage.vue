@@ -23,7 +23,6 @@ export default {
     fetchGoodList(){
       getGoodList().then(response => {
         const {data} = response
-        console.log(response)
         this.goodInfo= data
         console.log(this.goodInfo)
       })

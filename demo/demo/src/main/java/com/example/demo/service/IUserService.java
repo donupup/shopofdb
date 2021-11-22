@@ -21,7 +21,7 @@ public interface IUserService extends IService<User> {
 
     List<User> getUserList();
 
-    User executeEdit(EditDTO dto);
+    int executeEdit(EditDTO dto);
 
     int executeDelete(String username);
 }

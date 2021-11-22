@@ -58,8 +58,8 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     public ApiResult<Object> editInfo(@Valid @RequestBody EditDTO dto) {
         //System.out.println(dto);
-        User user = iUserService.executeEdit(dto);
-        if (ObjectUtils.isEmpty(user)) {
+        int result = iUserService.executeEdit(dto);
+        if (result <= 0) {
             return ApiResult.failed("修改失败");
         }
         return ApiResult.success(null, "修改成功");
@@ -67,6 +67,7 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ApiResult<Object> deleteUser(@Valid  @RequestBody String username){
+        //这里对传进来的参数进行了处理，因为前后端对RequeBody的处理方式不同，对于对象来说是正常的
         System.out.println(username);
         String[] arr = username.split("=");
         username = arr[0];
@@ -75,7 +76,5 @@ public class UserController extends BaseController{
             return ApiResult.success(null,"删除成功");
         }
         return ApiResult.failed("删除失败");
-
     }
-
 }

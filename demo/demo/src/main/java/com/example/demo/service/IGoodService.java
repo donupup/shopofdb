@@ -10,4 +10,6 @@ import java.util.List;
 public interface IGoodService extends IService<Good> {
 
     List<Good> getGoodList();
+
+    int executeDelete(String id);
 }

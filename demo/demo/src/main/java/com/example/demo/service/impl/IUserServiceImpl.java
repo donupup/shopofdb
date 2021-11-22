@@ -85,7 +85,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     }
 
     @Override
-    public User executeEdit(EditDTO dto) {
+    public int  executeEdit(EditDTO dto) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, dto.getUsername());
         User umsUser = new User();
@@ -95,7 +95,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         umsUser.setStuNo(dto.getStuNo());
         umsUser.setAlias(dto.getAlias());
         int result = this.baseMapper.update(umsUser, wrapper);
-        return umsUser;
+        return result;
     }
 
     @Override
