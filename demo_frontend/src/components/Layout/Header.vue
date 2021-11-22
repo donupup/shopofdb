@@ -1,6 +1,6 @@
 <template>
   <header class="header has-background-white has-text-black">
-    <b-navbar class="container is-white" :fixed-top="true">
+    <b-navbar class="container" :fixed-top="true" type="is-white">
       <!--        在调整格式时一直在-->
       <template slot="brand">
         <b-navbar-item tag="div">
@@ -99,16 +99,8 @@
           </div>
         </b-navbar-item>
 
-        <b-navbar-dropdown v-else :label="user.alias">
-          <b-navbar-item
-            tag="router-link"
-            :to="{ path: `/member/${user.username}/home` }"
-          >
-            🧘 个人中心
-          </b-navbar-item>
-          <hr class="dropdown-divider" />
-          <b-navbar-item tag="a" @click="logout"> 👋 退出登录 </b-navbar-item>
-        </b-navbar-dropdown>
+          <b-navbar-item v-else tag="a" @click="logout"> 👋 退出登录 </b-navbar-item>
+
       </template>
     </b-navbar>
   </header>

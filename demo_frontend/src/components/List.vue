@@ -180,7 +180,7 @@ export default {
                 type: 'success'
               });
             } else {
-              this.$message.error('修改失败，' + message)
+              this.$message.error('修改失败，' + message    )
             }
             this.$router.go(0)
           }).catch(() => {

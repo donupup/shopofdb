@@ -1,12 +1,10 @@
 package com.example.demo.model.dto;
 
+
 import lombok.Data;
 
 @Data
-public class GoodEditDTO {
-
-    //必须要id 要通过id去判断
-    String id;
+public class GoodAddDTO {
 
     String goodname;
 
@@ -17,4 +15,9 @@ public class GoodEditDTO {
     int storage;
 
     boolean status;
+
+    int shelflife;
+
+    String bio;
 }
+

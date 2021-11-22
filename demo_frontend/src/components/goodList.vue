@@ -122,6 +122,7 @@ export default {
       loading: false,
       dialogFormVisible: false,
       form: {
+        id:'',
         goodname: '',
         pricein: '',
         pricesell: '',
@@ -141,6 +142,7 @@ export default {
   methods: {
     setDefault(){
       this.dialogFormVisible = true
+      this.$set(this.form,'id',this.item.id)
       this.$set(this.form,'goodname',this.item.goodname)
       this.$set(this.form,'pricein',this.item.pricein)
       this.$set(this.form,'pricesell',this.item.pricesell)
@@ -149,10 +151,10 @@ export default {
     },
     deleteGoodInfo() {
       this.loading = true
-      console.log(this.item.id)
+      //console.log(this.item.id)
       deleteGood(this.item.id).then((value) => {
         const {code, message} = value
-        console.log(value)
+        //console.log(value)
         if (code === 200) {
           this.$message({
             message: '删除成功',
@@ -172,10 +174,10 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
-          console.log(this.form)
+          //console.log(this.form)
           editGood(this.form).then((value) => {
             const {code, message} = value
-            console.log(value)
+            //console.log(value)
             if (code === 200) {
               this.$message({
                 message: '修改成功',
@@ -184,7 +186,7 @@ export default {
             } else {
               this.$message.error('修改失败，' + message)
             }
-            //this.$router.go(0)
+            this.$router.go(0)
           }).catch(() => {
             this.loading = false
           })

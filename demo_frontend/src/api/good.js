@@ -22,3 +22,11 @@ export function editGood(EditGoodDTO) {
         data: EditGoodDTO
     })
 }
+
+export function addGood(GoodDTO) {
+    return request({
+        url: '/good/add',
+        method: 'post',
+        data: GoodDTO
+    })
+}
