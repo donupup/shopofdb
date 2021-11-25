@@ -37,3 +37,26 @@ CREATE TABLE `ums_user` (
   KEY `user_email` (`email`) USING BTREE,
   KEY `user_create_time` (`create_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC COMMENT='用户表';
+
+DROP TABLE IF EXISTS `bms_good_out`;
+CREATE TABLE `bms_good_out`  (
+                                  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'ID',
+                                  `goodname` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '商品名',
+                                  `num` int NOT NULL DEFAULT 0 COMMENT '数量',
+                                  `good_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci  COMMENT '商品id',
+                                  `bio` varchar(255) CHARACTER SET utf8 NULL DEFAULT NULL COMMENT '备注',
+                                  `good_out_time` datetime DEFAULT NULL COMMENT '时间',
+                                  `good_deleted` bit(1) DEFAULT b'0' COMMENT '状态，1：已彻底删除，0：未删除，仅出货',
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC COMMENT='商品出库表';
+
+DROP TABLE IF EXISTS `bms_good_in`;
+CREATE TABLE `bms_good_in`  (
+                                  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL  COMMENT 'ID',
+                                  `goodname` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '商品名',
+                                  `num` int NOT NULL DEFAULT 0 COMMENT '数量',
+                                  `good_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci  COMMENT '商品id',
+                                  `bio` varchar(255) CHARACTER SET utf8 NULL DEFAULT NULL COMMENT '备注',
+                                  `good_in_time` datetime DEFAULT NULL COMMENT '时间',
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC COMMENT='商品入库表';

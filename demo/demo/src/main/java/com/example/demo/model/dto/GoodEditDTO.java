@@ -17,4 +17,6 @@ public class GoodEditDTO {
     int storage;
 
     boolean status;
+
+    String bio;
 }

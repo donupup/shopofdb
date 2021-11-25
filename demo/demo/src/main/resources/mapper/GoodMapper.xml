@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.GoodMapper">
+    <insert id="outGood" >
+        insert into bms_good_out (id,goodname,num,bio,good_deleted,good_id,good_out_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{bio},#{is_deleted},#{good_id},#{date});
+    </insert>
+    <insert id="inGood" >
+        insert into bms_good_in (id,goodname,num,bio,good_id,good_in_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{bio},#{good_id},#{date});
+    </insert>
+</mapper>
+

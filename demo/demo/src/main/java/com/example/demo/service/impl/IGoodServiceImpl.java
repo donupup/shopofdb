@@ -9,6 +9,7 @@ import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IGoodService;
 import com.example.demo.utils.MD5Utils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,9 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
     public int executeDelete(String id) {
         LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Good::getId, id);
-        int result = baseMapper.delete(wrapper);
+        Good good_old = this.baseMapper.selectOne(wrapper);
+        int toOut = outGood(good_old.getGoodname(),good_old.getStorage(),good_old.getId(),good_old.getBio(),1,new Date());
+        int result = this.baseMapper.delete(wrapper);
         return result;
     }
 
@@ -47,12 +50,18 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         good.setStorage(dto.getStorage());
         good.setStatus(dto.isStatus());
         good.setModifyTime(new Date());
+        good.setBio(dto.getBio());
         LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Good::getId,dto.getId());
-        int result = baseMapper.update(good,wrapper);
+        Good good_old = this.baseMapper.selectOne(wrapper);
+        int change_num = good.getStorage() - good_old.getStorage();
+        if(change_num < 0){
+            int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
+        }
+        int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime());
+        int result = this.baseMapper.update(good,wrapper);
         return result;
     }
-
 
     @Override
     public Good executeAdd(GoodAddDTO dto) {
@@ -67,7 +76,18 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                         .createTime(new Date())
                         .modifyTime(new Date())
                         .build();
-        baseMapper.insert(good);
+        this.baseMapper.insert(good);
+        this.baseMapper.inGood(good.getGoodname(),good.getStorage(),good.getId(),good.getBio(),good.getModifyTime());
         return good;
+    }
+
+    @Override
+    public int outGood(String name, int num, String good_id, String bio, int is_del, Date date) {
+       return this.baseMapper.outGood(name,  num, good_id, bio,is_del,date);
+    }
+
+    @Override
+    public int inGood(String name, int num, String good_id, String bio, Date date) {
+        return this.baseMapper.inGood(name, num, good_id, bio, date);
     }
 }

@@ -12,7 +12,7 @@
         color: #167df0;
       }"
     >
-      <i class="fa fa-arrow-up "></i>
+    <i class="fa fa-arrow-up " ></i>
     </div>
   </el-backtop>
 </template>

@@ -7,23 +7,27 @@
           <el-form :model="form"
                    ref="form"
                    :rules="rules">
-            <el-form-item label="商品名" :label-width="formLabelWidth">
+            <el-form-item label="商品名" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.goodname" autocomplete="off" :placeholder="item.goodname"></el-input>
             </el-form-item>
-            <el-form-item label="进价" :label-width="formLabelWidth">
+            <el-form-item label="进价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricein" autocomplete="off" :placeholder="item.pricein"></el-input>
             </el-form-item>
-            <el-form-item label="售价" :label-width="formLabelWidth">
+            <el-form-item label="售价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricesell" autocomplete="off" :placeholder="item.pricesell"></el-input>
             </el-form-item>
-            <el-form-item label="库存" :label-width="formLabelWidth">
+            <el-form-item label="库存" :label-width="formLabelWidth" >
               <el-input v-model="form.storage" autocomplete="off" :placeholder="item.storage"></el-input>
             </el-form-item>
-            <el-form-item label="是否过期" :label-width="formLabelWidth">
+            <el-form-item label="是否过期" :label-width="formLabelWidth" v-if="role != 2">
               <el-select v-model="form.status" placeholder="请选择是否过期">
                 <el-option label="已过期" :value= true></el-option>
                 <el-option label="未过期" :value = false></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="备注" :label-width="formLabelWidth"v-if="role != 2">
+              <el-input v-model="form.bio"  placeholder="请输入原因"  type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -32,7 +36,7 @@
           </div>
         </el-dialog>
 
-        <el-popconfirm
+        <el-popconfirm v-if="role != 2"
             confirm-button-text='是'
             cancel-button-text='否'
             title="确定删除该商品吗？"
@@ -96,9 +100,9 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-date"></i>
-          最近一次进货时间
+          最近一次修改时间
         </template>
-        {{ item.modifyTime }}
+        {{ dayjs(item.modifyTime).format("YYYY/MM/DD dddd HH:mm:ss.SSS A") }}
       </el-descriptions-item>
 
     </el-descriptions>
@@ -108,6 +112,7 @@
 
 <script>
 import {deleteGood,editGood} from "@/api/good";
+import {mapGetters} from "vuex";
 
 export default {
   name: "goodList",
@@ -128,6 +133,7 @@ export default {
         pricesell: '',
         storage: '',
         status: '',
+        bio:''
       },
       formLabelWidth: '120px',
       rules: {
@@ -138,8 +144,17 @@ export default {
     }
 
   },
-
+  computed: {
+    ...mapGetters(["token", "user","role"]),
+  },
   methods: {
+    checkNum(){
+      if(this.role == 2){
+        if(this.form.storage > this.item.storage)
+          return true
+      }
+      return false
+    },
     setDefault(){
       this.dialogFormVisible = true
       this.$set(this.form,'id',this.item.id)
@@ -170,6 +185,10 @@ export default {
     },
     editGoodInfo(formName) {
       this.dialogFormVisible = false
+      if(!this.checkNum()){
+        this.$message.error("货物变少了~您只有权力进货，不能出货哦~")
+        return
+      }
       //this.$set(this.form,'username',this.item.username)
       this.$refs[formName].validate((valid) => {
         if (valid) {

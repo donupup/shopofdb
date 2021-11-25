@@ -30,6 +30,16 @@ const routes = [
     name: 'good_manage',
     component: ()=>import('@/views/good/goodManage')
   },
+  {
+    path: "/404",
+    name: '404',
+    component: ()=>import('@/views/error/404')
+  },
+  {
+    path: "*",
+    redirect: "/404",
+    hidden: true,
+  },
 
 
 

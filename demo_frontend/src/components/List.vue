@@ -117,7 +117,8 @@ export default {
         role: '',
         alias: '',
         mobile: '',
-        email: ''
+        email: '',
+
       },
       formLabelWidth: '120px',
       rules: {

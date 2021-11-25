@@ -23,7 +23,8 @@
           <el-input v-model="form.shelflife" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="商品描述" :label-width="formLabelWidth">
-          <el-input v-model="form.bio" autocomplete="off" ></el-input>
+          <el-input v-model="form.bio"  type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入商品描述" ></el-input>
         </el-form-item>
         <el-form-item label="是否过期" :label-width="formLabelWidth">
           <el-select v-model="form.status" placeholder="请选择是否过期">

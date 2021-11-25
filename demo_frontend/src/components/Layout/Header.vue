@@ -70,7 +70,7 @@
 
       <template v-if="role === '2'">
         <template slot="start">
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/manage' }">
             商品库存
           </b-navbar-item>
         </template>
