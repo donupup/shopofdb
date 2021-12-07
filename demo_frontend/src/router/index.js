@@ -18,17 +18,30 @@ const routes = [
   {
     path: '/employ/register',
     name: 'employ_register',
-    component: ()=>import('@/views/auth/Register')
+    component: ()=>import('@/views/auth/Register'),
+    meta: {
+      title: '用户注册',
+      requireAuth: true
+    }
   },
   {
     path: '/employ/manage',
     name: 'employ_manage',
-    component: ()=>import('@/views/auth/Manage')
+    component: ()=>import('@/views/auth/Manage'),
+    meta: {
+      title: '用户管理',
+      requireAuth: true
+    }
   },
   {
     path: '/good/manage',
     name: 'good_manage',
-    component: ()=>import('@/views/good/goodManage')
+    component: ()=>import('@/views/good/goodManage'),
+    meta: {
+      title: '货物管理',
+      requireAuth: true
+    }
+
   },
   {
     path: "/404",

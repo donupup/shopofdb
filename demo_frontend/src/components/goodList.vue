@@ -17,7 +17,7 @@
               <el-input v-model="form.pricesell" autocomplete="off" :placeholder="item.pricesell"></el-input>
             </el-form-item>
             <el-form-item label="库存" :label-width="formLabelWidth" >
-              <el-input v-model="form.storage" autocomplete="off" :placeholder="item.storage"></el-input>
+              <el-input-number v-model="form.storage" controls-position="right"  :min="0" ></el-input-number>
             </el-form-item>
             <el-form-item label="是否过期" :label-width="formLabelWidth" v-if="role != 2">
               <el-select v-model="form.status" placeholder="请选择是否过期">
@@ -149,11 +149,12 @@ export default {
   },
   methods: {
     checkNum(){
-      if(this.role == 2){
+      if(this.role == '2'){
         if(this.form.storage > this.item.storage)
           return true
+        return false
       }
-      return false
+      return true
     },
     setDefault(){
       this.dialogFormVisible = true
@@ -167,6 +168,10 @@ export default {
     deleteGoodInfo() {
       this.loading = true
       //console.log(this.item.id)
+      if(!this.checkNum()){
+        this.$message.error("货物变少了~您只有权力进货，不能出货哦~")
+        return
+      }
       deleteGood(this.item.id).then((value) => {
         const {code, message} = value
         //console.log(value)

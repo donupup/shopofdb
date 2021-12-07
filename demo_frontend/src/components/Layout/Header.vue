@@ -16,7 +16,7 @@
       </template>
 
       <template slot="start">
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <b-navbar-item tag="router-link" :to="{ path: '/' }" >
           主页
         </b-navbar-item>
       </template>
@@ -57,7 +57,7 @@
           </b-navbar-item>
         </template>
         <template slot="start">
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/manage' }">
             商品库存
           </b-navbar-item>
         </template>
@@ -81,7 +81,7 @@
 
 
       <template slot="end">
-        <b-navbar-item tag="div">
+        <b-navbar-item tag="div" >
           <b-switch v-model="darkMode" passive-type="is-warning" type="is-dark">
             {{ darkMode ? "🌙" : "🌞" }}
           </b-switch>
