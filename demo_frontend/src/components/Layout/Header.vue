@@ -48,6 +48,11 @@
             销售统计
           </b-navbar-item>
         </template>
+        <template slot="start">
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            账单
+          </b-navbar-item>
+        </template>
       </template>
 
       <template v-if="role === '1'">
@@ -99,7 +104,7 @@
           </div>
         </b-navbar-item>
 
-          <b-navbar-item v-else tag="a" @click="logout"> 👋 退出登录 </b-navbar-item>
+          <b-navbar-item v-else tag="a" @click="logout"> 退出登录 </b-navbar-item>
 
       </template>
     </b-navbar>
@@ -117,8 +122,7 @@ export default {
   name: "Header",
   data() {
     return {
-      logoUrl: require("@/assets/logo.png"),
-      //doubaoImg: require("@/assets/image/doubao.png"),
+      logoUrl: require("@/assets/shop.svg"),
       searchKey: "",
       darkMode: false,
     };

@@ -1,5 +1,8 @@
 <template>
+
   <div>
+    <el-page-header @back="headBack" content="商品详情">
+    </el-page-header>
     <div style="text-align:right">
       <el-button type="primary" @click="dialogFormVisible = true">增加商品</el-button>
     </div>
@@ -105,7 +108,12 @@ export default {
           })
         }
       })
+    },
+    headBack(){
+      console.log(this.$router)
+      this.$router.back()
     }
+
 
   }
 

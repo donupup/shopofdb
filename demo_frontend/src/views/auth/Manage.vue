@@ -1,5 +1,8 @@
 <template>
   <div>
+    <el-page-header @back="headBack" content="人员管理">
+    </el-page-header>
+    <el-divider></el-divider>
     <list v-for="(item,index) in info" :item="item" :key="index"></list>
   </div>
 </template>
@@ -27,6 +30,9 @@ export default {
         this.info = data
         console.log(this.info)
       })
+    },
+    headBack(){
+      this.$router.back()
     }
   }
 }

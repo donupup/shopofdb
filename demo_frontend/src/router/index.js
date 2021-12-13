@@ -8,12 +8,22 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: ()=>import('@/views/Home')
+    component: ()=>import('@/views/Home'),
+    meta: {
+      title: '首页',
+      requireAuth: false,
+      showInbreadcrumb:false
+    }
   },
   {
     path: '/login',
     name: 'Login',
-    component: ()=>import('@/views/auth/Login')
+    component: ()=>import('@/views/auth/Login'),
+    meta: {
+      title: '用户登录',
+      requireAuth: false,
+      showInbreadcrumb:false
+    }
   },
   {
     path: '/employ/register',
@@ -21,7 +31,8 @@ const routes = [
     component: ()=>import('@/views/auth/Register'),
     meta: {
       title: '用户注册',
-      requireAuth: true
+      requireAuth: true,
+      showInbreadcrumb:true
     }
   },
   {
@@ -30,7 +41,8 @@ const routes = [
     component: ()=>import('@/views/auth/Manage'),
     meta: {
       title: '用户管理',
-      requireAuth: true
+      requireAuth: true,
+      showInbreadcrumb:true
     }
   },
   {
@@ -39,19 +51,30 @@ const routes = [
     component: ()=>import('@/views/good/goodManage'),
     meta: {
       title: '货物管理',
-      requireAuth: true
+      requireAuth: true,
+      showInbreadcrumb:true
     }
 
   },
   {
     path: "/404",
     name: '404',
-    component: ()=>import('@/views/error/404')
+    component: ()=>import('@/views/error/404'),
+    meta: {
+      title: '404',
+      requireAuth: false,
+      showInbreadcrumb:false
+    }
   },
   {
     path: "*",
     redirect: "/404",
     hidden: true,
+    meta: {
+      title: 'else',
+      requireAuth: false,
+      showInbreadcrumb:false
+    }
   },
 
 

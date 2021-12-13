@@ -1,4 +1,8 @@
 <template>
+  <div>
+  <el-page-header @back="headBack" content="注册员工">
+  </el-page-header>
+  <el-divider></el-divider>
   <div class="columns py-6">
     <div class="column is-half is-offset-one-quarter">
       <el-card shadow="never">
@@ -64,6 +68,7 @@
         </div>
       </el-card>
     </div>
+  </div>
   </div>
 </template>
 
@@ -173,6 +178,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    headBack(){
+      this.$router.back()
     }
   }
 }
