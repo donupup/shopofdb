@@ -15,6 +15,7 @@
         <el-button type="primary" @click="onSubmit">加入购物车</el-button>
       </el-form-item>
     </el-form>
+    <good-list :item="shoppingEle.good" :need-opera="false" v-if="!(Object.prototype.isPrototypeOf(shoppingEle.good) && Object.keys(shoppingEle.good).length === 0)"></good-list>
     <float :value="eleNum" :shopping-car="this.shoppingCar"></float>
   </div>
 
@@ -24,11 +25,12 @@
 <script>
 import float from "@/components/Layout/float";
 import {getGoodList} from "@/api/good";
+import goodList from "@/components/good/goodList";
 
 export default {
   name: "goodSale",
   components: {
-    float,
+    float,goodList
   },
   data() {
     return {
@@ -54,6 +56,15 @@ export default {
       })
     },
     onSubmit() {
+      let obj = this.shoppingEle.good
+      if(Object.prototype.isPrototypeOf(obj) && Object.keys(obj).length === 0){
+        this.$message(
+            {
+              message: "请选择商品",
+              type: "error",
+            })
+        return
+      }
       if (this.nameInCar.includes(this.shoppingEle.good.goodname)) {
         this.$message(
             {
@@ -69,9 +80,15 @@ export default {
               })
 
         } else {
-          console.log(this.shoppingEle)
+          //console.log(this.shoppingEle)
           this.nameInCar.push(this.shoppingEle.good.goodname)
-          this.shoppingCar.push(this.shoppingEle)
+          let selected = {
+            goodname:'',
+            num:''
+          }
+          selected.goodname = this.shoppingEle.good.goodname
+          selected.num = this.shoppingEle.num
+          this.shoppingCar.push(selected)
           this.eleNum = this.eleNum + this.shoppingEle.num
           this.$message(
               {

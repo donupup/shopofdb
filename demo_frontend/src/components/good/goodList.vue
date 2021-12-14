@@ -2,7 +2,7 @@
   <div>
     <el-descriptions class="margin-top" :title="item.goodname" :column="3" border>
       <template slot="extra">
-        <el-button type="primary" icon="el-icon-edit" circle @click="setDefault"></el-button>
+        <el-button type="primary" icon="el-icon-edit" circle @click="setDefault" v-if="needOpera"></el-button>
         <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
           <el-form :model="form"
                    ref="form"
@@ -36,7 +36,7 @@
           </div>
         </el-dialog>
 
-        <el-popconfirm v-if="role != 2"
+        <el-popconfirm v-if="role != 2 && needOpera"
             confirm-button-text='是'
             cancel-button-text='否'
             title="确定删除该商品吗？"
@@ -120,6 +120,7 @@ export default {
     item: {
       type: Object
     },
+    needOpera:'',
   },
 
   data() {

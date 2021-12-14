@@ -42,7 +42,7 @@
       </div>
     </el-dialog>
     <el-divider></el-divider>
-    <goodList v-for="(item,index) in goodInfo" :item="item" :key="index"></goodList>
+    <goodList v-for="(item,index) in goodInfo" :item="item" :key="index" :need-opera="true"></goodList>
   </div>
 
 </template>

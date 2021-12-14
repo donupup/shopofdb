@@ -1,13 +1,26 @@
 // 悬浮按钮组件
 <template>
-  <div style="position:relative;">
-    <div class="button-box" v-drag draggable="false">
-      <div class="btn-bg-img"></div>
-      <el-badge :value="value" class="item">
-        <el-button icon=" el-icon-shopping-cart-2" circle @click="openBox"></el-button>
-      </el-badge>
+  <div>
+    <div style="position:relative;">
+      <div class="button-box" v-drag draggable="false">
+        <div class="btn-bg-img"></div>
+        <el-badge :value="value" class="item">
+          <el-button icon="el-icon-shopping-cart-2"  circle @click="openBox"></el-button>
+        </el-badge>
+      </div>
     </div>
+    <el-drawer
+        title="购物车"
+        :visible.sync="showCar"
+        direction="rtl"
+        >
+      <div v-for="ele in shoppingCar">
+        {{ele.goodname}}
+        {{ele.num}}
+      </div>
+    </el-drawer>
   </div>
+
 </template>
 
 <script>
@@ -18,12 +31,21 @@ export default {
     return {
       text: '双击显示案件详情',
       isOpen: false,
-      isMove: false
+      isMove: false,
+      showCar: false,
     }
   },
   methods: {
     openBox() {
       console.log(this.shoppingCar)
+      this.showCar = true
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
     },
     mousedowm(e) { // 鼠标按下时的鼠标所在的X，Y坐标
       this.mouseDownX = e.pageX
