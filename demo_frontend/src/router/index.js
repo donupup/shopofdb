@@ -57,6 +57,17 @@ const routes = [
 
   },
   {
+    path: '/good/sale',
+    name: 'good_sale',
+    component: ()=>import('@/views/good/goodSale'),
+    meta: {
+      title: '销售界面',
+      requireAuth: true,
+      showInbreadcrumb:true
+    }
+
+  },
+  {
     path: "/404",
     name: '404',
     component: ()=>import('@/views/error/404'),

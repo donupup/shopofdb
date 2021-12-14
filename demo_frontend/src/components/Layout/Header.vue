@@ -57,7 +57,7 @@
 
       <template v-if="role === '1'">
         <template slot="start">
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/sale' }">
             商品销售
           </b-navbar-item>
         </template>

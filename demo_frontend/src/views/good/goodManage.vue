@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import goodList from "@/components/goodList";
+import goodList from "@/components/good/goodList";
 import {getGoodList, addGood, editGood} from "@/api/good";
 export default {
   name: "goodManage",

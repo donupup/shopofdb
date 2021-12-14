@@ -9,7 +9,7 @@
 
 <script>
 
-import List from '@/components/List'
+import List from '@/components/auth/List'
 import {userInfo} from '@/api/auth'
 
 export default {

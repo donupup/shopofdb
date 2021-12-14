@@ -1,3 +1,6 @@
+
+<!--暂时放弃使用-->
+
 <template>
   <div class="content">
     <!-- 面包屑 -->
@@ -14,31 +17,34 @@
 <script>
 export default {
   name: "bread",
-  computed:{
-    breadcrumb(){
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    breadcrumb() {
       // 根据路由配置meta中的showInbreadcrumb字段过滤
-      let matchedArr = this.$route.matched
-      // let matchedArr = this.$route.matched.filter((item)=>{
-      //   return item.meta.showInbreadcrumb}
-      // );
-      console.log(matchedArr)
-      // 因为首页比较特殊，必须一直显示在面包屑第一个，如果没有首页路由信息，手动添加到最前面
-      if(matchedArr[0].meta.title !== '首页'){
-        matchedArr.unshift(
-            {
-              path:'/',
-              meta:{
-                title:"首页",
-                showInbreadcrumb:true
-              }
-            },
-        )
-      }
-      console.log(matchedArr)
-      return matchedArr;
-    },
+      let matchedAddr;
+      matchedAddr
+      = this.$route.matched
+      //因为首页比较特殊，必须一直显示在面包屑第一个，如果没有首页路由信息，手动添加到最前面
+      // if(matchedAddr[0].meta.title !== '首页'){
+      //     matchedAddr.unshift(
+      //         {
+      //           path:'/',
+      //           meta:{
+      //            title:"首页",
+      //             showInbreadcrumb:true
+      //
+      //           }
+      //         }
+      //     )
+      //   }
+      return matchedAddr;
+      },
+    }
   }
-}
 </script>
 
 <style scoped>
