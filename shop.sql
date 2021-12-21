@@ -60,3 +60,15 @@ CREATE TABLE `bms_good_in`  (
                                   `good_in_time` datetime DEFAULT NULL COMMENT '时间',
                                   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC COMMENT='商品入库表';
+
+DROP TABLE IF EXISTS `bms_good_sale`;
+CREATE TABLE `bms_good_sale`  (
+                                  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL  COMMENT 'ID',
+                                  `goodname` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '商品名',
+                                  `num` int NOT NULL DEFAULT 0 COMMENT '数量',
+                                  `good_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci  COMMENT '商品id',
+                                  `good_sold_time` datetime DEFAULT NULL COMMENT '时间',
+                                  `priceinNow` int NOT NULL DEFAULT '0' COMMENT '当前进价',
+                                  `pricesellNow` int NOT NULL DEFAULT '0' COMMENT '当前售价',
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC COMMENT='商品销售表';

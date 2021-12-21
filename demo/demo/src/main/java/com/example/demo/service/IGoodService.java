@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
+import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
 
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +27,8 @@ public interface IGoodService extends IService<Good> {
     int outGood(String name, int num, String good_id, String bio, int is_del, Date date);
 
     int inGood( String name, int num, String good_id, String bio,  Date date);
+
+    int sellGoodToTable(String name, int num, String good_id, int in, int out ,  Date date);
+
+    List<Good> sellGood(List<goodSaleDTO> goodArray);
 }

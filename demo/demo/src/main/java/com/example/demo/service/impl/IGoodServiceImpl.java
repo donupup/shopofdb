@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.GoodMapper;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
+import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IGoodService;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +58,10 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         Good good_old = this.baseMapper.selectOne(wrapper);
         int change_num = good.getStorage() - good_old.getStorage();
         if(change_num < 0){
+            if(good.getStorage() == 0)
+            {
+                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 1,good.getModifyTime());
+            }
             int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
         }
         int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime());
@@ -89,5 +95,40 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
     @Override
     public int inGood(String name, int num, String good_id, String bio, Date date) {
         return this.baseMapper.inGood(name, num, good_id, bio, date);
+    }
+
+    @Override
+    public int sellGoodToTable(String name, int num, String good_id, int in, int out, Date date) {
+        return baseMapper.sellGoodToTable(name, num, good_id, in, out, date);
+    }
+
+    @Override
+    public List<Good> sellGood(List<goodSaleDTO> goodArray) {
+
+        List<Good> goodsReturn = new ArrayList<>();
+        for (goodSaleDTO good : goodArray) {
+            LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Good::getGoodname, good.getGoodname());
+            Good good_old = this.baseMapper.selectOne(wrapper);
+            Good newGood =  Good.builder()
+                    .shelflife(good_old.getShelflife())
+                    .goodname(good_old.getGoodname())
+                    .bio(good_old.getBio())
+                    .pricein(good_old.getPricein())
+                    .pricesell(good_old.getPricesell())
+                    .status(good_old.getStatus())
+                    .storage(good_old.getStorage())
+                    .createTime(new Date())
+                    .modifyTime(new Date())
+                    .build();
+            if(good.getNum() > 0){
+                newGood.setStorage(good_old.getStorage() - good.getNum());
+                newGood.setSalenum(good_old.getSalenum() + good.getNum());
+                int res = baseMapper.update(newGood, wrapper);
+                if(res > 0) goodsReturn.add(newGood);
+                int res2 = sellGoodToTable(good.getGoodname(),good.getNum(),good_old.getId(),good_old.getPricein(),good_old.getPricesell(),new Date());
+            }
+        }
+        return goodsReturn;
     }
 }

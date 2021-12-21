@@ -9,44 +9,89 @@
         </el-badge>
       </div>
     </div>
-    <el-drawer
+    <el-dialog
         title="购物车"
         :visible.sync="showCar"
         direction="rtl"
+        :before-close="handleClose"
         >
-      <div v-for="ele in shoppingCar">
-        {{ele.goodname}}
-        {{ele.num}}
+      <div v-for="(ele,index) in shoppingCar">
+        <i class="el-icon-shopping-bag-2" style="font-size: 15px">{{ele.goodname}}</i>
+        <div style="text-align:right">
+          <el-input-number v-model="ele.num" controls-position="right" :min="0"
+                           :max="ele.max_num"></el-input-number>
+          <el-button type="danger" plain round @click="ele.num = 0">移出</el-button>
+        </div>
+        <el-divider></el-divider>
       </div>
-    </el-drawer>
+      <div slot="footer" class="dialog-footer">
+<!--        <el-button @click="handleClose">取 消</el-button>-->
+        <el-button type="primary" @click="GoodSale">购 买</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
+import {sellGood} from "@/api/good";
 export default {
   name: 'float',
   props: ['value', 'shoppingCar'],
   data() {
     return {
-      text: '双击显示案件详情',
+      text: '双击显示购物车',
       isOpen: false,
       isMove: false,
       showCar: false,
     }
   },
   methods: {
+    GoodSale(){
+      if(this.shoppingCar.length == 0){
+        this.$message(
+            {
+              message: "购物车里没有商品",
+              type: "error",
+            })
+        return
+      }
+      console.log(this.shoppingCar)
+      console.log(JSON.stringify(this.shoppingCar))
+      sellGood(JSON.stringify(this.shoppingCar)).then((value)=>{
+            const {code, message} = value
+            //console.log(value)
+            if (code === 200) {
+              this.$message({
+                message: '成功卖出',
+                type: 'success'
+              });}
+            else {
+              this.$message.error('卖出失败，' + message)
+            }
+        this.$router.go(0)
+      }).catch(() => {
+        this.loading = false
+      })
+    },
     openBox() {
       console.log(this.shoppingCar)
       this.showCar = true
     },
     handleClose(done) {
+      let numAll = 0
+      for(let i = 0;i < this.shoppingCar.length; i++){
+        numAll = numAll + this.shoppingCar[i].num
+      }
+      this.value = numAll
       this.$confirm('确认关闭？')
           .then(_ => {
             done();
           })
           .catch(_ => {});
+      this.$emit('changeNum',this.value)
     },
+
     mousedowm(e) { // 鼠标按下时的鼠标所在的X，Y坐标
       this.mouseDownX = e.pageX
       this.mouseDownY = e.pageY
@@ -101,7 +146,7 @@ export default {
   border-radius: 50%;
   position: fixed;
   bottom: 80px;
-  right: 50px;
+  left: 50px;
   padding-left: 15px;
   padding-top: 8px;
   cursor: pointer;

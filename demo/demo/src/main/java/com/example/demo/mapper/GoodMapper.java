@@ -14,5 +14,5 @@ public interface GoodMapper extends BaseMapper<Good> {
 
     int outGood(@Param("name") String name, @Param("num") int num, @Param("good_id") String good_id, @Param("bio") String bio, @Param("is_deleted") int is_del,@Param("date") Date date);
     int inGood(@Param("name") String name, @Param("num") int num, @Param("good_id") String good_id, @Param("bio") String bio, @Param("date") Date date);
-
+    int sellGoodToTable(@Param("name") String name, @Param("num") int num, @Param("good_id") String good_id, @Param("in") int in,@Param("out") int out, @Param("date") Date date);
 }

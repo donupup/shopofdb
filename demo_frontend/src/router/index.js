@@ -65,7 +65,16 @@ const routes = [
       requireAuth: true,
       showInbreadcrumb:true
     }
-
+  },
+  {
+    path: '/statistic',
+    name: 'statistic',
+    component: ()=>import('@/views/statistic'),
+    meta: {
+      title: '统计',
+      requireAuth: true,
+      showInbreadcrumb:true
+    }
   },
   {
     path: "/404",

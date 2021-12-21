@@ -30,3 +30,12 @@ export function addGood(GoodDTO) {
         data: GoodDTO
     })
 }
+
+export function sellGood(SaleDto){
+    return request({
+        url: '/good/sale',
+        method: 'post',
+        data:SaleDto
+    })
+}
+

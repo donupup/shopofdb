@@ -20,6 +20,9 @@ const dayjs = require('dayjs');
 
 import '@/permission'
 
+import * as echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
+
 // 相对时间插件
 dayjs.extend(relativeTime)
 

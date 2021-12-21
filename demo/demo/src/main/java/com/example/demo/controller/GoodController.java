@@ -1,23 +1,22 @@
 package com.example.demo.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
+import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IGoodService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/good")
@@ -63,4 +62,44 @@ public class GoodController extends  BaseController{
         map.put("good", good);
         return ApiResult.success(map);
     }
+
+    @RequestMapping(value = "/sale",method = RequestMethod.POST)
+    public  ApiResult<Object> sellGood(@Valid  @RequestParam  Map<String,String> map){
+        System.out.println(map);
+        String goodMap = null;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            goodMap = entry.getKey();
+            System.out.println(goodMap);
+        }
+        goodMap = goodMap.substring(1,goodMap.length()-1);
+        String[] goods = goodMap.split("},");
+        List<String> jsonArray = new ArrayList<>();
+        for (int i = 0; i < goods.length; i++) {
+            if(i == goods.length - 1)
+            {
+                System.out.println(goods[i]);
+                jsonArray.add(goods[i]);
+            }
+            else
+            {
+                System.out.println(goods[i] + '}');
+                jsonArray.add(goods[i] + '}');
+            }
+        }
+        List<goodSaleDTO> goodArray = new ArrayList<>();
+        for (String json : jsonArray
+             ) {
+            goodSaleDTO oneGoodSale = JSON.parseObject(json,goodSaleDTO.class);
+            goodArray.add(oneGoodSale);
+        }
+//        for (goodSaleDTO good: goodArray
+//             ) {
+//            System.out.println(good.getGoodname());
+//        }
+        List<Good> goodsReturn = igoodService.sellGood(goodArray);
+        if(ObjectUtils.isEmpty(goodsReturn))
+            return ApiResult.failed("系统故障，卖出失败");
+        return ApiResult.success("成功卖出");
+    }
 }
+

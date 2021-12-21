@@ -12,7 +12,6 @@
     </div>
   </div>
 
-
 </template>
 
 <script>
@@ -34,7 +33,7 @@ export default {
     this.Height = document.documentElement.clientHeight - 300;
     //监听浏览器窗口变化　
     window.onresize = ()=> {this.Height = document.documentElement.clientHeight -300}
-  }
+  },
 };
 </script>
 <style>

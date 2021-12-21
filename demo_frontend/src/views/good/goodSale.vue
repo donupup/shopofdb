@@ -1,5 +1,8 @@
 <template>
   <div>
+    <el-page-header @back="headBack" content="商品销售">
+    </el-page-header>
+    <el-divider></el-divider>
     <el-form :inline="true" :model="shoppingEle" class="demo-form-inline">
       <el-form-item label="选择商品">
         <el-select v-model="shoppingEle.good" placeholder="商品名称" value-key="id">
@@ -16,7 +19,7 @@
       </el-form-item>
     </el-form>
     <good-list :item="shoppingEle.good" :need-opera="false" v-if="!(Object.prototype.isPrototypeOf(shoppingEle.good) && Object.keys(shoppingEle.good).length === 0)"></good-list>
-    <float :value="eleNum" :shopping-car="this.shoppingCar"></float>
+    <float :value="eleNum" :shopping-car="this.shoppingCar"  @changeNum = "changeValue"></float>
   </div>
 
 
@@ -48,6 +51,13 @@ export default {
     this.fetchGoodList()
   },
   methods: {
+    headBack(){
+      console.log(this.$router)
+      this.$router.back()
+    },
+    changeValue(data){
+      this.eleNum = data
+    },
     fetchGoodList() {
       getGoodList().then(response => {
         const {data} = response
@@ -84,10 +94,12 @@ export default {
           this.nameInCar.push(this.shoppingEle.good.goodname)
           let selected = {
             goodname:'',
+            max_num:'',
             num:''
           }
           selected.goodname = this.shoppingEle.good.goodname
           selected.num = this.shoppingEle.num
+          selected.max_num = this.shoppingEle.good.storage
           this.shoppingCar.push(selected)
           this.eleNum = this.eleNum + this.shoppingEle.num
           this.$message(
