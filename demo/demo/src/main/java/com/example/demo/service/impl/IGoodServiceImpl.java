@@ -3,14 +3,15 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.GoodMapper;
+import com.example.demo.mapper.SaleGoodMapper;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
 import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.entity.SaleGood;
+import com.example.demo.model.vo.InGood;
+import com.example.demo.model.vo.OutGood;
 import com.example.demo.service.IGoodService;
-import com.example.demo.utils.MD5Utils;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -25,6 +27,11 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
 
     @Resource
     private GoodMapper goodMapper;
+    private SaleGoodMapper saleGoodMapper;
+
+    public IGoodServiceImpl(SaleGoodMapper saleGoodMapper) {
+        this.saleGoodMapper = saleGoodMapper;
+    }
 
 
     @Override
@@ -62,9 +69,12 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
             {
                 int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 1,good.getModifyTime());
             }
-            int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
+            else{
+                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
+            }
+
         }
-        int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime());
+        int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
         int result = this.baseMapper.update(good,wrapper);
         return result;
     }
@@ -83,7 +93,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                         .modifyTime(new Date())
                         .build();
         this.baseMapper.insert(good);
-        this.baseMapper.inGood(good.getGoodname(),good.getStorage(),good.getId(),good.getBio(),good.getModifyTime());
+        this.baseMapper.inGood(good.getGoodname(),good.getStorage(),good.getId(),good.getBio(),good.getModifyTime(),good.getPricein());
         return good;
     }
 
@@ -93,8 +103,8 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
     }
 
     @Override
-    public int inGood(String name, int num, String good_id, String bio, Date date) {
-        return this.baseMapper.inGood(name, num, good_id, bio, date);
+    public int inGood(String name, int num, String good_id, String bio, Date date,int inPrice) {
+        return this.baseMapper.inGood(name, num, good_id, bio, date,inPrice);
     }
 
     @Override
@@ -130,5 +140,38 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
             }
         }
         return goodsReturn;
+    }
+
+    @Override
+    public Map<String, Integer> getSoldGood() {
+
+        // LambdaQueryWrapper<Good> goodwrapper = new LambdaQueryWrapper<>();
+        System.out.println(1);
+        //System.out.println(baseMapper.selectList(goodwrapper));
+        return null;
+    }
+
+    @Override
+    public List<SaleGood> getSaleList() {
+        List<SaleGood> soldGood  = saleGoodMapper.selectList(null);
+        for (SaleGood good : soldGood
+             ) {
+            System.out.println(good);
+        }
+        return soldGood;
+    }
+
+    @Override
+    public List<InGood> getInList() {
+        List<InGood> l = new ArrayList<>();
+        l = baseMapper.getInList();
+        return l;
+    }
+
+    @Override
+    public List<OutGood> getOutList() {
+        List<OutGood> l = new ArrayList<>();
+        l = baseMapper.getOutList();
+        return  l;
     }
 }

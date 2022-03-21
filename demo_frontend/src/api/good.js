@@ -39,3 +39,23 @@ export function sellGood(SaleDto){
     })
 }
 
+export function getSaleList(){
+    return request({
+        url: '/good/salelist',
+        method: 'get',
+    })
+}
+
+export function getInList(){
+    return request({
+        url: '/good/inlist',
+        method: 'get',
+    })
+}
+
+export function getOutList(){
+    return request({
+        url: '/good/outlist',
+        method: 'get',
+    })
+}

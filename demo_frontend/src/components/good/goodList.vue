@@ -25,7 +25,7 @@
                 <el-option label="未过期" :value = false></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="备注" :label-width="formLabelWidth"v-if="role != 2">
+            <el-form-item label="备注" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.bio"  placeholder="请输入原因"  type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>

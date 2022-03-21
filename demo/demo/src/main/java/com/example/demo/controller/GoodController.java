@@ -10,8 +10,12 @@ import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
 import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
+import com.example.demo.model.entity.SaleGood;
 import com.example.demo.model.entity.User;
+import com.example.demo.model.vo.InGood;
+import com.example.demo.model.vo.OutGood;
 import com.example.demo.service.IGoodService;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -101,5 +105,34 @@ public class GoodController extends  BaseController{
             return ApiResult.failed("系统故障，卖出失败");
         return ApiResult.success("成功卖出");
     }
+
+    //这里用来进行统计
+    @RequestMapping(value = "/statistic/getsaledgood",method = RequestMethod.POST)
+    public  ApiResult<Map<String, Integer>> getSoldGood(){
+        igoodService.getSoldGood();
+        return null;
+    }
+
+    @RequestMapping(value = "/salelist",method = RequestMethod.GET)
+    public ApiResult<List<SaleGood>> getSaleList() {
+        List<SaleGood> salegoods = igoodService.getSaleList();
+        return ApiResult.success(salegoods);
+    }
+
+    @RequestMapping(value = "/inlist",method = RequestMethod.GET)
+    public ApiResult<List<InGood>> getInList() {
+        List<InGood> in = igoodService.getInList();
+        return ApiResult.success(in);
+    }
+
+    @RequestMapping(value = "/outlist",method = RequestMethod.GET)
+    public ApiResult<List<OutGood>> getOutList() {
+        List<OutGood> out = igoodService.getOutList();
+        return ApiResult.success(out);
+    }
+
+
+
+
 }
 

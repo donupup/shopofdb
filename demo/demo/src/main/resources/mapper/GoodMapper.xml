@@ -5,7 +5,7 @@
         insert into bms_good_out (id,goodname,num,bio,good_deleted,good_id,good_out_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{bio},#{is_deleted},#{good_id},#{date});
     </insert>
     <insert id="inGood" >
-        insert into bms_good_in (id,goodname,num,bio,good_id,good_in_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{bio},#{good_id},#{date});
+        insert into bms_good_in (id,goodname,num,bio,good_id,good_in_time,inPrice) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{bio},#{good_id},#{date},#{inPrice});
     </insert>
     <insert id="sellGoodToTable" >
         insert into bms_good_sale (id,goodname,num,priceinNow,pricesellNow,good_id,good_sold_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{in},#{out},#{good_id},#{date});

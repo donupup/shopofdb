@@ -67,11 +67,31 @@ const routes = [
     }
   },
   {
+    path: '/good/sale_sta',
+    name: 'sale_sta',
+    component: ()=>import('@/views/good/sale_sta'),
+    meta: {
+      title: '销售统计',
+      requireAuth: true,
+      showInbreadcrumb:true
+    }
+  },
+  {
     path: '/statistic',
     name: 'statistic',
     component: ()=>import('@/views/statistic'),
     meta: {
       title: '统计',
+      requireAuth: true,
+      showInbreadcrumb:true
+    }
+  },
+  {
+    path: '/good/bill_sta',
+    name: 'bill_sta',
+    component: ()=>import('@/views/good/bill_sta'),
+    meta: {
+      title: '账单',
       requireAuth: true,
       showInbreadcrumb:true
     }

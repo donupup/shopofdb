@@ -44,12 +44,12 @@
             </b-navbar-item>
           </template>
         <template slot="start">
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/sale_sta' }">
             销售统计
           </b-navbar-item>
         </template>
         <template slot="start">
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/bill_sta' }">
             账单
           </b-navbar-item>
         </template>
@@ -67,7 +67,7 @@
           </b-navbar-item>
         </template>
         <template slot="start" >
-          <b-navbar-item tag="router-link" :to="{ path: '/statistic' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/sale_sta' }">
             销售统计
           </b-navbar-item>
         </template>
@@ -77,6 +77,11 @@
         <template slot="start">
           <b-navbar-item tag="router-link" :to="{ path: '/good/manage' }">
             商品库存
+          </b-navbar-item>
+        </template>
+        <template slot="start">
+          <b-navbar-item tag="router-link" :to="{ path: '/good/bill_sta' }">
+            账单
           </b-navbar-item>
         </template>
       </template>
