@@ -116,6 +116,12 @@ const routes = [
       showInbreadcrumb:false
     }
   },
+  {
+    name: 'search',
+    path: '/search',
+    component: () => import('@/views/search'),
+    meta: { title: '检索' }
+  },
 
 
 

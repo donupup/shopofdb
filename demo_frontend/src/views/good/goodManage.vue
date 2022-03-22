@@ -5,6 +5,24 @@
     </el-page-header>
     <div style="text-align:right">
       <el-button type="primary" @click="dialogFormVisible = true">增加商品</el-button>
+      <b-field position="is-centered">
+            <b-input
+              v-model="searchKey"
+              class="s_input"
+              width="80%"
+              placeholder="搜索商品"
+              rounded
+              clearable
+              @keyup.enter.native="search()"
+            />
+            <p class="control">
+              <b-button
+                class="is-info"
+                @click="search()"
+              >检索
+              </b-button>
+            </p>
+          </b-field>
     </div>
     <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
       <el-form :model="form"
@@ -50,11 +68,13 @@
 <script>
 import goodList from "@/components/good/goodList";
 import {getGoodList, addGood, editGood} from "@/api/good";
+import {searchByKeyword} from "@/api/search"
 export default {
   name: "goodManage",
   components:{goodList},
   data(){
     return{
+      searchKey: '',
       goodInfo:{},
       form: {
         goodname: '',
@@ -112,6 +132,18 @@ export default {
     headBack(){
       console.log(this.$router)
       this.$router.back()
+    },
+    search() {
+      console.log(this.searchKey)
+      if (this.searchKey.trim() === null || this.searchKey.trim() === '') {
+        this.$message.info({
+          showClose: true,
+          message: '请输入关键字搜索！',
+          type: 'warning'
+        })
+        return false
+      }
+      this.$router.push({ path: '/search?key=' + this.searchKey })
     }
 
 

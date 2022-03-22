@@ -25,4 +25,10 @@ public interface GoodMapper extends BaseMapper<Good> {
 
     @Select("select * from bms_good_out")
     List<OutGood>  getOutList();
+
+    @Select("select * from bms_good t where t.goodname like CONCAT('%','${key}')\n" +
+            "                or t.goodname  like CONCAT('${key}','%')\n" +
+            "                or t.goodname like CONCAT('%','${key}','%')\n" +
+            "                or t.goodname  = #{key} ")
+    List<Good> searchByKey(@Param("key") String key);
 }

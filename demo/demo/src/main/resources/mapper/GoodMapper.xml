@@ -10,5 +10,6 @@
     <insert id="sellGoodToTable" >
         insert into bms_good_sale (id,goodname,num,priceinNow,pricesellNow,good_id,good_sold_time) VALUES(replace(uuid(), '-', ''),#{name},#{num},#{in},#{out},#{good_id},#{date});
     </insert>
+
 </mapper>
 

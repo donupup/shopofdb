@@ -41,4 +41,6 @@ public interface IGoodService extends IService<Good> {
     List<InGood> getInList();
 
     List<OutGood> getOutList();
+
+    List<Good> searchByKey(String key);
 }
