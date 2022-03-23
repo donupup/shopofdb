@@ -3,14 +3,47 @@
     <el-page-header @back="headBack" content="销售统计"> </el-page-header>
     <el-divider></el-divider>
     在此期间👜共卖出 <el-tag>{{ saleNum }}</el-tag
-    >件 <el-divider></el-divider>💴总进价
+    >件 💴总进价
     <el-tag type="warning">{{ totalIn }}</el-tag
     >元 💰 总售价 <el-tag type="success">{{ totalOut }}</el-tag
     >元
 
+    <!-- <exportExcel :id="'exportTab'" :name="'导出Table'"></exportExcel> -->
+    <div hidden="hidden">
+      <el-table
+        :data="this.info"
+        border-card
+        highlight-current-row
+        style="width: 100%"
+        :default-sort="{ prop: 'goodSoldTime', order: 'descending' }"
+        id="exportTab"
+      >
+        <el-table-column prop="goodname" label="商品名称" sortable width="180">
+        </el-table-column>
+        <el-table-column prop="goodId" label="商品Id" sortable width="180">
+        </el-table-column>
+        <el-table-column prop="num" label="数量" sortable width="100">
+        </el-table-column>
+        <el-table-column prop="priceinNow" label="进价" sortable width="100">
+        </el-table-column>
+        <el-table-column prop="pricesellNow" label="售价" sortable width="100">
+        </el-table-column>
+        <el-table-column
+          prop="goodSoldTime"
+          label="日期"
+          sortable
+          :formatter="formatter"
+        >
+        </el-table-column>
+      </el-table>
+    </div>
     <el-divider></el-divider>
     <div class="block">
-      <span class="demonstration"><el-button @click="choseData" type="primary">筛选日期后进行统计</el-button></span>
+      <span class="demonstration"
+        ><el-button @click="choseData" type="primary"
+          >筛选日期后进行统计</el-button
+        ></span
+      >
       <el-date-picker
         v-model="value"
         type="daterange"
@@ -22,9 +55,18 @@
         :picker-options="pickerOptions"
       >
       </el-date-picker>
+      <exportExcel
+        :id="'exportTab'"
+        :name="'全日期商品销售记录'"
+        :button="'导出全部记录'"
+      ></exportExcel>
+      <exportExcel
+        :id="'exportNow'"
+        :name="'当前选择商品销售记录'"
+        :button="'导出当前选择日期内记录'"
+      ></exportExcel>
     </div>
-    
-    <!-- <exportExcel :id="'exportTab'" :name="'导出Table'"></exportExcel> -->
+
     <!-- <sale-list v-for="(item,index) in info" :item="item" :key="index"></sale-list> -->
     <el-table
       :data="
@@ -33,8 +75,8 @@
       border-card
       highlight-current-row
       style="width: 100%"
-      :default-sort="{ prop: 'goodname', order: 'descending' }"
-      id="exportTab"
+      :default-sort="{ prop: 'goodSoldTime', order: 'descending' }"
+      id="exportNow"
     >
       <el-table-column prop="goodname" label="商品名称" sortable width="180">
       </el-table-column>
@@ -71,10 +113,10 @@
 <script>
 import { getSaleList } from "@/api/good";
 import SaleList from "../../components/good/saleList.vue";
-//import ExportExcel from "@/components/ExportExcel";
+import ExportExcel from "@/components/ExportExcel";
 export default {
   name: "sale_sta",
-  components: { SaleList },
+  components: { SaleList, ExportExcel },
   data() {
     return {
       page: 1, //第几页
@@ -123,7 +165,7 @@ export default {
   },
   mounted() {
     this.fetchSaleGood();
-    this.choseData();
+    //this.choseData();
     this.getTabelData2();
     this.sizeChange(5);
   },
@@ -132,7 +174,6 @@ export default {
       getSaleList().then((response) => {
         const { data } = response;
         this.info = data;
-        
       });
     },
     headBack() {
@@ -188,11 +229,16 @@ export default {
 
     //日期筛选
     choseData() {
-      this.databyday = []
+      this.databyday = [];
       //console.log(this.value[0]);
-      if (this.value === null ||this.value === '' ) {
+      if (this.value === null || this.value === "") {
         //console.log(111111)
         this.databyday = this.info;
+        this.$message({
+                  message: "没有选择日期，默认为全部日期",
+                  type: "info",
+                  duration: 2000,
+                });
         //console.log(this.databyday)
       } else {
         let j = 0;
@@ -200,21 +246,28 @@ export default {
           //console.log(new Date(this.info[i].goodSoldTime))
           //console.log(this.value[0])
           if (
-            new Date(this.info[i].goodSoldTime).getTime() > this.value[0].getTime() &&
-            new Date(this.info[i].goodSoldTime).getTime() < this.value[1].getTime()
+            new Date(this.info[i].goodSoldTime).getTime() >
+              this.value[0].getTime() &&
+            new Date(this.info[i].goodSoldTime).getTime() <
+              this.value[1].getTime()
           ) {
             this.databyday[j] = this.info[i];
             j++;
           }
         }
+        this.$message({
+                  message: "筛选成功！",
+                  type: "success",
+                  duration: 2000,
+                });
         // console.log(123);
         // //console.log(this.info)
         // console.log(this.databyday);
         // console.log(456)
-        
       }
-      this.sizeChange(this.size)
-      this.totalNum()
+      this.sizeChange(this.size);
+      this.totalNum();
+      
     },
   },
 };

@@ -53,6 +53,11 @@
             账单
           </b-navbar-item>
         </template>
+        <template slot="start">
+          <b-navbar-item tag="router-link" :to="{ path: '/sta' }">
+            图表
+          </b-navbar-item>
+        </template>
       </template>
 
       <template v-if="role === '1'">

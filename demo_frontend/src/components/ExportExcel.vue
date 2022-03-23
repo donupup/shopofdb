@@ -1,10 +1,10 @@
 <template>
-    <el-button type="primary"  :loading="downloadLoading" icon="el-icon-top-right" size="small" @click="exportExcel">导出</el-button>
+    <el-button type="primary"  :loading="downloadLoading" icon="el-icon-top-right" size="small" @click="exportExcel">{{button}}</el-button>
 </template>
 
 <script>
 import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
+import * as xlsx from "xlsx";
 export default {
   props: {
     id: {
@@ -14,6 +14,10 @@ export default {
     name: {
       type: String, //导出需要的名字
       default: 'Table'
+    },
+    button:{
+      type : String,
+      default:"导出"
     }
 
   },
@@ -29,12 +33,12 @@ export default {
       this.downloadLoading = true
       var xlsxParam = { raw: true } //转换成excel时，使用原始的格式
       /* 从表生成工作簿对象 */
-      var wb = XLSX.utils.table_to_book(
+      var wb = xlsx.utils.table_to_book(
         document.querySelector('#' + this.id),
         xlsxParam
       )
       /* 获取二进制字符串作为输出 */
-      var wbout = XLSX.write(wb, {
+      var wbout = xlsx.write(wb, {
         bookType: 'xlsx',
         bookSST: true,
         type: 'array'
@@ -56,6 +60,11 @@ export default {
       }
       console.log("下载结束")
       this.downloadLoading = false
+      this.$message({
+                  message: "下载成功！",
+                  type: "success",
+                  duration: 2000,
+                });
       return wbout
     }
   }

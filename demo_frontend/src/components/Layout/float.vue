@@ -20,7 +20,7 @@
         <div style="text-align:right">
           <el-input-number v-model="ele.num" controls-position="right" :min="0"
                            :max="ele.max_num"></el-input-number>
-          <el-button type="danger" plain round @click="ele.num = 0">移出</el-button>
+          <el-button type="danger" plain round @click="shoppingCar.splice(index,1)">移出</el-button>
         </div>
         <el-divider></el-divider>
       </div>

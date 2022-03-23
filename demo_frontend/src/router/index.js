@@ -77,9 +77,9 @@ const routes = [
     }
   },
   {
-    path: '/statistic',
+    path: '/sta',
     name: 'statistic',
-    component: ()=>import('@/views/statistic'),
+    component: ()=>import('@/components/dashboard/index'),
     meta: {
       title: '统计',
       requireAuth: true,
