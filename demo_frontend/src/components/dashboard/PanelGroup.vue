@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             库存统计
           </div>
-          <count-to :start-val="0" :end-val="7690" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="storageLength" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -63,9 +63,10 @@ export default {
     CountTo
   },
   props:{
-    saleLength:123,
-    inLength:123,
-    outLength:123
+    saleLength:'',
+    inLength:'',
+    outLength:'',
+    storageLength:''
   },
   methods: {
     handleSetLineChartData (type) {

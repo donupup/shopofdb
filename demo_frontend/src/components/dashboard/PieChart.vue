@@ -21,11 +21,17 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    salePineNum:{
+      type:Array,
     }
   },
   data () {
     return {
-      chart: null
+      chart: null,
+      salePineNum1:[],
+      data:[],
+      key2:[],
     }
   },
   mounted () {
@@ -40,7 +46,33 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  watch: {
+    salePineNum: {
+      deep: true,
+      handler (val) {
+        this.salePineNum1 = val;
+        this.pushData();
+      }
+    },
+  },
   methods: {
+    pushData(){
+      let data = [];
+      let obj = {};
+      let key1 = [];
+      for(let key in this.salePineNum1)
+      {
+        obj = {}
+        obj["name"] = key;
+        obj["value"] = this.salePineNum1[key];
+        data.push(obj);
+        key1.push[key];
+      }
+      this.data = data;
+      this.key2 = key1;
+      //console.log(this.key)
+      this.initChart();
+    },
     initChart () {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -52,22 +84,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: this.key,
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '各商品销量统计',
             type: 'pie',
             roseType: 'radius',
-            radius: [15, 95],
+            radius: [15, 65],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: this.data,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

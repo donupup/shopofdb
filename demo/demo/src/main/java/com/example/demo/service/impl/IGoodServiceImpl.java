@@ -74,7 +74,9 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
             }
 
         }
-        int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
+        else{
+            int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
+        }
         int result = this.baseMapper.update(good,wrapper);
         return result;
     }

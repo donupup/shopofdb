@@ -23,11 +23,26 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    barName:{
+      type:Array,
+      default:['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    barNum:{
+      type:Array,
+      default:[79, 52, 200, 334, 390, 330, 220]
+    },
+    barPrice:{
+      type:Array,
+      default:[80, 52, 200, 334, 390, 330, 220]
     }
   },
   data () {
     return {
-      chart: null
+      chart: null,
+      barName1:['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      barNum1:[79, 52, 200, 334, 390, 330, 220],
+      barPrice1:[80, 52, 200, 334, 390, 330, 220],
     }
   },
   mounted () {
@@ -41,6 +56,29 @@ export default {
     }
     this.chart.dispose()
     this.chart = null
+  },
+  watch: {
+    barName: {
+      deep: true,
+      handler (val) {
+        this.barName1 = val;
+        this.initChart();
+      }
+    },
+    barNum: {
+      deep: true,
+      handler (val) {
+        this.barNum1 = val;
+        this.initChart();
+      }
+    },
+    barPrice: {
+      deep: true,
+      handler (val) {
+        this.barPrice1 = val;
+        this.initChart();
+      }
+    }
   },
   methods: {
     initChart () {
@@ -62,7 +100,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.barName1,
           axisTick: {
             alignWithLabel: true
           }
@@ -74,27 +112,30 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '数量',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: this.barNum1,
           animationDuration
-        }, {
-          name: 'pageB',
+        }, 
+        {
+          name: '总价值',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
+          data: this.barPrice1,
           animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
+        }, 
+        // {
+        //   name: 'pageC',
+        //   type: 'bar',
+        //   stack: 'vistors',
+        //   barWidth: '60%',
+        //   data: [30, 52, 200, 334, 390, 330, 220],
+        //   animationDuration
+        // }
+        ]
       })
     }
   }
