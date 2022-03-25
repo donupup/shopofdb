@@ -3,7 +3,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('saleLineSta')">
         <div class="card-panel-icon-wrapper icon-people">
-          <i class="el-icon-user-solid" style="font-size: 50px"></i>
+          <i class="el-icon-goods" style="font-size: 50px"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -16,7 +16,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('inLineSta')">
         <div class="card-panel-icon-wrapper icon-message">
-          <i class="el-icon-message" style="font-size: 50px"></i>
+          <i class="el-icon-news" style="font-size: 50px"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -29,7 +29,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('outLineSta')">
         <div class="card-panel-icon-wrapper icon-money">
-          <i class="el-icon-star-on" style="font-size: 50px"></i>
+          <i class="el-icon-sold-out" style="font-size: 50px"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">

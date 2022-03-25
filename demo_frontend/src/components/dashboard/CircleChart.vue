@@ -96,10 +96,10 @@ export default {
         },
         series: [
           {
-            name: '各商品销量统计',
+            name: '各商品库存统计',
             type: 'pie',
-            roseType: 'radius',
-            radius: [15, 65],
+            //roseType: 'radius',
+            radius: ['15%', '30%'],
             center: ['50%', '38%'],
             data: this.data,
             animationEasing: 'cubicInOut',

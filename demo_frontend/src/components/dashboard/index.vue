@@ -18,7 +18,7 @@
 
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <circle-chart :salePineNum="storageCircleNum"/>
         </div>
       </el-col>
 
@@ -44,6 +44,7 @@ import RaddarChart from "./RaddarChart";
 import PieChart from "./PieChart";
 import LineChart from "./LineChart";
 import BarChart from "./BarChart";
+import CircleChart from "./CircleChart"
 import { getInList, getOutList, getSaleList, getGoodList } from "@/api/good";
 //import TransactionTable from './TransactionTable'
 //import BoxCard from './BoxCard'
@@ -76,6 +77,7 @@ export default {
     LineChart,
     PieChart,
     BarChart,
+    CircleChart
     //TransactionTable,
     //BoxCard
   },
@@ -102,6 +104,7 @@ export default {
       barNum:[],
       barPrice:[],
       salePineNum:[],
+      storageCircleNum:[],
       xarryDay: ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
     };
   },
@@ -140,6 +143,7 @@ export default {
       this.storageLine();
       this.storageBar();  
       this.salePine();
+      this.storageCircle();
     
       //console.log(this.outLineNum)
     },
@@ -277,6 +281,22 @@ export default {
         }
       }
       this.salePineNum = arrNum;
+      //console.log(arrNum);
+    },
+    storageCircle(){
+      let arrNum = new Array();
+      this.storageCircleNum = [];
+      for(let i = 0 ;i < this.goodList.length;i++)
+      {
+        if(this.goodList[i].goodname in arrNum)
+        {
+          arrNum[this.goodList[i].goodname] += this.goodList[i].storage;
+        }
+        else{
+          arrNum[this.goodList[i].goodname] = this.goodList[i].storage;
+        }
+      }
+      this.storageCircleNum = arrNum;
       //console.log(arrNum);
     }
   },

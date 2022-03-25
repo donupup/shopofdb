@@ -77,6 +77,14 @@ export default {
             show: false,
           },
         },
+        toolbox: {
+          feature: {
+            saveAsImage: {
+              title: "保存为图片", //标题可自行调整
+              type: "png", //下载为png格式
+            },
+          },
+        },
         grid: {
           left: 10,
           right: 10,
