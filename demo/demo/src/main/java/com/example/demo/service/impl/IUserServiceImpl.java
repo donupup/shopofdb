@@ -47,8 +47,10 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
             }
             token = JwtUtil.generateToken(String.valueOf(user.getUsername()));
             role = user.getRoleId();
+            String userId = user.getId();
             map.put("token", token);
             map.put("role", role);
+            map.put("userId",userId);
         } catch (Exception e) {
             log.warn("用户不存在or密码验证失败=======>{}", dto.getUsername());
         }

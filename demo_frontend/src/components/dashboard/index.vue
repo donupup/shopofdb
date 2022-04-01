@@ -149,30 +149,39 @@ export default {
     },
     dateInDay(first, second, num) {
       if (
-        first.getFullYear() === second.getFullYear() &&
-        first.getMonth() === second.getMonth() &&
-        first.getDate() - second.getDate() === num
+        // 
+        num == Math.round((first.getTime() - second.getTime())/1000/60/60/24)
       )
         return true;
       else return false;
     },
     saleLine() {
+      //console.log(Math.round((new Date().getTime() - new Date('2022-3-30').getTime())/1000/60/60/24))
       this.saleLineNum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       this.saleLinePrice = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       let now = new Date();
       this.totalSale = this.saleList.length;
       for (let i = 0; i < 10; i++) {
         for (let j = 0; j < this.saleList.length; j++) {
-          // console.log(now);
+          //console.log(now);
           // console.log(this.saleList[j].goodSoldTime);
           if (this.dateInDay(now, new Date(this.saleList[j].goodSoldTime), i)) {
-            //console.log(123);
+            // console.log(i);
+            // console.log(this.saleList[j].goodSoldTime)
             this.saleLineNum[9 - i] += this.saleList[j].num;
             this.saleLinePrice[9 - i] +=
               this.saleList[j].num * this.saleList[j].pricesellNow;
           }
+
         }
-        this.xarryDay[9 - i] = now.getMonth() + "." + (now.getDate() - i);
+        if((now.getDate() - i) > 0)
+        {
+          this.xarryDay[9 - i] = (now.getMonth() + 1) + "." + (now.getDate() - i);
+        }
+        else{
+          this.xarryDay[9 - i] = (now.getMonth()) + "." + (now.getDate() - i + 31);
+        }
+        //this.xarryDay[9 - i] = i;//(now.getMonth() + 1) + "." + (now.getDate() - i);
       }
       lineChartDatas.saleLineSta.expectedData = this.saleLineNum;
       lineChartDatas.saleLineSta.actualData = this.saleLinePrice;
