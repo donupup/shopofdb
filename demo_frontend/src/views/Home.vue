@@ -17,7 +17,7 @@ export default {
   name: "Home",
   components: {},
   computed: {
-    ...mapGetters(["token", "user", "role"]),
+    ...mapGetters(["token", "user", "role","userId"]),
   },
   methods: {
     headBack() {

@@ -1,9 +1,10 @@
 <template>
-
   <div>
     <el-page-header @back="headBack" content="商品详情">
     </el-page-header>
+    
     <div style="text-align:right">
+      <import-excel />
       <el-button type="primary" @click="dialogFormVisible = true">增加商品</el-button>
       <b-field position="is-centered">
             <b-input
@@ -69,9 +70,10 @@
 import goodList from "@/components/good/goodList";
 import {getGoodList, addGood, editGood} from "@/api/good";
 import {searchByKeyword} from "@/api/search"
+import ImportExcel from '../../components/ImportExcel.vue';
 export default {
   name: "goodManage",
-  components:{goodList},
+  components:{goodList,ImportExcel},
   data(){
     return{
       searchKey: '',
@@ -98,6 +100,20 @@ export default {
     this.fetchGoodList()
   },
   methods:{
+    messa(value){
+      console.log(1111)
+      const { code, message } = value;
+              //console.log(value)
+              if (code === 200) {
+                this.$message({
+                  message: "修改成功",
+                  type: "success",
+                });
+                
+              } else {
+                this.$message.error("修改失败，" + message);
+              }
+    },
     fetchGoodList(){
       getGoodList().then(response => {
         const {data} = response

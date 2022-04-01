@@ -181,4 +181,9 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
     public List<Good> searchByKey(String key) {
         return this.baseMapper.searchByKey(key);
     }
+
+    @Override
+    public Good findByName(String name) {
+        return baseMapper.findByName(name);
+    }
 }

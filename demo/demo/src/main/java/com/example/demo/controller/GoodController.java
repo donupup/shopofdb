@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -131,8 +133,19 @@ public class GoodController extends  BaseController{
         return ApiResult.success(out);
     }
 
-
-
-
+    @RequestMapping(value = "/file_good",method = RequestMethod.POST)
+    public ApiResult<String> editGoodByFile(@Valid  @RequestBody JSONArray ja) throws ParseException {
+        System.out.println(ja);
+        for(int i = 0;i < ja.size();i++) {
+//            System.out.println(ja.getJSONObject(i));
+//            System.out.println(ja.getJSONObject(i).get("商品名称"));
+            JSONObject good = ja.getJSONObject(i);
+            Good g = igoodService.findByName(good.get("商品名称").toString());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date d = sdf.parse(good.get("日期").toString());
+            igoodService.inGood(good.get("商品名称").toString(),Integer.parseInt(good.get("数量").toString()),g.getId(),good.get("备注").toString(),d,Integer.parseInt(good.get("进价").toString()));
+        }
+        return ApiResult.success("成功进货");
+    }
 }
 

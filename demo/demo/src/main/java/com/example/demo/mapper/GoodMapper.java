@@ -31,4 +31,7 @@ public interface GoodMapper extends BaseMapper<Good> {
             "                or t.goodname like CONCAT('%','${key}','%')\n" +
             "                or t.goodname  = #{key} ")
     List<Good> searchByKey(@Param("key") String key);
+
+    @Select("select * from bms_good where goodname = #{name}")
+    Good findByName(@Param("name") String name);
 }

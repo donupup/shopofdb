@@ -59,3 +59,11 @@ export function getOutList(){
         method: 'get',
     })
 }
+
+export function editGoodByFile(exceldata){
+    return request({
+        url: '/good/file_good',
+        method: 'post',
+        data:exceldata
+    })
+}

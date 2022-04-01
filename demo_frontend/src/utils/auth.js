@@ -1,9 +1,10 @@
 //此模块是对写入浏览器的token
 import Cookies from 'js-cookie'
 
-const uToken = 'u_token'
+const uToken = 'u_token';
 const darkMode = 'dark_mode';
-const uRole = 'u_role'
+const uRole = 'u_role';
+const userId = 'u_Id'
 
 // 获取Token
 export function getToken() {
@@ -37,12 +38,26 @@ export function getRole() {
     return Cookies.get(uRole);
 }
 
-// 设置Token，1天,与后端同步
+
 export function setRole(role) {
     return Cookies.set(uRole, role, {expires: 1})
 }
 
-// 删除Token
+
 export function removeRole() {
     return Cookies.remove(uRole)
+}
+
+export function getUserId() {
+    return Cookies.get(userId);
+}
+
+
+export function setUserId(RuserId) {
+    return Cookies.set(userId, RuserId, {expires: 1})
+}
+
+// 删除Token
+export function removeUserId() {
+    return Cookies.remove(userId)
 }

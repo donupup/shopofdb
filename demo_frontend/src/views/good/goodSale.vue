@@ -135,12 +135,13 @@ export default {
         });
         return;
       }
-      if (this.nameInCar.includes(this.shoppingEle.good.goodname)) {
-        this.$message({
-          message: "购物车里已经有该商品了，请去购物车操作",
-          type: "warning",
-        });
-      } else {
+      // if (this.nameInCar.includes(this.shoppingEle.good.goodname)) {
+      //   this.$message({
+      //     message: "购物车里已经有该商品了，请去购物车操作",
+      //     type: "warning",
+      //   });
+      // } else 
+      {
         if (this.shoppingEle.num > this.shoppingEle.good.storage) {
           this.$message({
             message: "库存不足",

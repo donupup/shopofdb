@@ -1,10 +1,11 @@
 import {  login, logout } from "@/api/auth";
-import { getToken, setToken, removeToken, getRole, setRole, removeRole } from "@/utils/auth";
+import { getToken, setToken, removeToken, getRole, setRole, removeRole, getUserId, setUserId, removeUserId } from "@/utils/auth";
 
 const state = {
   token: getToken(), // token
   user: "", // 用户对象
-  role: getRole() //role
+  role: getRole(), //role,
+  userId: getUserId()
 };
 
 const mutations = {
@@ -16,6 +17,9 @@ const mutations = {
   },
   SET_ROLE_STATE: (state, role) => {
     state.role = role;
+  },
+  SET_USERID_STATE: (state, userId) => {
+    state.userId = userId;
   }
 };
 
@@ -34,6 +38,9 @@ const actions = {
           commit("SET_ROLE_STATE",data.role);
           //console.log(this.state);
           setRole(data.role)
+          //console.log(data.userId)
+          commit("SET_USERID_STATE",data.userId);
+          setUserId(data.userId)
           resolve();
         })
         .catch((error) => {
@@ -50,8 +57,10 @@ const actions = {
             commit("SET_TOKEN_STATE", "");
             commit("SET_USER_STATE", "");
             commit("SET_ROLE_STATE", "");
+            commit("SET_USERID_STATE", "");
             removeToken();
             removeRole();
+            removeUserId();
             resolve();
           })
           .catch((error) => {

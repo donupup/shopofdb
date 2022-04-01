@@ -1,4 +1,3 @@
-// 悬浮按钮组件
 <template>
   <div>
     <div style="position:relative;">
@@ -15,7 +14,7 @@
         direction="rtl"
         :before-close="handleClose"
         >
-      <div v-for="(ele,index) in shoppingCar">
+      <div v-for="(ele,index) in shoppingCar" :key="index">
         <i class="el-icon-shopping-bag-2" style="font-size: 15px">{{ele.goodname}}</i>
         <div style="text-align:right">
           <el-input-number v-model="ele.num" controls-position="right" :min="0"
