@@ -14,10 +14,13 @@ public class GoodAddDTO {
 
     int storage;
 
-    boolean status;
-
     int shelflife;
 
     String bio;
+
+    String categoryId;
+
+    String providerId;
+
 }
 

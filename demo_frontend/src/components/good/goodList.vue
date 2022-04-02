@@ -19,12 +19,16 @@
             <el-form-item label="库存" :label-width="formLabelWidth" >
               <el-input-number v-model="form.storage" controls-position="right"  :min="0" ></el-input-number>
             </el-form-item>
-            <el-form-item label="是否过期" :label-width="formLabelWidth" v-if="role != 2">
-              <el-select v-model="form.status" placeholder="请选择是否过期">
-                <el-option label="已过期" :value= true></el-option>
-                <el-option label="未过期" :value = false></el-option>
-              </el-select>
-            </el-form-item>
+            <el-form-item label="选择种类" :label-width="formLabelWidth">
+          <el-select v-model="form.categoryId" placeholder="请选择种类">
+            <el-option v-for="(item,index) in categoryInfo" :key="index" :label="item.cname" :value="item.cid"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择供货商" :label-width="formLabelWidth">
+          <el-select v-model="form.providerId" placeholder="请选择供货商">
+            <el-option v-for="(item,index) in providerInfo" :key="index" :label="item.pname" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
             <el-form-item label="备注" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.bio"  placeholder="请输入原因"  type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"></el-input>
@@ -84,18 +88,18 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-date"></i>
-          保质期
+          进货商
         </template>
-        {{ item.shelflife }}
+        {{ item.providerNmae }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-date"></i>
-          是否过期
+          商品种类
         </template>
-        <!--      {{item.roleId}}-->
-        <el-tag size="small" v-if="item.status == false">未过期</el-tag>
-        <el-tag size="small" v-else-if="item.status == true">已过期</el-tag>
+           {{item.categoryName}}
+        <!-- <el-tag size="small" v-if="item.status == false">未过期</el-tag>
+        <el-tag size="small" v-else-if="item.status == true">已过期</el-tag> -->
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
@@ -113,6 +117,8 @@
 <script>
 import {deleteGood,editGood} from "@/api/good";
 import {mapGetters} from "vuex";
+import {getCategoryList} from "@/api/category";
+import {getProviderList} from "@/api/provider"
 
 export default {
   name: "goodList",
@@ -121,6 +127,12 @@ export default {
       type: Object
     },
     needOpera:'',
+    providerList:{
+      type:Array
+    },
+    categoryList:{
+      type:Array
+    }
   },
 
   data() {
@@ -136,6 +148,8 @@ export default {
         status: '',
         bio:''
       },
+      providerInfo:{},
+      categoryInfo:{},
       formLabelWidth: '120px',
       rules: {
         goodname: [
@@ -145,10 +159,29 @@ export default {
     }
 
   },
+  mounted() {
+    this.fetchCategoryList();
+    this.fetchProviderList();
+  },
   computed: {
     ...mapGetters(["token", "user","role"]),
   },
   methods: {
+    fetchCategoryList() {
+      getCategoryList().then((response) => {
+        const { data } = response;
+        this.categoryInfo = data;
+        console.log(123)
+        console.log(this.categoryInfo);
+      });
+    },
+    fetchProviderList() {
+      getProviderList().then((response) => {
+        const { data } = response;
+        this.providerInfo = data;
+        console.log(this.providerInfo);
+      });
+    },
     checkNum(){
       if(this.role == '2'){
         if(this.form.storage > this.item.storage)

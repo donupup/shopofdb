@@ -27,6 +27,9 @@ public class Good implements Serializable {
     @TableField("goodname")
     private String goodname;
 
+    @TableField("category_id")
+    private String categoryId;
+
     @TableField("pricein")
     private int pricein;
 
@@ -44,13 +47,7 @@ public class Good implements Serializable {
 
     @Builder.Default
     @TableField("bio")
-    private String bio = "自由职业者";
-
-
-    @Builder.Default
-    @TableField("outofdate")
-    private Boolean status = false;
-
+    private String bio = "商品";
 
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
@@ -58,4 +55,6 @@ public class Good implements Serializable {
     @TableField(value = "modify_time", fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
 
+    @TableField("provider_id")
+    private String ProviderId;
 }

@@ -12,9 +12,12 @@ import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.SaleGood;
 import com.example.demo.model.entity.User;
+import com.example.demo.model.vo.GoodInfo;
 import com.example.demo.model.vo.InGood;
 import com.example.demo.model.vo.OutGood;
+import com.example.demo.service.ICategoryService;
 import com.example.demo.service.IGoodService;
+import com.example.demo.service.IProviderService;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,17 +33,42 @@ public class GoodController extends  BaseController{
 
     @Resource
     private IGoodService igoodService;
+    @Resource
+    private ICategoryService categoryService;
+    @Resource
+    private IProviderService providerService;
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public ApiResult<List<Good>> getGood() {
+    public ApiResult<List<GoodInfo>> getGood() {
         List<Good> goods = igoodService.getGoodList();
-        return ApiResult.success(goods);
+        List<GoodInfo> goodInfo = new ArrayList<>();
+        for (Good g:goods
+             ) {
+            String pname = providerService.getNameById(g.getProviderId());
+            String cname = categoryService.getNameById(g.getCategoryId());
+            GoodInfo gi = GoodInfo.builder().goodname(g.getGoodname())
+                    .id(g.getId())
+                    .categoryName(cname)
+                    .pricein(g.getPricein())
+                    .pricesell(g.getPricesell())
+                    .salenum(g.getSalenum())
+                    .storage(g.getStorage())
+                    .shelflife(g.getShelflife())
+                    .bio(g.getBio())
+                    .createTime(g.getCreateTime())
+                    .modifyTime(g.getModifyTime())
+                    .ProviderNmae(pname).build();
+            goodInfo.add(gi);
+        }
+        return ApiResult.success(goodInfo);
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ApiResult<Object> deleteGood(@Valid @RequestBody String id){
+        System.out.println(id);
         String[] arr = id.split("=");
         id = arr[0];
+        System.out.println(id);
         int result = igoodService.executeDelete(id);
         if(result > 0) {
             return ApiResult.success(null,"删除成功");
@@ -108,12 +136,6 @@ public class GoodController extends  BaseController{
         return ApiResult.success("成功卖出");
     }
 
-    //这里用来进行统计
-    @RequestMapping(value = "/statistic/getsaledgood",method = RequestMethod.POST)
-    public  ApiResult<Map<String, Integer>> getSoldGood(){
-        igoodService.getSoldGood();
-        return null;
-    }
 
     @RequestMapping(value = "/salelist",method = RequestMethod.GET)
     public ApiResult<List<SaleGood>> getSaleList() {

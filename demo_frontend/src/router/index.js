@@ -125,6 +125,28 @@ const routes = [{
       showInbreadcrumb: false
     }
   },
+  {
+    path: '/provider/manage',
+    name: 'provider_manage',
+    component: () => import('@/views/provider/providerManage'),
+    meta: {
+      title: '供应商管理',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+
+  },
+  {
+    path: '/vip/manage',
+    name: 'vip_manage',
+    component: () => import('@/views/vip/vipManage'),
+    meta: {
+      title: '供应商管理',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+
+  },
 
 
 

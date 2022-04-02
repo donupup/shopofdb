@@ -19,4 +19,8 @@ public class GoodEditDTO {
     boolean status;
 
     String bio;
+
+    String categoryId;
+
+    String providerId;
 }

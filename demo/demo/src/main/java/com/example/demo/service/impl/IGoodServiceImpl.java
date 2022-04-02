@@ -2,11 +2,13 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.mapper.CategoryMapper;
 import com.example.demo.mapper.GoodMapper;
 import com.example.demo.mapper.SaleGoodMapper;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodEditDTO;
 import com.example.demo.model.dto.goodSaleDTO;
+import com.example.demo.model.entity.Category;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.SaleGood;
 import com.example.demo.model.vo.InGood;
@@ -27,7 +29,10 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
 
     @Resource
     private GoodMapper goodMapper;
+    @Resource
     private SaleGoodMapper saleGoodMapper;
+    @Resource
+    private CategoryMapper categoryMapper;
 
     public IGoodServiceImpl(SaleGoodMapper saleGoodMapper) {
         this.saleGoodMapper = saleGoodMapper;
@@ -45,8 +50,9 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Good::getId, id);
         Good good_old = this.baseMapper.selectOne(wrapper);
-        int toOut = outGood(good_old.getGoodname(),good_old.getStorage(),good_old.getId(),good_old.getBio(),1,new Date());
+        //int toOut = outGood(good_old.getGoodname(),good_old.getStorage(),good_old.getId(),good_old.getBio(),1,new Date());
         int result = this.baseMapper.delete(wrapper);
+
         return result;
     }
 
@@ -57,26 +63,27 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         good.setPricein(dto.getPricein());
         good.setPricesell(dto.getPricesell());
         good.setStorage(dto.getStorage());
-        good.setStatus(dto.isStatus());
         good.setModifyTime(new Date());
         good.setBio(dto.getBio());
+        good.setCategoryId(dto.getCategoryId());
+        good.setProviderId(dto.getProviderId());
         LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Good::getId,dto.getId());
-        Good good_old = this.baseMapper.selectOne(wrapper);
-        int change_num = good.getStorage() - good_old.getStorage();
-        if(change_num < 0){
-            if(good.getStorage() == 0)
-            {
-                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 1,good.getModifyTime());
-            }
-            else{
-                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
-            }
-
-        }
-        else{
-            int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
-        }
+        //Good good_old = this.baseMapper.selectOne(wrapper);
+//        int change_num = good.getStorage() - good_old.getStorage();
+//        if(change_num < 0){
+//            if(good.getStorage() == 0)
+//            {
+//                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 1,good.getModifyTime());
+//            }
+//            else{
+//                int res = outGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(), 0,good.getModifyTime());
+//            }
+//
+//        }
+//        else{
+//            int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
+//        }
         int result = this.baseMapper.update(good,wrapper);
         return result;
     }
@@ -89,13 +96,17 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                         .bio(dto.getBio())
                         .pricein(dto.getPricein())
                         .pricesell(dto.getPricesell())
-                        .status(dto.isStatus())
                         .storage(dto.getStorage())
                         .createTime(new Date())
                         .modifyTime(new Date())
+                .categoryId(dto.getCategoryId())
+                .ProviderId(dto.getProviderId())
                         .build();
         this.baseMapper.insert(good);
-        this.baseMapper.inGood(good.getGoodname(),good.getStorage(),good.getId(),good.getBio(),good.getModifyTime(),good.getPricein());
+        //this.baseMapper.inGood(good.getGoodname(),good.getStorage(),good.getId(),good.getBio(),good.getModifyTime(),good.getPricein());
+//        Category cat = this.categoryMapper.selectById(dto.getCategoryId());
+//        Category c = Category.builder().cid(cat.getCid()).cname(cat.getCname()).availableNum(cat.getAvailableNum() + 1).build();
+//        this.categoryMapper.updateById(c);
         return good;
     }
 
@@ -128,7 +139,6 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                     .bio(good_old.getBio())
                     .pricein(good_old.getPricein())
                     .pricesell(good_old.getPricesell())
-                    .status(good_old.getStatus())
                     .storage(good_old.getStorage())
                     .createTime(new Date())
                     .modifyTime(new Date())

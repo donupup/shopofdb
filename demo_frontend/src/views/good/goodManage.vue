@@ -1,58 +1,62 @@
 <template>
   <div>
-    <el-page-header @back="headBack" content="商品详情">
-    </el-page-header>
-    
-    <div style="text-align:right">
-      <import-excel />
-      <el-button type="primary" @click="dialogFormVisible = true">增加商品</el-button>
+    <el-page-header @back="headBack" content="商品详情"> </el-page-header>
+
+    <div style="text-align: right">
+      <!-- <import-excel /> -->
+      <el-button type="primary" @click="dialogFormVisible = true"
+        >增加商品</el-button
+      >
       <b-field position="is-centered">
-            <b-input
-              v-model="searchKey"
-              class="s_input"
-              width="80%"
-              placeholder="搜索商品"
-              rounded
-              clearable
-              @keyup.enter.native="search()"
-            />
-            <p class="control">
-              <b-button
-                class="is-info"
-                @click="search()"
-              >检索
-              </b-button>
-            </p>
-          </b-field>
+        <b-input
+          v-model="searchKey"
+          class="s_input"
+          width="80%"
+          placeholder="搜索商品"
+          rounded
+          clearable
+          @keyup.enter.native="search()"
+        />
+        <p class="control">
+          <b-button class="is-info" @click="search()">检索 </b-button>
+        </p>
+      </b-field>
     </div>
+
     <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
-      <el-form :model="form"
-               ref="form"
-               :rules="rules">
+      <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="商品名" :label-width="formLabelWidth">
-          <el-input v-model="form.goodname" autocomplete="off" ></el-input>
+          <el-input v-model="form.goodname" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="进价" :label-width="formLabelWidth">
-          <el-input v-model="form.pricein" autocomplete="off" ></el-input>
+          <el-input v-model="form.pricein" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="售价" :label-width="formLabelWidth">
-          <el-input v-model="form.pricesell" autocomplete="off" ></el-input>
+          <el-input v-model="form.pricesell" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="库存" :label-width="formLabelWidth">
-          <el-input v-model="form.storage" autocomplete="off" ></el-input>
+          <el-input v-model="form.storage" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="保质期" :label-width="formLabelWidth">
-          <el-input v-model="form.shelflife" autocomplete="off" ></el-input>
+          <el-input v-model="form.shelflife" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="选择种类" :label-width="formLabelWidth">
+          <el-select v-model="form.categoryId" placeholder="请选择种类">
+            <el-option v-for="(item,index) in categoryInfo" :key="index" :label="item.cname" :value="item.cid"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择供货商" :label-width="formLabelWidth">
+          <el-select v-model="form.providerId" placeholder="请选择供货商">
+            <el-option v-for="(item,index) in providerInfo" :key="index" :label="item.pname" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="商品描述" :label-width="formLabelWidth">
-          <el-input v-model="form.bio"  type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入商品描述" ></el-input>
-        </el-form-item>
-        <el-form-item label="是否过期" :label-width="formLabelWidth">
-          <el-select v-model="form.status" placeholder="请选择是否过期">
-            <el-option label="已过期" :value= true></el-option>
-            <el-option label="未过期" :value = false></el-option>
-          </el-select>
+          <el-input
+            v-model="form.bio"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入商品描述"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -61,113 +65,137 @@
       </div>
     </el-dialog>
     <el-divider></el-divider>
-    <goodList v-for="(item,index) in goodInfo" :item="item" :key="index" :need-opera="true"></goodList>
+    <goodList
+      v-for="(item, index) in goodInfo"
+      :item="item"
+      :key="index"
+      :need-opera="true"
+    ></goodList>
   </div>
-
 </template>
 
 <script>
 import goodList from "@/components/good/goodList";
-import {getGoodList, addGood, editGood} from "@/api/good";
-import {searchByKeyword} from "@/api/search"
-import ImportExcel from '../../components/ImportExcel.vue';
+import { getGoodList, addGood, editGood } from "@/api/good";
+import { getCategoryList } from "@/api/category";
+import { getProviderList } from "@/api/provider";
+import { searchByKeyword } from "@/api/search";
+import ImportExcel from "../../components/ImportExcel.vue";
 export default {
   name: "goodManage",
-  components:{goodList,ImportExcel},
-  data(){
-    return{
-      searchKey: '',
-      goodInfo:{},
+  components: { goodList, ImportExcel },
+  data() {
+    return {
+      searchKey: "",
+      goodInfo: {},
+      categoryInfo:{},
+      providerInfo:{},
       form: {
-        goodname: '',
-        pricein: '',
-        pricesell: '',
-        storage: '',
-        status: '',
-        shelflife:'',
-        bio:''
+        goodname: "",
+        pricein: "",
+        pricesell: "",
+        storage: "",
+        status: "",
+        categoryId:'',
+        providerId:'',
+        shelflife: "",
+        bio: "",
       },
       rules: {
         goodname: [
-          {required: true, message: "请输入商品名", trigger: "blur"}
+          { required: true, message: "请输入商品名", trigger: "blur" },
         ],
       },
-      dialogFormVisible : false,
-      formLabelWidth : '120px'
-    }
+      dialogFormVisible: false,
+      formLabelWidth: "120px",
+    };
   },
   mounted() {
-    this.fetchGoodList()
+    this.fetchCategoryList();
+    this.fetchGoodList();
+    this.fetchProviderList();
   },
-  methods:{
-    messa(value){
-      console.log(1111)
+  methods: {
+    fetchCategoryList() {
+      getCategoryList().then((response) => {
+        const { data } = response;
+        this.categoryInfo = data;
+        console.log(123)
+        console.log(this.categoryInfo);
+      });
+    },
+    fetchProviderList() {
+      getProviderList().then((response) => {
+        const { data } = response;
+        this.providerInfo = data;
+        console.log(this.providerInfo);
+      });
+    },
+    messa(value) {
+      console.log(1111);
       const { code, message } = value;
+      //console.log(value)
+      if (code === 200) {
+        this.$message({
+          message: "修改成功",
+          type: "success",
+        });
+      } else {
+        this.$message.error("修改失败，" + message);
+      }
+    },
+    fetchGoodList() {
+      getGoodList().then((response) => {
+        const { data } = response;
+        this.goodInfo = data;
+        console.log(this.goodInfo);
+      });
+    },
+    AddGoods(formName) {
+      this.dialogFormVisible = false;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          //console.log(this.form)
+          addGood(this.form)
+            .then((value) => {
+              const { code, message } = value;
               //console.log(value)
               if (code === 200) {
                 this.$message({
                   message: "修改成功",
                   type: "success",
                 });
-                
               } else {
                 this.$message.error("修改失败，" + message);
               }
-    },
-    fetchGoodList(){
-      getGoodList().then(response => {
-        const {data} = response
-        this.goodInfo= data
-        console.log(this.goodInfo)
-      })
-    },
-    AddGoods(formName){
-      this.dialogFormVisible = false
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          //console.log(this.form)
-          addGood(this.form).then((value) => {
-            const {code, message} = value
-            //console.log(value)
-            if (code === 200) {
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              });
-            } else {
-              this.$message.error('修改失败，' + message)
-            }
-            this.$router.go(0)
-          }).catch(() => {
-            this.loading = false
-          })
+              this.$router.go(0);
+            })
+            .catch(() => {
+              this.loading = false;
+            });
         }
-      })
+      });
     },
-    headBack(){
-      console.log(this.$router)
-      this.$router.back()
+    headBack() {
+      console.log(this.$router);
+      this.$router.back();
     },
     search() {
-      console.log(this.searchKey)
-      if (this.searchKey.trim() === null || this.searchKey.trim() === '') {
+      console.log(this.searchKey);
+      if (this.searchKey.trim() === null || this.searchKey.trim() === "") {
         this.$message.info({
           showClose: true,
-          message: '请输入关键字搜索！',
-          type: 'warning'
-        })
-        return false
+          message: "请输入关键字搜索！",
+          type: "warning",
+        });
+        return false;
       }
-      this.$router.push({ path: '/search?key=' + this.searchKey })
-    }
-
-
-  }
-
-}
+      this.$router.push({ path: "/search?key=" + this.searchKey });
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 </style>
