@@ -6,7 +6,9 @@ import com.example.demo.common.api.ApiResult;
 import com.example.demo.model.dto.EditDTO;
 import com.example.demo.model.dto.LoginDTO;
 import com.example.demo.model.dto.RegisterDTO;
+import com.example.demo.model.entity.Role;
 import com.example.demo.model.entity.User;
+import com.example.demo.service.IRoleService;
 import com.example.demo.service.IUserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,9 @@ public class UserController extends BaseController{
 
     @Resource
     private IUserService iUserService;
+
+    @Resource
+    private IRoleService roleService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ApiResult<Map<String, String>> login(@Valid @RequestBody LoginDTO dto) {
@@ -76,5 +81,11 @@ public class UserController extends BaseController{
             return ApiResult.success(null,"删除成功");
         }
         return ApiResult.failed("删除失败");
+    }
+
+    @RequestMapping(value = "/role", method = RequestMethod.GET)
+    public ApiResult<List<Role>> getRole() {
+        List<Role> roles = roleService.getRoleList();
+        return ApiResult.success(roles);
     }
 }

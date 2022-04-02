@@ -46,10 +46,10 @@
             <el-form-item label="职责" prop="role">
               <el-select v-model="ruleForm.role" placeholder="Select">
                 <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item,key) in roleInfo"
+                    :key="key"
+                    :label="item.rolename"
+                    :value="item.roleid"
                 >
                 </el-option>
               </el-select>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import {userRegister} from '@/api/auth'
+import {userRegister,getRoleList} from '@/api/auth'
 
 export default {
   name: 'Register',
@@ -89,6 +89,7 @@ export default {
     }
     return {
       loading: false,
+      roleInfo:{},
       options: [
         {
           value: '1',
@@ -146,10 +147,20 @@ export default {
       }
     }
   },
-  mounted:{
+  mounted() {
+    this.fetchRole();
     
   },
   methods: {
+    fetchRole(){
+      getRoleList().then((response) => {
+        const { data } = response;
+        this.roleInfo = data;
+        console.log(123)
+        console.log(this.roleInfo);
+      });
+      
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

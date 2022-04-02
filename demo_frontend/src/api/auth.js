@@ -43,3 +43,11 @@ export function deleteUser(EditDTO) {
         data: EditDTO
     })
 }
+
+
+export function getRoleList(){
+    return request({
+        url: '/user/role',
+        method: 'get',
+    })
+}
