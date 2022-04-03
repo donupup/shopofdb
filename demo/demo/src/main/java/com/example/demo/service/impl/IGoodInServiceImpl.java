@@ -1,9 +1,14 @@
 package com.example.demo.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.GoodInMapper;
 import com.example.demo.mapper.GoodMapper;
 import com.example.demo.model.dto.GoodInAddDTO;
+import com.example.demo.model.dto.GoodInConditionDTO;
 import com.example.demo.model.dto.GoodInEditDTO;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.GoodIn;
@@ -42,5 +47,33 @@ public class IGoodInServiceImpl extends ServiceImpl<GoodInMapper, GoodIn> implem
         System.out.println(new Date());
         this.baseMapper.insert(g);
         return g;
+    }
+
+    @Override
+    public List<GoodIn> getCondition(GoodInConditionDTO dto) {
+        QueryWrapper<GoodIn> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodIn> lambda = wrapper.lambda();
+        if(!StrUtil.isBlank(dto.getGoodid()))
+        {
+            lambda.eq(GoodIn::getGoodId,dto.getGoodid());
+        }
+        if(!StrUtil.isBlank(dto.getPid()))
+        {
+            lambda.eq(GoodIn::getProviderId,dto.getPid());
+        }
+        if(!StrUtil.isBlank(dto.getUserid()))
+        {
+            lambda.eq(GoodIn::getUserId,dto.getUserid());
+        }
+        if(dto.getStarttime() != null)
+        {
+            lambda.ge(GoodIn::getGoodInTime,dto.getStarttime());
+        }
+        if(dto.getEndtime() != null)
+        {
+            lambda.le(GoodIn::getGoodInTime,dto.getEndtime());
+        }
+        List<GoodIn> gs = this.baseMapper.selectList(lambda);
+        return  gs;
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.dto.GoodInAddDTO;
+import com.example.demo.model.dto.GoodInConditionDTO;
 import com.example.demo.model.dto.GoodInEditDTO;
 import com.example.demo.model.entity.GoodIn;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,6 @@ public interface IGoodInService extends IService<GoodIn> {
     int executeEdit(GoodInEditDTO dto);
 
     GoodIn executeAdd(GoodInAddDTO dto);
+
+    List<GoodIn> getCondition(GoodInConditionDTO dto);
 }

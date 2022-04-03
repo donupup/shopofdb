@@ -1,13 +1,12 @@
 <template>
   <div>
-    <el-page-header @back="headBack" content="进货详情"> </el-page-header>
+    <el-page-header @back="headBack" content="销售详情"> </el-page-header>
 
-    <div style="text-align: right">
-      <!-- <import-excel /> -->
+    <!-- <div style="text-align: right">
       <el-button type="primary" @click="dialogFormVisible = true"
         >增加进货</el-button
       >
-    </div>
+    </div> -->
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <div>
@@ -36,12 +35,12 @@
           size="small"
           label-width="140px"
         >
-          <el-form-item label="供货商">
-            <el-select v-model="listQuery.pid" placeholder="供货商" clearable>
+          <el-form-item label="会员">
+            <el-select v-model="listQuery.vipid" placeholder="会员" clearable>
               <el-option
-                v-for="item in providerInfo"
+                v-for="item in vipInfo"
                 :key="item.id"
-                :label="item.pname"
+                :label="item.vname"
                 :value="item.id"
               >
               </el-option>
@@ -94,7 +93,7 @@
     <el-table
       ref="multipleTable"
       :data="
-        inportInfo.slice((this.page - 1) * this.size, this.page * this.size)
+        saleInfo.slice((this.page - 1) * this.size, this.page * this.size)
       "
       tooltip-effect="dark"
       style="width: 100%"
@@ -103,18 +102,18 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="150"> </el-table-column>
-      <el-table-column prop="goodName" label="商品名称" show-overflow-tooltip>
+      <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        prop="providerName"
-        label="供货商名称"
+        prop="vipname"
+        label="购货会员"
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column prop="userName" label="操作员" show-overflow-tooltip>
+      <el-table-column prop="username" label="操作员" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        prop="goodPrice"
+        prop="oneprice"
         label="单价"
         show-overflow-tooltip
         width="50"
@@ -127,7 +126,7 @@
         width="70"
       >
       </el-table-column>
-      <el-table-column prop="goodInTime" label="时间" show-overflow-tooltip>
+      <el-table-column prop="goodsoldtime" label="时间" show-overflow-tooltip>
       </el-table-column>
 
       <el-table-column prop="bio" label="备注" show-overflow-tooltip>
@@ -153,7 +152,7 @@
       :page-size="size"
       :page-sizes="pageSizes"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="this.inportInfo.length"
+      :total="this.saleInfo.length"
     >
     </el-pagination>
 
@@ -204,7 +203,7 @@
 
     <el-dialog title="进货信息" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="formEdit" ref="formEdit" :rules="rules">
-        <el-form-item label="进货数量" :label-width="formLabelWidth">
+        <el-form-item label="销售数量" :label-width="formLabelWidth">
           <el-input
             v-model="formEdit.num"
             autocomplete="off"
@@ -222,7 +221,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="EditInport('formEdit')"
+        <el-button type="primary" @click="EditSale('formEdit')"
           >确 定</el-button
         >
       </div>
@@ -238,16 +237,23 @@ import {
   addInport,
   deleteInport,
   editInport,
-  getConditionList,
 } from "@/api/inport";
 import { getGoodList } from "@/api/good";
 import { getCategoryList } from "@/api/category";
 import { getProviderList } from "@/api/provider";
 import { getUserId } from "@/utils/auth";
 import { userInfo } from "@/api/auth";
+import {
+  getGoodSaleList,
+  addSale,
+  deleteSale,
+  editSale,
+  getConditionList,
+} from "@/api/sale";
+import { getVipList } from "@/api/vip";
 const defaultListQuery = {
   goodid: null,
-  pid: null,
+  vipid: null,
   userid: null,
   starttime: null,
   endtime: null,
@@ -267,10 +273,12 @@ export default {
       searchKey: "",
       inportInfo: {},
       goodInfo: [],
+      saleInfo: [],
       goodofprovider: [],
       providerInfo: [],
       categoryInfo: {},
       userInfo: [],
+      vipInfo:[],
       form: {
         pid: "",
         goodid: "",
@@ -302,14 +310,31 @@ export default {
     };
   },
   mounted() {
-    this.fetchInportList();
+    this.fetchSaleList();
+    //this.fetchInportList();
     this.fetchCategoryList();
     this.fetchGoodList();
     this.fetchProviderList();
     this.fetchUserList();
     this.getUser();
+    this.fetchVipList();
   },
   methods: {
+      fetchVipList() {
+      getVipList().then((response) => {
+        const { data } = response;
+        this.vipInfo = data;
+        console.log(this.vipInfo);
+      });
+    },
+    fetchSaleList() {
+      getGoodSaleList().then((response) => {
+          console.log(response)
+        const { data } = response;
+        this.saleInfo = data;
+        console.log(this.saleInfo);
+      });
+    },
     fetchUserList() {
       userInfo().then((response) => {
         const { data } = response;
@@ -345,13 +370,13 @@ export default {
       console.log(this.listQuery);
       getConditionList(this.listQuery).then((response) => {
         const { data } = response;
-        this.inportInfo = data;
-        console.log(this.inportInfo);
+        this.saleInfo = data;
+        console.log(this.saleInfo);
       });
     },
     handleResetSearch() {
-      this.fetchInportList();
       this.listQuery = Object.assign({}, defaultListQuery);
+      this.getList();
     },
     handleSearchList() {
       this.listQuery.starttime = this.value1[0];
@@ -396,7 +421,7 @@ export default {
     },
     handleDelete(index, row) {
       console.log(row);
-      deleteInport(row)
+      deleteSale(row)
         .then((value) => {
           const { code, message } = value;
           //console.log(value)
@@ -440,14 +465,14 @@ export default {
         }
       });
     },
-    EditInport(formName) {
+    EditSale(formName) {
       this.dialogFormVisibleEdit = false;
       console.log(this.$refs[formName]);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           console.log(this.form);
-          editInport(this.formEdit)
+          editSale(this.formEdit)
             .then((value) => {
               const { code, message } = value;
               //console.log(value)

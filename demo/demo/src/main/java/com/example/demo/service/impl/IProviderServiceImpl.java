@@ -68,7 +68,7 @@ public class IProviderServiceImpl extends ServiceImpl<ProviderMapper, Provider> 
         }
         if(!StrUtil.isBlank(dto.getPphone()))
         {
-            lambda.eq(Provider::getPphone,dto.getPphone());
+            lambda.like(Provider::getPphone,dto.getPphone());
         }
         if(!StrUtil.isBlank(dto.getPaddress()))
         {

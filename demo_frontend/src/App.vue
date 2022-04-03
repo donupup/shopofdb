@@ -49,6 +49,7 @@ export default {
   left: 0;
   top: 60px;
   bottom: 0;
+  background-color: white;
 }
 .el-header {
   position: relative;

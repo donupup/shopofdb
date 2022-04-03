@@ -64,7 +64,16 @@ const routes = [{
       requireAuth: true,
       showInbreadcrumb: true
     }
-
+  },
+  {
+    path: '/sale/manage',
+    name: 'sale_manage',
+    component: () => import('@/views/good/saleManage'),
+    meta: {
+      title: '进货管理',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
   },
   {
     path: '/good/sale',

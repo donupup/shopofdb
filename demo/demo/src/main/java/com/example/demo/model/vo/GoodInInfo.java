@@ -23,5 +23,5 @@ public class GoodInInfo {
 
     private String bio;
 
-    private Date goodInTime;
+    private String goodInTime;
 }

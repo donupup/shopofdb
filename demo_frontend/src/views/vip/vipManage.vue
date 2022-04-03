@@ -122,7 +122,7 @@
     >
     </el-pagination>
 
-    <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
+    <el-dialog title="会员信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="会员姓名" :label-width="formLabelWidth">
           <el-input v-model="form.vname" autocomplete="off"></el-input>
