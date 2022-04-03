@@ -49,7 +49,7 @@
                     v-for="(item,key) in roleInfo"
                     :key="key"
                     :label="item.rolename"
-                    :value="item.roleid"
+                    :value="item.id"
                 >
                 </el-option>
               </el-select>

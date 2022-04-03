@@ -51,3 +51,11 @@ export function getRoleList(){
         method: 'get',
     })
 }
+
+export function getConditionList(UserConditionDTO){
+    return request({
+        url: '/user/condition',
+        method: 'post',
+        data: UserConditionDTO
+    })
+}

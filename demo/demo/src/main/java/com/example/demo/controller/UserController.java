@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
 import com.example.demo.model.dto.EditDTO;
 import com.example.demo.model.dto.LoginDTO;
 import com.example.demo.model.dto.RegisterDTO;
+import com.example.demo.model.dto.UserConditionDTO;
 import com.example.demo.model.entity.Role;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IRoleService;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +66,7 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     public ApiResult<Object> editInfo(@Valid @RequestBody EditDTO dto) {
-        //System.out.println(dto);
+        System.out.println(dto);
         int result = iUserService.executeEdit(dto);
         if (result <= 0) {
             return ApiResult.failed("修改失败");
@@ -87,5 +91,12 @@ public class UserController extends BaseController{
     public ApiResult<List<Role>> getRole() {
         List<Role> roles = roleService.getRoleList();
         return ApiResult.success(roles);
+    }
+
+    @RequestMapping(value = "/condition", method = RequestMethod.POST)
+    public ApiResult<List<User>> getConditionUser(@Valid @RequestBody UserConditionDTO dto) {
+        System.out.println(dto);
+        List<User> l =  iUserService.getCondition(dto);
+        return ApiResult.success(l);
     }
 }

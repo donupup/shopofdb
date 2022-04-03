@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.ProviderAddDTO;
-import com.example.demo.model.dto.ProviderEditDTO;
-import com.example.demo.model.dto.VipAddDTO;
-import com.example.demo.model.dto.VipEditDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Provider;
+import com.example.demo.model.entity.User;
 import com.example.demo.model.entity.Vip;
 import com.example.demo.service.IVipService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,5 +63,12 @@ public class VipController {
             return ApiResult.success(null,"编辑成功");
         }
         return ApiResult.failed("编辑失败");
+    }
+
+    @RequestMapping(value = "/condition", method = RequestMethod.POST)
+    public ApiResult<List<Vip>> getConditionVip(@Valid @RequestBody VipConditionDTO dto) {
+        System.out.println(dto);
+        List<Vip> l =  vipService.getCondition(dto);
+        return ApiResult.success(l);
     }
 }

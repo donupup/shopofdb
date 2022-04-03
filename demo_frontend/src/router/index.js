@@ -37,7 +37,7 @@ const routes = [{
   {
     path: '/employ/manage',
     name: 'employ_manage',
-    component: () => import('@/views/auth/Manage'),
+    component: () => import('@/views/auth/userManage'),
     meta: {
       title: '用户管理',
       requireAuth: true,
@@ -50,6 +50,17 @@ const routes = [{
     component: () => import('@/views/good/goodManage'),
     meta: {
       title: '货物管理',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+
+  },
+  {
+    path: '/inport/manage',
+    name: 'inport_manage',
+    component: () => import('@/views/inport/inportManage'),
+    meta: {
+      title: '进货管理',
       requireAuth: true,
       showInbreadcrumb: true
     }
@@ -141,7 +152,7 @@ const routes = [{
     name: 'vip_manage',
     component: () => import('@/views/vip/vipManage'),
     meta: {
-      title: '供应商管理',
+      title: '会员管理',
       requireAuth: true,
       showInbreadcrumb: true
     }

@@ -1,10 +1,15 @@
 package com.example.demo.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.ProviderMapper;
 import com.example.demo.model.dto.ProviderAddDTO;
+import com.example.demo.model.dto.ProviderConditionDTO;
 import com.example.demo.model.dto.ProviderEditDTO;
 import com.example.demo.model.entity.Provider;
+import com.example.demo.model.entity.Vip;
 import com.example.demo.service.IProviderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,5 +56,26 @@ public class IProviderServiceImpl extends ServiceImpl<ProviderMapper, Provider> 
     public String getNameById(String id) {
         Provider pro = this.baseMapper.selectById(id);
         return pro.getPname();
+    }
+
+    @Override
+    public List<Provider> getCondition(ProviderConditionDTO dto) {
+        QueryWrapper<Provider> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Provider> lambda = wrapper.lambda();
+        if(!StrUtil.isBlank(dto.getPname()))
+        {
+            lambda.like(Provider::getPname,dto.getPname());
+        }
+        if(!StrUtil.isBlank(dto.getPphone()))
+        {
+            lambda.eq(Provider::getPphone,dto.getPphone());
+        }
+        if(!StrUtil.isBlank(dto.getPaddress()))
+        {
+            lambda.like(Provider::getPaddress,dto.getPaddress());
+        }
+
+        List<Provider> ps = this.baseMapper.selectList(lambda);
+        return  ps;
     }
 }

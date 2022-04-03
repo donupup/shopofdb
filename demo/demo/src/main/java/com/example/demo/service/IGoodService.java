@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.dto.GoodAddDTO;
+import com.example.demo.model.dto.GoodConditionDTO;
 import com.example.demo.model.dto.GoodEditDTO;
 import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Good;
@@ -45,4 +46,8 @@ public interface IGoodService extends IService<Good> {
     List<Good> searchByKey(String key);
 
     Good findByName(String name);
+
+    List<Good> getCondition(GoodConditionDTO dto);
+
+    Good getById(String id);
 }

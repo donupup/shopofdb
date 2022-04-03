@@ -7,7 +7,7 @@
       <el-button type="primary" @click="dialogFormVisible = true"
         >增加商品</el-button
       >
-      <b-field position="is-centered">
+      <!-- <b-field position="is-centered">
         <b-input
           v-model="searchKey"
           class="s_input"
@@ -20,8 +20,90 @@
         <p class="control">
           <b-button class="is-info" @click="search()">检索 </b-button>
         </p>
-      </b-field>
+      </b-field> -->
     </div>
+    <el-divider></el-divider>
+    <el-card class="filter-container" shadow="never">
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right"
+          @click="handleSearchList()"
+          type="primary"
+          size="small"
+        >
+          查询结果
+        </el-button>
+        <el-button
+          style="float: right; margin-right: 15px"
+          @click="handleResetSearch()"
+          size="small"
+        >
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form
+          :inline="true"
+          :model="listQuery"
+          size="small"
+          label-width="140px"
+        >
+          <el-form-item label="商品名">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.goodname"
+              placeholder="名称"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="进价￥">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.pricein"
+              placeholder="价格"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="售价￥">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.pricesell"
+              placeholder="价格"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货商">
+            <el-select
+              v-model="listQuery.providerId"
+              placeholder="供货商"
+              clearable
+            >
+              <el-option
+                v-for="item in providerInfo"
+                :key="item.id"
+                :label="item.pname"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品种类">
+            <el-select
+              v-model="listQuery.categoryId"
+              placeholder="种类"
+              clearable
+            >
+              <el-option
+                v-for="item in categoryInfo"
+                :key="item.cid"
+                :label="item.cname"
+                :value="item.cid"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
 
     <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
@@ -42,12 +124,22 @@
         </el-form-item>
         <el-form-item label="选择种类" :label-width="formLabelWidth">
           <el-select v-model="form.categoryId" placeholder="请选择种类">
-            <el-option v-for="(item,index) in categoryInfo" :key="index" :label="item.cname" :value="item.cid"></el-option>
+            <el-option
+              v-for="(item, index) in categoryInfo"
+              :key="index"
+              :label="item.cname"
+              :value="item.cid"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择供货商" :label-width="formLabelWidth">
           <el-select v-model="form.providerId" placeholder="请选择供货商">
-            <el-option v-for="(item,index) in providerInfo" :key="index" :label="item.pname" :value="item.id"></el-option>
+            <el-option
+              v-for="(item, index) in providerInfo"
+              :key="index"
+              :label="item.pname"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="商品描述" :label-width="formLabelWidth">
@@ -71,33 +163,46 @@
       :key="index"
       :need-opera="true"
     ></goodList>
+    <!-- <el-table ref="goodInfo" :data="list" style="width: 100%" border>
+      <el-table-column v-for="(item, index) in goodInfo" :key="index">
+        <goodList :item="item"  :need-opera="true"></goodList>
+      </el-table-column>
+    </el-table> -->
   </div>
 </template>
 
 <script>
 import goodList from "@/components/good/goodList";
-import { getGoodList, addGood, editGood } from "@/api/good";
+import { getGoodList, addGood, editGood, getConditionList } from "@/api/good";
 import { getCategoryList } from "@/api/category";
 import { getProviderList } from "@/api/provider";
 import { searchByKeyword } from "@/api/search";
 import ImportExcel from "../../components/ImportExcel.vue";
+const defaultListQuery = {
+  goodname: null,
+  providerId: null,
+  categoryId: null,
+  pricein: null,
+  pricesell: null,
+};
 export default {
   name: "goodManage",
   components: { goodList, ImportExcel },
   data() {
     return {
+      listQuery: Object.assign({}, defaultListQuery),
       searchKey: "",
       goodInfo: {},
-      categoryInfo:{},
-      providerInfo:{},
+      categoryInfo: {},
+      providerInfo: {},
       form: {
         goodname: "",
         pricein: "",
         pricesell: "",
         storage: "",
         status: "",
-        categoryId:'',
-        providerId:'',
+        categoryId: "",
+        providerId: "",
         shelflife: "",
         bio: "",
       },
@@ -116,11 +221,26 @@ export default {
     this.fetchProviderList();
   },
   methods: {
+    getList() {
+      console.log(this.listQuery)
+      getConditionList(this.listQuery).then((response) => {
+        const { data } = response;
+        this.goodInfo = data;
+        console.log(this.goodInfo);
+      });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.fetchGoodList();
+    },
+    handleSearchList() {
+      this.getList();
+    },
     fetchCategoryList() {
       getCategoryList().then((response) => {
         const { data } = response;
         this.categoryInfo = data;
-        console.log(123)
+        console.log(123);
         console.log(this.categoryInfo);
       });
     },

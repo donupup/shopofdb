@@ -66,9 +66,10 @@
           职责
         </template>
         <!--      {{item.roleId}}-->
-        <el-tag size="small" v-if="item.roleId == '0'">店长</el-tag>
-        <el-tag size="small" v-else-if="item.roleId == '1'">管理员</el-tag>
-        <el-tag size="small" v-else="item.roleId == '2'">采购员</el-tag>
+      
+        <el-tag size="small" v-if="item.roleId == '1'">管理员</el-tag>
+        <el-tag size="small" v-else-if="item.roleId == '2'">采购员</el-tag>
+        <el-tag size="small" v-else-if="item.roleId == '3'">数据管理</el-tag>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
@@ -97,7 +98,7 @@
 </template>
 
 <script>
-import {editInfo,deleteUser} from "@/api/auth";
+import {editInfo,deleteUser,getRoleList} from "@/api/auth";
 
 export default {
   name: "List",
@@ -136,7 +137,19 @@ export default {
     }
 
   },
-
+  mounted() {
+    this.fetchRole();
+    
+  },
+  fetchRole(){
+      getRoleList().then((response) => {
+        const { data } = response;
+        this.roleInfo = data;
+        console.log(123)
+        console.log(this.roleInfo);
+      });
+      
+    },
   methods: {
     setDefault(){
       this.dialogFormVisible = true

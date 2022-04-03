@@ -1,14 +1,18 @@
 package com.example.demo.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.common.api.ApiResult;
 import com.example.demo.common.exception.ApiAsserts;
 import com.example.demo.jwt.JwtUtil;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.dto.EditDTO;
 import com.example.demo.model.dto.LoginDTO;
 import com.example.demo.model.dto.RegisterDTO;
+import com.example.demo.model.dto.UserConditionDTO;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IUserService;
 import com.example.demo.utils.MD5Utils;
@@ -106,5 +110,32 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         wrapper.eq(User::getUsername, username);
         int result = baseMapper.delete(wrapper);
         return result;
+    }
+
+    @Override
+    public List<User> getCondition(UserConditionDTO dto) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<User> lambda = wrapper.lambda();
+        if(!StrUtil.isBlank(dto.getUsername()))
+        {
+            lambda.like(User::getUsername,dto.getUsername());
+        }
+        if(!StrUtil.isBlank(dto.getStuNo()))
+        {
+            lambda.eq(User::getStuNo,dto.getStuNo());
+        }
+        if(!StrUtil.isBlank(dto.getRole()))
+        {
+            lambda.eq(User::getRoleId,dto.getRole());
+        }
+
+        List<User> users = usermapper.selectList(lambda);
+        return  users;
+
+    }
+
+    @Override
+    public User getUserById(String id) {
+        return this.baseMapper.selectById(id);
     }
 }

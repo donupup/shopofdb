@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.dto.EditDTO;
 import com.example.demo.model.dto.LoginDTO;
 import com.example.demo.model.dto.RegisterDTO;
+import com.example.demo.model.dto.UserConditionDTO;
 import com.example.demo.model.entity.User;
 
 import java.util.List;
@@ -24,4 +25,8 @@ public interface IUserService extends IService<User> {
     int executeEdit(EditDTO dto);
 
     int executeDelete(String username);
+
+    List<User> getCondition(UserConditionDTO dto);
+
+    User getUserById(String id);
 }

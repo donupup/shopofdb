@@ -80,6 +80,25 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!--hutool jar-->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>5.0.7</version>
+		</dependency>
+
+		<!--考虑到Hutool的非强制依赖性，因此zxing需要用户自行引入-->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
 
 		<!--bean validator-->
 		<dependency>

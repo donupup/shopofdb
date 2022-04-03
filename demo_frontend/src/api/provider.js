@@ -30,3 +30,11 @@ export function editProvider(ProviderEditDTO) {
         data: ProviderEditDTO
     })
 }
+
+export function getConditionList(ProviderConditionDTO) {
+    return request({
+        url: '/provider/condition',
+        method: 'post',
+        data: ProviderConditionDTO
+    })
+}

@@ -9,15 +9,68 @@
       >
     </div>
     <el-divider></el-divider>
+    <el-card class="filter-container" shadow="never">
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right"
+          @click="handleSearchList()"
+          type="primary"
+          size="small"
+        >
+          查询结果
+        </el-button>
+        <el-button
+          style="float: right; margin-right: 15px"
+          @click="handleResetSearch()"
+          size="small"
+        >
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form
+          :inline="true"
+          :model="listQuery"
+          size="small"
+          label-width="140px"
+        >
+          <el-form-item label="供货商名称">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.pname"
+              placeholder="用户名"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="供货商地址：">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.paddress"
+              placeholder="地址"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="联系方式">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.pphone"
+              placeholder="电话号"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
+    <el-divider></el-divider>
     <el-table
       ref="multipleTable"
-      :data="providerInfo"
+      :data="providerInfo.slice((this.page - 1) * this.size, this.page * this.size)"
       tooltip-effect="dark"
       style="width: 100%"
+      border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="id" label="ID" width="120"> </el-table-column>
+      <el-table-column prop="id" label="ID" width="200"> </el-table-column>
       <el-table-column prop="pname" label="供货商名称" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
@@ -48,6 +101,16 @@
         </template>
       </el-table-column>
     </el-table>
+          <el-pagination
+      @size-change="sizeChange"
+      @current-change="currentChange"
+      :current-page="page"
+      :page-size="size"
+      :page-sizes="pageSizes"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="this.providerInfo.length"
+    >
+    </el-pagination>
 
     <el-dialog title="供应商信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
@@ -97,12 +160,23 @@
 
 <script>
 import goodList from "@/components/good/goodList";
-import { getProviderList, addProvider, deleteProvider,editProvider } from "@/api/provider";
+import { getProviderList, addProvider, deleteProvider,editProvider,getConditionList } from "@/api/provider";
+const defaultListQuery = {
+  pname: null,
+  paddress: null,
+  pphone: null,
+};
 export default {
   name: "providerManage",
   components: { goodList },
   data() {
     return {
+       page: 1, //第几页
+      size: 3, //一页多少条
+      total: 0, //总条目数
+      pageSizes: [3, 5, 10, 20, 50, 100, 200, 300, 400, 500, 1000], //可选择的一页多少条
+      tableData: [], //表格绑定的数据
+      listQuery: Object.assign({}, defaultListQuery),
       searchKey: "",
       providerInfo: {},
       form: {
@@ -140,6 +214,25 @@ export default {
     this.fetchProviderList();
   },
   methods: {
+    getList() {
+      console.log(this.listQuery)
+      getConditionList(this.listQuery).then((response) => {
+        const { data } = response;
+        this.providerInfo = data;
+        console.log(this.providerInfo);
+      });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.fetchProviderList()
+    },
+    handleSearchList() {;
+      this.getList();
+    },
+    headBack() {
+      console.log(this.$router);
+      this.$router.back();
+    },
     fetchProviderList() {
       getProviderList().then((response) => {
         const { data } = response;
@@ -246,6 +339,35 @@ export default {
             });
         }
       });
+    },
+     getTabelData() {
+      //allData为全部数据
+      this.tableData = this.info.slice(
+        (this.page - 1) * this.size,
+        this.page * this.size
+      );
+      this.total = this.info.length;
+    },
+
+    //获取表格数据，自行分页（splice）
+    getTabelData2() {
+      let data = JSON.parse(JSON.stringify(this.info));
+      console.log(data);
+      this.tableData = data.splice((this.page - 1) * this.size, this.size);
+      this.total = this.info.length;
+    },
+    //page改变时的回调函数，参数为当前页码
+    currentChange(val) {
+      console.log("翻页，当前为第几页", val);
+      this.page = val;
+      this.getTabelData2();
+    },
+    //size改变时回调的函数，参数为当前的size
+    sizeChange(val) {
+      console.log("改变每页多少条，当前一页多少条数据", val);
+      this.size = val;
+      this.page = 1;
+      this.getTabelData2();
     },
   },
 };

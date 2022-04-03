@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <el-container style="height: 20%">
-      <el-header>
+      <el-header style="height: 58px">
         <Header></Header>
       </el-header>
       <el-container>

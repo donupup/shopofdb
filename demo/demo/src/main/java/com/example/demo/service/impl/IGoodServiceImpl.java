@@ -1,16 +1,20 @@
 package com.example.demo.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.CategoryMapper;
 import com.example.demo.mapper.GoodMapper;
 import com.example.demo.mapper.SaleGoodMapper;
 import com.example.demo.model.dto.GoodAddDTO;
+import com.example.demo.model.dto.GoodConditionDTO;
 import com.example.demo.model.dto.GoodEditDTO;
 import com.example.demo.model.dto.goodSaleDTO;
 import com.example.demo.model.entity.Category;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.SaleGood;
+import com.example.demo.model.entity.Vip;
 import com.example.demo.model.vo.InGood;
 import com.example.demo.model.vo.OutGood;
 import com.example.demo.service.IGoodService;
@@ -108,6 +112,41 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
 //        Category c = Category.builder().cid(cat.getCid()).cname(cat.getCname()).availableNum(cat.getAvailableNum() + 1).build();
 //        this.categoryMapper.updateById(c);
         return good;
+    }
+
+    @Override
+    public List<Good> getCondition(GoodConditionDTO dto) {
+        QueryWrapper<Good> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Good> lambda = wrapper.lambda();
+        if(!StrUtil.isBlank(dto.getGoodname()))
+        {
+            lambda.like(Good::getGoodname,dto.getGoodname());
+        }
+        if(!StrUtil.isBlank(dto.getCategoryId()))
+        {
+            lambda.eq(Good::getCategoryId,dto.getCategoryId());
+        }
+        if(!StrUtil.isBlank(dto.getProviderId()))
+        {
+            lambda.eq(Good::getProviderId,dto.getProviderId());
+        }
+        if(!StrUtil.isBlank(dto.getPricein()))
+        {
+            lambda.eq(Good::getPricein,dto.getPricein());
+        }
+        if(!StrUtil.isBlank(dto.getPricesell()))
+        {
+            lambda.eq(Good::getPricesell,dto.getPricesell());
+        }
+
+        List<Good> gs = this.baseMapper.selectList(lambda);
+        return  gs;
+    }
+
+
+    @Override
+    public Good getById(String id) {
+        return this.baseMapper.selectById(id);
     }
 
     @Override

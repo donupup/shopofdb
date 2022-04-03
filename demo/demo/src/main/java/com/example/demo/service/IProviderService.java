@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.dto.ProviderAddDTO;
+import com.example.demo.model.dto.ProviderConditionDTO;
 import com.example.demo.model.dto.ProviderEditDTO;
 import com.example.demo.model.entity.Provider;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,7 @@ public interface IProviderService extends IService<Provider> {
     int executeEdit(ProviderEditDTO dto);
 
     String getNameById(String id);
+
+    List<Provider> getCondition(ProviderConditionDTO dto);
 }
 

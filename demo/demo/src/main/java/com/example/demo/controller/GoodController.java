@@ -6,10 +6,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.GoodAddDTO;
-import com.example.demo.model.dto.GoodEditDTO;
-import com.example.demo.model.dto.goodSaleDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Good;
+import com.example.demo.model.entity.Provider;
 import com.example.demo.model.entity.SaleGood;
 import com.example.demo.model.entity.User;
 import com.example.demo.model.vo.GoodInfo;
@@ -95,6 +94,32 @@ public class GoodController extends  BaseController{
         Map<String, Object> map = new HashMap<>(16);
         map.put("good", good);
         return ApiResult.success(map);
+    }
+
+    @RequestMapping(value = "/condition", method = RequestMethod.POST)
+    public ApiResult<List<GoodInfo>> getConditionUser(@Valid @RequestBody GoodConditionDTO dto) {
+        System.out.println(dto);
+        List<Good> l =  igoodService.getCondition(dto);
+        List<GoodInfo> goodInfo = new ArrayList<>();
+        for (Good g:l
+        ) {
+            String pname = providerService.getNameById(g.getProviderId());
+            String cname = categoryService.getNameById(g.getCategoryId());
+            GoodInfo gi = GoodInfo.builder().goodname(g.getGoodname())
+                    .id(g.getId())
+                    .categoryName(cname)
+                    .pricein(g.getPricein())
+                    .pricesell(g.getPricesell())
+                    .salenum(g.getSalenum())
+                    .storage(g.getStorage())
+                    .shelflife(g.getShelflife())
+                    .bio(g.getBio())
+                    .createTime(g.getCreateTime())
+                    .modifyTime(g.getModifyTime())
+                    .ProviderNmae(pname).build();
+            goodInfo.add(gi);
+        }
+        return ApiResult.success(goodInfo);
     }
 
     @RequestMapping(value = "/sale",method = RequestMethod.POST)

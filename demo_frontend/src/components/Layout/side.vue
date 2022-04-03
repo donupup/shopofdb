@@ -16,16 +16,32 @@
           <router-link to="/good/manage"> 商品信息管理 </router-link>
         </el-menu-item>
         <el-menu-item index="1-2">
-          <router-link to='/vip/manage'> 会员信息管理 </router-link>
+          <router-link to="/vip/manage"> 会员信息管理 </router-link>
         </el-menu-item>
         <el-menu-item index="1-3">
-          <router-link to="/provider/manage"> 供货商信息管理 </router-link></el-menu-item>
-        <el-menu-item index="1-4">
-             <router-link to="/employ/manage"> 职工信息管理 </router-link></el-menu-item>
+          <router-link to="/provider/manage">
+            供货商信息管理
+          </router-link></el-menu-item
+        >
+        <el-submenu index="1-4">
+          <template slot="title">职工信息管理</template>
+          <el-menu-item index="1-4-1">
+            <router-link to="/employ/manage">
+              职工信息详情
+            </router-link></el-menu-item
+          >
+          <el-menu-item index="1-4-2">
+            <router-link to="/employ/register">
+              职工注册
+            </router-link></el-menu-item
+          >
+        </el-submenu>
       </el-submenu>
       <el-menu-item index="2">
         <i class="el-icon-menu"></i>
-        <span slot="title">进货管理</span>
+        <router-link to="/inport/manage">
+        进货管理
+            </router-link>
       </el-menu-item>
       <el-menu-item index="3">
         <i class="el-icon-document"></i>

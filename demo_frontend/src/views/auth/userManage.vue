@@ -1,12 +1,7 @@
 <template>
   <div>
-    <el-page-header @back="headBack" content="会员详情"> </el-page-header>
-    <div style="text-align: right">
-      <!-- <import-excel /> -->
-      <el-button type="primary" @click="dialogFormVisible = true"
-        >增加会员</el-button
-      >
-    </div>
+    <el-page-header @back="headBack" content="职工详情"> </el-page-header>
+
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <div>
@@ -35,67 +30,64 @@
           size="small"
           label-width="140px"
         >
-          <el-form-item label="会员用户名">
+          <el-form-item label="职工用户名">
             <el-input
               style="width: 203px"
-              v-model="listQuery.vname"
-              placeholder="用户名"
+              v-model="listQuery.username"
+              placeholder="职工用户名"
             ></el-input>
           </el-form-item>
-          <el-form-item label="会员卡号：">
+          <el-form-item label="职工工号：">
             <el-input
               style="width: 203px"
-              v-model="listQuery.id"
-              placeholder="卡号"
+              v-model="listQuery.stuNo"
+              placeholder="工号"
             ></el-input>
           </el-form-item>
-          <el-form-item label="会员电话：">
-            <el-input
-              style="width: 203px"
-              v-model="listQuery.vphone"
-              placeholder="电话号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="性别">
+          <el-form-item label="职工角色">
             <el-select
-              v-model="listQuery.vsex"
+              v-model="listQuery.role"
               placeholder="请选择角色"
               clearable
             >
-              <el-option :label="'男'" :value="'男'"> </el-option>
-              <el-option :label="'女'" :value="'女'"> </el-option>
+              <el-option
+                v-for="item in roleInfo"
+                :key="item.id"
+                :label="item.rolename"
+                :value="item.id"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
-
-    <el-divider></el-divider>
     <el-table
       ref="multipleTable"
-      :data="vipInfo.slice((this.page - 1) * this.size, this.page * this.size)"
+      :data="userInfo.slice((this.page - 1) * this.size, this.page * this.size)"
       tooltip-effect="dark"
       style="width: 100%"
       border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="id" label="会员卡号" width="200">
+      <el-table-column prop="id" label="职工ID" width="200"> </el-table-column>
+      <el-table-column prop="username" label="职工用户名" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="vname" label="会员姓名" show-overflow-tooltip>
+      <el-table-column prop="alias" label="职工姓名" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="vsex" label="性别" show-overflow-tooltip>
+      <el-table-column prop="stuNo" label="职工工号" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="vphone" label="联系方式" show-overflow-tooltip>
+      <el-table-column prop="mobile" label="职工电话" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column
-        prop="vaddress"
-        label="注册地址"
+      <el-table-column prop="bio" label="职工备注" show-overflow-tooltip>
+      </el-table-column>
+      <!-- <el-table-column
+        prop="vbalance"
+        label="会员卡余额"
         show-overflow-tooltip
       >
-      </el-table-column>
-      <el-table-column prop="vbalance" label="会员卡余额" show-overflow-tooltip>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -111,76 +103,62 @@
       </el-table-column>
     </el-table>
 
-      <el-pagination
+
+          <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="page"
       :page-size="size"
       :page-sizes="pageSizes"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="this.vipInfo.length"
+      :total="this.userInfo.length"
     >
     </el-pagination>
 
-    <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
-      <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="会员姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.vname" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="会员性别" :label-width="formLabelWidth">
-          <el-select v-model="form.vsex" placeholder="请选择性别">
-            <el-option label="男" :value="'男'"></el-option>
-            <el-option label="女" :value="'女'"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="会员联系方式" :label-width="formLabelWidth">
-          <el-input v-model="form.vphone" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="会员注册地址" :label-width="formLabelWidth">
-          <el-input v-model="form.vaddress" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="会员卡余额" :label-width="formLabelWidth">
-          <el-input v-model="form.vbalance" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="AddVip('form')">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="会员信息" :visible.sync="dialogFormVisibleEdit">
+    <el-dialog title="职工信息" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="formEdit" ref="formEdit" :rules="rules">
-        <el-form-item label="会员姓名" :label-width="formLabelWidth">
+        <el-form-item label="职工用户名" :label-width="formLabelWidth">
           <el-input
-            v-model="formEdit.vname"
+            v-model="formEdit.username"
             autocomplete="off"
             :placeholder="rowItem.vname"
           ></el-input>
         </el-form-item>
-        <el-form-item label="会员性别" :label-width="formLabelWidth">
-          <el-select v-model="formEdit.vsex" placeholder="请选择性别">
-            <el-option label="男" :value="'男'"></el-option>
-            <el-option label="女" :value="'女'"></el-option>
+        <el-form-item label="职责" :label-width="formLabelWidth">
+          <el-select v-model="formEdit.role" placeholder="Select">
+            <el-option
+              v-for="(item, key) in roleInfo"
+              :key="key"
+              :label="item.rolename"
+              :value="item.id"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="会员联系方式" :label-width="formLabelWidth">
+        <el-form-item label="职工联系方式" :label-width="formLabelWidth">
           <el-input
-            v-model="formEdit.vphone"
+            v-model="formEdit.mobile"
             autocomplete="off"
             :placeholder="rowItem.vphone"
           ></el-input>
         </el-form-item>
-        <el-form-item label="会员注册地址" :label-width="formLabelWidth">
+        <el-form-item label="职工姓名" :label-width="formLabelWidth">
           <el-input
-            v-model="formEdit.vaddress"
+            v-model="formEdit.alias"
             autocomplete="off"
             :placeholder="rowItem.vaddress"
           ></el-input>
         </el-form-item>
-        <el-form-item label="会员卡余额" :label-width="formLabelWidth">
+        <el-form-item label="职工工号" :label-width="formLabelWidth">
           <el-input
-            v-model="formEdit.vbalance"
+            v-model="formEdit.stuNo"
+            autocomplete="off"
+            :placeholder="rowItem.vbalance"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="职工邮箱" :label-width="formLabelWidth">
+          <el-input
+            v-model="formEdit.email"
             autocomplete="off"
             :placeholder="rowItem.vbalance"
           ></el-input>
@@ -188,7 +166,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="EditVip('formEdit')">确 定</el-button>
+        <el-button type="primary" @click="editUserInfo('formEdit')"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -197,42 +177,33 @@
 </template>
 
 <script>
-import goodList from "@/components/good/goodList";
-import { getVipList, addVip, deleteVip, editVip,getConditionList } from "@/api/vip";
-
+import { userInfo } from "@/api/auth";
+import { editInfo, deleteUser, getRoleList, getConditionList } from "@/api/auth";
 const defaultListQuery = {
-  id: null,
-  vname: null,
-  vsex: null,
-  vphone: null,
+  username: null,
+  stuNo: null,
+  role: null,
 };
 export default {
-  name: "vipManage",
-  components: { goodList },
+  name: "userManage",
   data() {
     return {
-       page: 1, //第几页
+         page: 1, //第几页
       size: 3, //一页多少条
       total: 0, //总条目数
       pageSizes: [3, 5, 10, 20, 50, 100, 200, 300, 400, 500, 1000], //可选择的一页多少条
       tableData: [], //表格绑定的数据
       listQuery: Object.assign({}, defaultListQuery),
       searchKey: "",
-      vipInfo: {},
-      form: {
-        vname: "",
-        vsex: "",
-        vphone: "",
-        vaddress: "",
-        vbalance: "",
-      },
+      userInfo: {},
+      roleInfo: {},
       formEdit: {
-        id: "",
-        vname: "",
-        vsex: "",
-        vphone: "",
-        vaddress: "",
-        vbalance: "",
+        role: "",
+        username: "",
+        stuNo: "",
+        mobile: "",
+        alias: "",
+        email: "",
       },
       multipleSelection: [],
       rules: {
@@ -254,34 +225,42 @@ export default {
     };
   },
   mounted() {
-    this.fetchVipList();
+    this.fetchUserList();
+    this.fetchRole();
   },
   methods: {
     getList() {
-      console.log(this.listQuery)
       getConditionList(this.listQuery).then((response) => {
         const { data } = response;
-        this.vipInfo = data;
-        console.log(this.vipInfo);
+        this.userInfo = data;
+        console.log(this.userInfo);
       });
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);
-      this.fetchVipList();
+      this.fetchUserList();
     },
-    handleSearchList() {
+    handleSearchList() {;
       this.getList();
-    },
-    fetchVipList() {
-      getVipList().then((response) => {
-        const { data } = response;
-        this.vipInfo = data;
-        console.log(this.vipInfo);
-      });
     },
     headBack() {
       console.log(this.$router);
       this.$router.back();
+    },
+    fetchUserList() {
+      userInfo().then((response) => {
+        const { data } = response;
+        this.userInfo = data;
+        console.log(this.userInfo);
+      });
+    },
+    fetchRole() {
+      getRoleList().then((response) => {
+        const { data } = response;
+        this.roleInfo = data;
+        console.log(123);
+        console.log(this.roleInfo);
+      });
     },
     toggleSelection(rows) {
       if (rows) {
@@ -300,21 +279,20 @@ export default {
       this.rowItem = row;
       //console.log(this.multipleSelection);
       //console.log(this.rowItem)
-      this.$set(this.formEdit, "id", this.rowItem["id"]);
-      this.$set(this.formEdit, "vname", this.rowItem["vname"]);
-      this.$set(this.formEdit, "vphone", this.rowItem["vphone"]);
-      this.$set(this.formEdit, "vaddress", this.rowItem["vaddress"]);
-      this.$set(this.formEdit, "vsex", this.rowItem["vsex"]);
-      this.$set(this.formEdit, "vbalance", this.rowItem["vbalance"]);
-      console.log(this.formEdit);
+      this.$set(this.formEdit, "role", this.rowItem["roleId"]);
+      this.$set(this.formEdit, "username", this.rowItem["username"]);
+      this.$set(this.formEdit, "mobile", this.rowItem["mobile"]);
+      this.$set(this.formEdit, "stuNo", this.rowItem["stuNo"]);
+      this.$set(this.formEdit, "alias", this.rowItem["alias"]);
+      this.$set(this.formEdit, "email", this.rowItem["email"]);
       this.dialogFormVisibleEdit = true;
     },
     handleDelete(index, row) {
       console.log(row);
-      deleteVip(row)
+      deleteUser(row["username"])
         .then((value) => {
           const { code, message } = value;
-          //console.log(value)
+          console.log(value);
           if (code === 200) {
             this.$message({
               message: "删除成功",
@@ -329,43 +307,17 @@ export default {
           this.loading = false;
         });
     },
-    AddVip(formName) {
+    editUserInfo(formName) {
       this.dialogFormVisible = false;
+      //this.$set(this.form,'username',this.item.username)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           console.log(this.form);
-          addVip(this.form)
+          editInfo(this.formEdit)
             .then((value) => {
               const { code, message } = value;
-              //console.log(value)
-              if (code === 200) {
-                this.$message({
-                  message: "添加成功",
-                  type: "success",
-                });
-              } else {
-                this.$message.error("添加失败，" + message);
-              }
-              this.$router.go(0);
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        }
-      });
-    },
-    EditVip(formName) {
-      this.dialogFormVisibleEdit = false;
-      console.log(this.$refs[formName]);
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          console.log(this.form);
-          editVip(this.formEdit)
-            .then((value) => {
-              const { code, message } = value;
-              //console.log(value)
+              console.log(value);
               if (code === 200) {
                 this.$message({
                   message: "修改成功",
@@ -411,7 +363,6 @@ export default {
       this.page = 1;
       this.getTabelData2();
     },
-
   },
 };
 </script>

@@ -67,3 +67,11 @@ export function editGoodByFile(exceldata){
         data:exceldata
     })
 }
+
+export function getConditionList(GoodConditionDTO){
+    return request({
+        url: '/good/condition',
+        method: 'post',
+        data: GoodConditionDTO
+    })
+}

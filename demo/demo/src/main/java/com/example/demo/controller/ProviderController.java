@@ -2,12 +2,10 @@ package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.GoodAddDTO;
-import com.example.demo.model.dto.GoodEditDTO;
-import com.example.demo.model.dto.ProviderAddDTO;
-import com.example.demo.model.dto.ProviderEditDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.Provider;
+import com.example.demo.model.entity.Vip;
 import com.example.demo.service.IProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,6 +64,13 @@ public class ProviderController {
             return ApiResult.success(null,"编辑成功");
         }
         return ApiResult.failed("编辑失败");
+    }
+
+    @RequestMapping(value = "/condition", method = RequestMethod.POST)
+    public ApiResult<List<Provider>> getConditionProvider(@Valid @RequestBody ProviderConditionDTO dto) {
+        System.out.println(dto);
+        List<Provider> l =  providerService.getCondition(dto);
+        return ApiResult.success(l);
     }
 }
 

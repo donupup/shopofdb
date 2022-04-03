@@ -88,7 +88,7 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-date"></i>
-          进货商
+          供货商
         </template>
         {{ item.providerNmae }}
       </el-descriptions-item>

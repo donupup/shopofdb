@@ -30,3 +30,11 @@ export function editVip(VipEditDTO) {
         data: VipEditDTO
     })
 }
+
+export function getConditionList(VipConditionDTO) {
+    return request({
+        url: '/vip/condition',
+        method: 'post',
+        data: VipConditionDTO
+    })
+}
