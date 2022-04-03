@@ -48,7 +48,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="商品">
-            <el-select
+            <!-- <el-select
               v-model="listQuery.goodid"
               placeholder="商品名"
               clearable
@@ -60,7 +60,12 @@
                 :value="item.id"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
+             <el-input
+              style="width: 203px"
+              v-model="listQuery.goodid"
+              placeholder="商品名"
+            ></el-input>
           </el-form-item>
           <el-form-item label="用户">
             <el-select

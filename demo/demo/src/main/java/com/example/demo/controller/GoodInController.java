@@ -59,6 +59,9 @@ public class GoodInController {
     public ApiResult<Object> deleteInport(@Valid @RequestBody GoodInInfo gi) {
 
         String id = gi.getId();
+        Good g = this.igoodService.getById(this.goodInService.getById(gi.getId()).getGoodId());
+        g.setStorage(g.getStorage() - gi.getNum());
+        this.igoodService.updateById(g);
         int result = goodInService.executeDelete(id);
         if(result > 0) {
             return ApiResult.success(null,"删除成功");

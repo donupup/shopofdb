@@ -1,12 +1,13 @@
 package com.example.demo.controller;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.GoodInConditionDTO;
-import com.example.demo.model.dto.GoodInEditDTO;
-import com.example.demo.model.dto.GoodSaleConditionDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Good;
+import com.example.demo.model.entity.GoodIn;
 import com.example.demo.model.entity.GoodSale;
+import com.example.demo.model.entity.Vip;
 import com.example.demo.model.vo.GoodInInfo;
 import com.example.demo.model.vo.GoodSaleInfo;
 import com.example.demo.service.*;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/goodsale")
@@ -93,6 +96,9 @@ public class GoodSaleController {
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ApiResult<Object> deleteSale(@Valid @RequestBody GoodSaleInfo gi) {
+        Good g = this.igoodService.getById(this.goodSaleService.getById(gi.getId()).getGoodId());
+        g.setStorage(g.getStorage() + gi.getNum());
+        this.igoodService.updateById(g);
         String id = gi.getId();
         System.out.println(id);
         int res = goodSaleService.executeDelete(id);
@@ -119,5 +125,27 @@ public class GoodSaleController {
             res.add(gsi);
         }
         return ApiResult.success(res);
+    }
+
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    public  ApiResult<Object> addSale(@Valid @RequestBody SaleADDDTO dto){
+
+        String vid = dto.getVipid();
+        Vip v = vipService.getBaseMapper().selectById(vid);
+        if (ObjectUtils.isEmpty(v)) {
+            return ApiResult.failed("添加失败,请输入正确的ID");
+        }
+        GoodSale g = goodSaleService.executeAdd(dto);
+        Good good = igoodService.getById(dto.getGoodid());
+        int old_storage = good.getStorage();
+        good.setStorage(old_storage - dto.getNum());
+        igoodService.updateById(good);
+        if (ObjectUtils.isEmpty(g)) {
+            return ApiResult.failed("添加失败");
+        }
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("goodSale", g);
+        return ApiResult.success(map);
+
     }
 }

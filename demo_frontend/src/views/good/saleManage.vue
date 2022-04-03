@@ -2,11 +2,12 @@
   <div>
     <el-page-header @back="headBack" content="销售详情"> </el-page-header>
 
-    <!-- <div style="text-align: right">
+    <div style="text-align: right">
       <el-button type="primary" @click="dialogFormVisible = true"
-        >增加进货</el-button
+        >增加销售记录</el-button
       >
-    </div> -->
+    </div>
+
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <div>
@@ -36,7 +37,7 @@
           label-width="140px"
         >
           <el-form-item label="会员">
-            <el-select v-model="listQuery.vipid" placeholder="会员" clearable>
+            <!-- <el-select v-model="listQuery.vipid" placeholder="会员" clearable>
               <el-option
                 v-for="item in vipInfo"
                 :key="item.id"
@@ -44,10 +45,15 @@
                 :value="item.id"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.vipid"
+              placeholder="姓名"
+            ></el-input>
           </el-form-item>
           <el-form-item label="商品">
-            <el-select
+            <!-- <el-select
               v-model="listQuery.goodid"
               placeholder="商品名"
               clearable
@@ -59,7 +65,12 @@
                 :value="item.id"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.goodid"
+              placeholder="商品名"
+            ></el-input>
           </el-form-item>
           <el-form-item label="用户">
             <el-select
@@ -92,9 +103,7 @@
     <el-divider></el-divider>
     <el-table
       ref="multipleTable"
-      :data="
-        saleInfo.slice((this.page - 1) * this.size, this.page * this.size)
-      "
+      :data="saleInfo.slice((this.page - 1) * this.size, this.page * this.size)"
       tooltip-effect="dark"
       style="width: 100%"
       border
@@ -104,11 +113,7 @@
       <el-table-column prop="id" label="ID" width="150"> </el-table-column>
       <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column
-        prop="vipname"
-        label="购货会员"
-        show-overflow-tooltip
-      >
+      <el-table-column prop="vipname" label="购货会员" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="username" label="操作员" show-overflow-tooltip>
       </el-table-column>
@@ -119,12 +124,7 @@
         width="50"
       >
       </el-table-column>
-      <el-table-column
-        prop="num"
-        label="数量"
-        show-overflow-tooltip
-        width="70"
-      >
+      <el-table-column prop="num" label="数量" show-overflow-tooltip width="70">
       </el-table-column>
       <el-table-column prop="goodsoldtime" label="时间" show-overflow-tooltip>
       </el-table-column>
@@ -158,31 +158,30 @@
 
     <el-dialog title="进货信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="供应商" :label-width="formLabelWidth">
-          <el-select
-            v-model="form.pid"
-            placeholder="请选择供货商"
-            @change="selectTrigger(form.pid)"
-            clearable
-          >
-            <el-option
-              v-for="(item, index) in providerInfo"
-              :key="index"
-              :label="item.pname"
-              :value="item.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="商品" :label-width="formLabelWidth">
           <el-select v-model="form.goodid" placeholder="请选择商品" clearable>
             <el-option
-              v-for="(item, index) in goodofprovider"
+              v-for="(item, index) in goodInfo"
               :key="index"
               :label="item.goodname"
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="会员" :label-width="formLabelWidth">
+          <!-- <el-select v-model="form.vipid" placeholder="请选择会员" clearable>
+            <el-option
+              v-for="(item, index) in vipInfo"
+              :key="index"
+              :label="item.vname"
+              :value="item.id"
+            ></el-option>
+          </el-select> -->
+          <el-input
+              style="width: 203px"
+              v-model="form.vipid"
+              placeholder="请输入会员卡号"
+            ></el-input>
         </el-form-item>
         <el-form-item label="数量" :label-width="formLabelWidth">
           <el-input v-model="form.num" autocomplete="off"></el-input>
@@ -197,7 +196,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="AddInport('form')">确 定</el-button>
+        <el-button type="primary" @click="AddSale('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -278,9 +277,9 @@ export default {
       providerInfo: [],
       categoryInfo: {},
       userInfo: [],
-      vipInfo:[],
+      vipInfo: [],
       form: {
-        pid: "",
+        vipid: "",
         goodid: "",
         userid: "",
         num: "",
@@ -320,7 +319,7 @@ export default {
     this.fetchVipList();
   },
   methods: {
-      fetchVipList() {
+    fetchVipList() {
       getVipList().then((response) => {
         const { data } = response;
         this.vipInfo = data;
@@ -329,7 +328,7 @@ export default {
     },
     fetchSaleList() {
       getGoodSaleList().then((response) => {
-          console.log(response)
+        console.log(response);
         const { data } = response;
         this.saleInfo = data;
         console.log(this.saleInfo);
@@ -439,13 +438,13 @@ export default {
           this.loading = false;
         });
     },
-    AddInport(formName) {
+    AddSale(formName) {
       this.dialogFormVisible = false;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           console.log(this.form);
-          addInport(this.form)
+          addSale(this.form)
             .then((value) => {
               const { code, message } = value;
               //console.log(value)

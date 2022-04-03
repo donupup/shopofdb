@@ -15,6 +15,7 @@ import com.example.demo.model.entity.GoodIn;
 import com.example.demo.service.IGoodInService;
 import com.example.demo.service.IGoodService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,6 +24,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class IGoodInServiceImpl extends ServiceImpl<GoodInMapper, GoodIn> implements IGoodInService {
+
+    @Autowired
+    GoodMapper goodMapper;
     @Override
     public List<GoodIn> getlist() {
         return this.baseMapper.selectList(null);
@@ -55,7 +59,20 @@ public class IGoodInServiceImpl extends ServiceImpl<GoodInMapper, GoodIn> implem
         LambdaQueryWrapper<GoodIn> lambda = wrapper.lambda();
         if(!StrUtil.isBlank(dto.getGoodid()))
         {
-            lambda.eq(GoodIn::getGoodId,dto.getGoodid());
+            QueryWrapper<Good> w = new QueryWrapper<>();
+            LambdaQueryWrapper<Good> l = w.lambda();
+            l.like(Good::getGoodname,dto.getGoodid());
+            List<Good> goods = goodMapper.selectList(l);
+            if(goods.isEmpty()){
+                lambda.eq(GoodIn::getGoodId,"");
+            }
+            else{
+                for (Good g:goods
+                     ) {
+                    lambda.eq(GoodIn::getGoodId,g.getId());
+                }
+            }
+
         }
         if(!StrUtil.isBlank(dto.getPid()))
         {

@@ -68,11 +68,11 @@ public class IVipServiceImpl extends ServiceImpl<VipMapper, Vip> implements IVip
         }
         if(!StrUtil.isBlank(dto.getId()))
         {
-            lambda.eq(Vip::getId,dto.getId());
+            lambda.like(Vip::getId,dto.getId());
         }
         if(!StrUtil.isBlank(dto.getVphone()))
         {
-            lambda.eq(Vip::getVphone,dto.getVphone());
+            lambda.like(Vip::getVphone,dto.getVphone());
         }
         if(!StrUtil.isBlank(dto.getVsex()))
         {
