@@ -5,7 +5,7 @@
     <div style="text-align: right">
       <!-- <import-excel /> -->
       <el-button type="primary" @click="dialogFormVisible = true"
-        >增加供货商</el-button
+        >增加进货</el-button
       >
     </div>
     <el-divider></el-divider>
@@ -97,7 +97,7 @@
          width="70"
       >
       </el-table-column>
-            <el-table-column
+        <el-table-column
         prop="goodInTime"
         label="进货时间"
         show-overflow-tooltip
@@ -137,24 +137,43 @@
     >
     </el-pagination>
 
-    <el-dialog title="供应商信息" :visible.sync="dialogFormVisible">
+    <el-dialog title="进货信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="供应商名" :label-width="formLabelWidth">
-          <el-input v-model="form.pname" autocomplete="off"></el-input>
+        <el-form-item label="供应商" :label-width="formLabelWidth">
+          <el-select v-model="form.pid" placeholder="请选择供货商" @change="selectTrigger(form.pid)">
+            <el-option
+              v-for="(item, index) in providerInfo"
+              :key="index"
+              :label="item.pname"
+              :value="item.id"
+             >
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="供应商电话" :label-width="formLabelWidth">
-          <el-input v-model="form.pphone" autocomplete="off"></el-input>
+        <el-form-item label="商品" :label-width="formLabelWidth">
+          <el-select v-model="form.goodid" placeholder="请选择商品">
+            <el-option
+              v-for="(item, index) in goodofprovider"
+              :key="index"
+              :label="item.goodname"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="供应商地址" :label-width="formLabelWidth">
-          <el-input v-model="form.paddress" autocomplete="off"></el-input>
+        <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-input v-model="form.num" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="供应商联系人" :label-width="formLabelWidth">
-          <el-input v-model="form.plinkman" autocomplete="off"></el-input>
-        </el-form-item>
+         <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input
+            v-model="form.bio"
+            autocomplete="off"
+            type="textarea"
+          ></el-input>
+         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="AddProvider('form')">确 定</el-button>
+        <el-button type="primary" @click="AddInport('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -167,7 +186,7 @@
             :placeholder="rowItem.num"
           ></el-input>
         </el-form-item>
-        <el-form-item label="进货数量" :label-width="formLabelWidth">
+        <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input
             v-model="formEdit.bio"
             autocomplete="off"
@@ -200,6 +219,7 @@ import {
 import { getGoodList} from "@/api/good";
 import { getCategoryList } from "@/api/category";
 import { getProviderList } from "@/api/provider";
+import {  getUserId } from "@/utils/auth";
 const defaultListQuery = {
   pname: null,
   paddress: null,
@@ -209,6 +229,7 @@ export default {
   name: "inportManage",
   data() {
     return {
+        userId:'',
       page: 1, //第几页
       size: 3, //一页多少条
       total: 0, //总条目数
@@ -217,14 +238,16 @@ export default {
       listQuery: Object.assign({}, defaultListQuery),
       searchKey: "",
       inportInfo: {},
-      goodInfo:{},
-      providerInfo:{},
+      goodInfo:[],
+      goodofprovider:[],
+      providerInfo:[],
       categoryInfo:{},
       form: {
-        pname: "",
-        pphone: "",
-        paddress: "",
-        plinkman: "",
+        pid: "",
+        goodid: "",
+        userid: "",
+        num: "",
+        bio:''
       },
       formEdit: {
           id:'',
@@ -254,8 +277,40 @@ export default {
     this.fetchCategoryList();
     this.fetchGoodList();
     this.fetchProviderList();
+    this.getUser();
   },
   methods: {
+      selectTrigger(val){
+          console.log(val)
+          this.goodofprovider = []
+          this.form.goodid=''
+          let flag = 0
+          for(let i = 0;i < this.providerInfo.length; i ++){
+              if(this.providerInfo[i].id == val)
+              {
+                  for(let j = 0; j < this.goodInfo.length; j ++)
+                  {
+                      if(this.goodInfo[j].providerNmae == this.providerInfo[i].pname)
+                      {
+                          flag = 1;
+                          this.goodofprovider.push(this.goodInfo[j]);
+                      }
+                  }
+                  
+              }
+          }
+          if(flag == 0)
+          {
+              this.goodofprovider = []
+          }
+
+      },
+      getUser(){
+         this.userId =  getUserId()
+         console.log(this.userId)
+         this.form.userid = this.userId
+          
+      },
     getList() {
       console.log(this.listQuery);
       getConditionList(this.listQuery).then((response) => {
@@ -327,13 +382,13 @@ export default {
           this.loading = false;
         });
     },
-    AddProvider(formName) {
+    AddInport(formName) {
       this.dialogFormVisible = false;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           console.log(this.form);
-          addProvider(this.form)
+          addInport(this.form)
             .then((value) => {
               const { code, message } = value;
               //console.log(value)

@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.GoodInMapper;
 import com.example.demo.mapper.GoodMapper;
+import com.example.demo.model.dto.GoodInAddDTO;
 import com.example.demo.model.dto.GoodInEditDTO;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.GoodIn;
@@ -11,6 +12,7 @@ import com.example.demo.service.IGoodService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -31,5 +33,14 @@ public class IGoodInServiceImpl extends ServiceImpl<GoodInMapper, GoodIn> implem
         GoodIn gi = GoodIn.builder().bio(dto.getBio()).num(dto.getNum()).id(dto.getId()).build();
         int res = this.baseMapper.updateById(gi);
         return res;
+    }
+
+    @Override
+    public GoodIn executeAdd(GoodInAddDTO dto) {
+        GoodIn g = GoodIn.builder().goodId(dto.getGoodid()).bio(dto.getBio()).num(dto.getNum()).providerId(dto.getPid()).userId(dto.getUserid())
+                .goodInTime(new Date()).build();
+        System.out.println(new Date());
+        this.baseMapper.insert(g);
+        return g;
     }
 }

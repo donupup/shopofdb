@@ -2,10 +2,7 @@ package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.GoodInEditDTO;
-import com.example.demo.model.dto.VipAddDTO;
-import com.example.demo.model.dto.VipConditionDTO;
-import com.example.demo.model.dto.VipEditDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.GoodIn;
 import com.example.demo.model.entity.Vip;
@@ -74,14 +71,28 @@ public class GoodInController {
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
    public ApiResult<Object> editInport(@Valid @RequestBody GoodInEditDTO dto) {
 
-        int result = i=goodInService.executeEdit(dto);
+        int result  = goodInService.executeEdit(dto);
         if(result > 0){
             return ApiResult.success(null,"编辑成功");
         }
         return ApiResult.failed("编辑失败");
     }
-//    @RequestMapping(value = "/add",method = RequestMethod.POST)
-//    public  ApiResult<Object> addInport(@Valid @RequestBody VipAddDTO dto){
+   @RequestMapping(value = "/add",method = RequestMethod.POST)
+   public  ApiResult<Object> addInport(@Valid @RequestBody GoodInAddDTO dto){
+
+       GoodIn g = goodInService.executeAdd(dto);
+       Good good = igoodService.getById(dto.getGoodid());
+       int old_storage = good.getStorage();
+       good.setStorage(old_storage + dto.getNum());
+       igoodService.updateById(good);
+        if (ObjectUtils.isEmpty(g)) {
+            return ApiResult.failed("添加失败");
+        }
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("goodin", g);
+        return ApiResult.success(map);
+
+   }
 //
 //        Vip p = vipService.executeAdd(dto);
 //        if (ObjectUtils.isEmpty(p)) {
