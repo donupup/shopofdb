@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       chart: null,
-      barName1: ["销售","进货","利润"],
+      barName1: ["销售","进货","销售利润","净利润"],
       barNum1: [79, 52, 200, 334, 390, 330, 220],
       barPrice1: [80, 52, 200, 334, 390, 330, 220],
     };
@@ -123,6 +123,14 @@ export default {
           right: "2%",
           bottom: "3%",
           containLabel: true,
+        },
+                title: {
+          text: "当月数据统计",
+          left: "center",
+          textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
         },
         xAxis: [
           {

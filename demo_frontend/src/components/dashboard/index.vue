@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartDatas.shoppings,
+      lineChartData: lineChartDatas.saleLineSta,
       saleList: [],
       inList: [],
       outList: [],

@@ -41,6 +41,60 @@ public class StaController {
     ApiResult<Object> getMonthData(@Valid @RequestBody Date d)
     {
         System.out.println(d);
+        Date beginofyear = DateUtil.beginOfYear(d);
+        List<Integer>  yearsaleNum = new ArrayList<>();
+        List<Integer> yearsalePrice = new ArrayList<>();
+        List<Integer> yearsaleProfit = new ArrayList<>();
+        List<Integer> yearinNum = new ArrayList<>();
+        List<Integer> yearinPrice = new ArrayList<>();
+        List<Integer> yeartotalProfit = new ArrayList<>();
+         for(int i = 0;i < 12;i ++)
+        {
+            Date perMonth = DateUtil.offsetMonth(beginofyear,i);
+            Date pernext = DateUtil.offsetMonth(perMonth,1);
+
+            QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
+            LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
+            QueryWrapper<GoodIn> inwra = new QueryWrapper<>();
+            LambdaQueryWrapper<GoodIn> inlam = inwra.lambda();
+
+            salelam.ge(GoodSale::getGoodSoldTime,perMonth);
+            salelam.lt(GoodSale::getGoodSoldTime,pernext);
+
+            inlam.ge(GoodIn::getGoodInTime,perMonth);
+            inlam.lt(GoodIn::getGoodInTime,pernext);
+
+            List<GoodSale> goodsale = this.goodSaleService.getBaseMapper().selectList(salelam);
+            List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inlam);
+
+            int saleSum= 0;
+            int salePrice = 0;
+            int saleProfit = 0;
+            for (GoodSale gs: goodsale
+            ) {
+                saleSum += gs.getNum();
+                salePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+                saleProfit += gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein());
+                Good g1 = igoodService.getById(gs.getGoodId());
+            }
+            yearsaleNum.add(saleSum);
+            yearsalePrice.add(salePrice);
+            yearsaleProfit.add(saleProfit);
+
+            int inSum = 0;
+            int inPrice = 0;
+            for (GoodIn gi: goodin
+            ) {
+                inSum += gi.getNum();
+                inPrice += gi.getNum() * igoodService.getById(gi.getGoodId()).getPricein();
+            }
+            yearinNum.add(inSum);
+            yearinPrice.add(inPrice);
+
+            yeartotalProfit.add(saleProfit - inPrice);
+        }
+
+
         Map<String,Object> goodsalePrice = new HashMap<>();
         Map<String,Object> map = new HashMap<>();
         QueryWrapper<GoodSale> salew = new QueryWrapper<>();
@@ -57,10 +111,12 @@ public class StaController {
         List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inl);
         int saleSum= 0;
         int salePrice = 0;
+        int saleProfit = 0;
         for (GoodSale gs: goodsale
              ) {
             saleSum += gs.getNum();
             salePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+            saleProfit += gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein());
             Good g1 = igoodService.getById(gs.getGoodId());
             if(!goodsalePrice.containsKey(g1.getGoodname()))
             {
@@ -105,15 +161,25 @@ public class StaController {
             res.add(gii);
 
         }
-        int totalProfit = salePrice - inPrice;
+        int totalProfit = saleProfit - inPrice;
         map.put("saleList",resInfo);
         map.put("inList",res);
         map.put("saleSum",saleSum);
         map.put("inSum",inSum);
         map.put("salePrice",salePrice);
         map.put("inPrice",inPrice);
+        map.put("saleProfit",saleProfit);
         map.put("totalProfit",totalProfit);
         map.put("goodsalePrice",goodsalePrice);
+        map.put("yearsaleNum",yearsaleNum);
+        map.put("yearsalePrice",yearsalePrice);
+        map.put("yearsaleProfit",yearsaleProfit);
+        map.put("yearinNum",yearinNum);
+        map.put("yearinPrice",yearinPrice);
+        map.put("yeartotalProfit",yeartotalProfit);
+
+
+
         return ApiResult.success(map);
     }
 

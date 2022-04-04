@@ -33,7 +33,7 @@
 
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart :barName="barName" :barNum="barNum" :barPrice="barPrice" />
+          <bar-chart-2 :barName="barName" :barNum="barNum" :barPrice="barPrice" />
         </div>
       </el-col>
     </el-row>
@@ -47,11 +47,12 @@ import PanelGroup from "@/components/dashboard/PanelGroup";
 import RaddarChart from "@/components/dashboard/RaddarChart";
 import PieChart from "@/components/dashboard/PieChart";
 import LineChart from "@/components/dashboard/LineChart";
-import BarChart from "@/components/dashboard/BarChart";
+
 import CircleChart from "@/components/dashboard/CircleChart";
 import { getInportList } from "@/api/inport";
 import { getGoodSaleList } from "@/api/sale";
 import { getGoodList } from "@/api/good";
+import BarChart2 from '../../components/dashboard/BarChart2.vue';
 //import TransactionTable from './TransactionTable'
 //import BoxCard from './BoxCard'
 
@@ -86,8 +87,8 @@ export default {
     RaddarChart,
     LineChart,
     PieChart,
-    BarChart,
     CircleChart,
+    BarChart2,
     //TransactionTable,
     //BoxCard
   },
