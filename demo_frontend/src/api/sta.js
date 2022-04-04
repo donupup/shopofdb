@@ -16,3 +16,10 @@ export function getGoodNumSta(good){
         data: good
     })
 }
+
+export function getGoodSta(){
+    return request({
+        url: '/sta/good',
+        method: 'post',
+    })
+}

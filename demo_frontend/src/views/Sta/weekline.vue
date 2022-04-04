@@ -10,7 +10,7 @@
       @handleSetLineChartData="handleSetLineChartData"
       :saleLength="totalSale"
       :inLength="totalIn"
-      :outLength="totalOut"
+      :outLength="totalProfit"
       :storageLength="totalStorage"
     />
 
@@ -102,6 +102,7 @@ export default {
       totalSale: 0,
       totalIn: 0,
       totalOut: 0,
+      totalProfit:0,
       saleLineNum: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       saleLinePrice: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       profitLinePrice:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -170,6 +171,7 @@ export default {
       else return false;
     },
     saleLine() {
+      this.totalProfit= 0
       //console.log(Math.round((new Date().getTime() - new Date('2022-3-30').getTime())/1000/60/60/24))
       this.profitLinePrice = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       this.saleLineNum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -193,6 +195,7 @@ export default {
             this.saleLinePrice[9 - i] +=
               this.saleList[j].num * this.saleList[j].oneprice;
               this.profitLinePrice[9 - i] += this.saleList[j].num * (this.saleList[j].oneprice - this.saleList[j].inprice);
+              this.totalProfit += this.profitLinePrice[9 - i]
           }
         }
         if (now.getDate() - i > 0) {
@@ -207,7 +210,7 @@ export default {
       lineChartDatas.saleLineSta.actualData = this.saleLinePrice;
         lineChartDatas.profitLineSta.actualData = this.profitLinePrice;
       // console.log(this.saleLineNum)
-       console.log(this.profitLinePrice)
+       console.log(this.totalProfit)
     },
    
     inLine() {

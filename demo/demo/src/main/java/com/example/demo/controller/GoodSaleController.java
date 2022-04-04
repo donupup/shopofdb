@@ -139,6 +139,13 @@ public class GoodSaleController {
         if (ObjectUtils.isEmpty(v)) {
             return ApiResult.failed("添加失败,请输入正确的ID");
         }
+        int totalSum = dto.getNum() * igoodService.getById(dto.getGoodid()).getPricesell();
+        if(v.getVbalance() < totalSum)
+        {
+            return ApiResult.failed("会员卡余额不足，需要进行充值~");
+        }
+        v.setVbalance(v.getVbalance() - totalSum);
+        vipService.updateById(v);
         GoodSale g = goodSaleService.executeAdd(dto);
         Good good = igoodService.getById(dto.getGoodid());
         int old_storage = good.getStorage();

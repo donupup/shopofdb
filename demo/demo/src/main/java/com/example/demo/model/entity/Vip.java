@@ -32,7 +32,7 @@ public class Vip {
     private String vaddress;
 
     @TableField("vbalance")
-    private String vbalance;
+    private Float vbalance;
 
     @TableField("vsex")
     private String vsex;

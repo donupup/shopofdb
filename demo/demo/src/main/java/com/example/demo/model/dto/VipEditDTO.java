@@ -16,7 +16,7 @@ public class VipEditDTO {
     private String vaddress;
 
 
-    private String vbalance;
+    private Float vbalance;
 
     private String vsex;
 }
