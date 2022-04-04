@@ -1,38 +1,52 @@
 <template>
   <div>
-        <el-page-header @back="headBack" content="月营销额查询">
+        <el-page-header @back="headBack" content="商品营收占比">
   </el-page-header>
   <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
-      <div class="block">
-        <span class="demonstration"></span>
-        <el-date-picker v-model="month" type="month" placeholder="选择月">
-        </el-date-picker>
-        <el-button @click="handleSearch()" type="primary"> 查询结果 </el-button>
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right"
+          @click="handleSearchList()"
+          type="primary"
+          size="small"
+        >
+          查询结果
+        </el-button>
+        <el-button
+          style="float: right; margin-right: 15px"
+          @click="handleResetSearch()"
+          size="small"
+        >
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form
+          :inline="true"
+          :model="listQuery"
+          size="small"
+          label-width="140px"
+        >
+          <el-form-item label="商品名">
+            <el-input
+              style="width: 203px"
+              v-model="goodid"
+              placeholder="名称"
+            ></el-input>
+          </el-form-item>
+        </el-form>
       </div>
     </el-card>
-    <div class="chart-wrapper">
-      <bar-chart :barName="barName" :barNum="barNum" :barPrice="barPrice" />
-    </div>
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <circle-in :salePineNum="inCircleNum" />
-        </div>
-      </el-col>
 
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <pie-chart :salePineNum="salePineNum" />
-        </div>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
 
 <script>
-import { getMonthSta } from "@/api/sta";
+import { getGoodNumSta } from "@/api/sta";
 import BarChart from "@/components/dashboard/BarChart";
 import PieChart from "@/components/dashboard/PieChart";
 import CircleChart from "@/components/dashboard/CircleChart";
@@ -42,6 +56,7 @@ export default {
   data() {
     return {
       month: "",
+      goodid:'',
       monthInfo: "",
       barName: ["销售", "进货","利润"],
       barNum: [],
@@ -53,27 +68,15 @@ export default {
     };
   },
   methods: {
-    handleSearch() {
-        this.barNum = []
-        this.barPrice = []
-      if (this.month == "") {
-        this.$message.error("请选择日期");
-      } else {
-        getMonthSta(this.month).then((response) => {
-          const { data } = response;
-          console.log(data);
-          this.barNum.push(data.saleSum);
-          this.barNum.push(data.inSum);
-          this.barNum.push(data.saleSum)
-          this.barPrice.push(data.salePrice)
-          this.barPrice.push(data.inPrice)
-          this.barPrice.push(data.totalProfit)
-          this.saleList = data.saleList
-          this.inList = data.inList
-          this.salePine()
-          this.inCircle()
-        });
-      }
+    handleSearchList() {
+        getGoodNumSta(this.goodid).then((response) => {
+        const { data } = response;
+        console.log(data);
+      });
+        
+    },
+    handleResetSearch() {
+     this.goodid = ''
     },
     salePine(){
       let arrNum = new Array();
@@ -105,9 +108,10 @@ export default {
       console.log(123)
       console.log(arrNum);
     },
-    headBack(){
-      this.$router.back()
-    }
+        headBack() {
+      console.log(this.$router);
+      this.$router.back();
+    },
   },
 };
 </script>

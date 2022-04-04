@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       chart: null,
-      barName1: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      barName1: ["销售","进货","利润"],
       barNum1: [79, 52, 200, 334, 390, 330, 220],
       barPrice1: [80, 52, 200, 334, 390, 330, 220],
     };
@@ -146,7 +146,7 @@ export default {
             name: "数量",
             type: "bar",
             //stack: "vistors",
-            barWidth: "30%",
+            barWidth: "20%",
             data: this.barNum1,
             animationDuration,
           },
@@ -154,7 +154,7 @@ export default {
             name: "总价值",
             type: "bar",
             //stack: "vistors",
-            barWidth: "30%",
+            barWidth: "20%",
             data: this.barPrice1,
             animationDuration,
           },

@@ -1,4 +1,8 @@
 <template>
+<div>
+      <el-page-header @back="headBack" content="十日进销存">
+  </el-page-header>
+  <el-divider></el-divider>
   <div class="dashboard-editor-container">
     <!--<github-corner class="github-corner" />-->
 
@@ -33,6 +37,7 @@
         </div>
       </el-col>
     </el-row>
+  </div>
   </div>
 </template>
 
@@ -328,6 +333,9 @@ export default {
       this.storageCircleNum = arrNum;
       //console.log(arrNum);
     },
+    headBack(){
+      this.$router.back()
+    }
   },
 };
 </script>

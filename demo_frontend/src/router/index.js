@@ -116,6 +116,16 @@ const routes = [{
     }
   },
   {
+    path: '/sta/stagood',
+    name: 'monthprice',
+    component: () => import('@/views/Sta/staGood'),
+    meta: {
+      title: '各商品分析',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta',
     name: 'statistic',
     component: () => import('@/components/dashboard/index'),
