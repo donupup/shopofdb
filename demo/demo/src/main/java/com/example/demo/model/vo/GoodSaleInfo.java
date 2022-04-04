@@ -15,6 +15,8 @@ public class GoodSaleInfo {
 
     int totalprice;
 
+    int inprice;
+
     String goodname;
 
     String vipname;

@@ -69,8 +69,10 @@ public class GoodSaleController {
             String vipname = this.vipService.getById(gs.getVipId()).getVname();
             int oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
             int totalprice = gs.getNum() * oneprice;
+            int inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
             GoodSaleInfo gsi = GoodSaleInfo.builder().id(gs.getId()).num(gs.getNum()).oneprice(oneprice).totalprice(totalprice)
-                    .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).username(username).goodsoldtime(date).bio(gs.getBio()).build();
+                    .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).username(username).goodsoldtime(date)
+                    .inprice(inprice).bio(gs.getBio()).build();
             res.add(gsi);
      }
         return ApiResult.success(res);
@@ -120,8 +122,10 @@ public class GoodSaleController {
             String vipname = this.vipService.getById(gs.getVipId()).getVname();
             int oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
             int totalprice = gs.getNum() * oneprice;
+            int inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
             GoodSaleInfo gsi = GoodSaleInfo.builder().id(gs.getId()).num(gs.getNum()).oneprice(oneprice).totalprice(totalprice)
-                    .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).username(username).goodsoldtime(date).bio(gs.getBio()).build();
+                    .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).inprice(inprice).
+            username(username).goodsoldtime(date).bio(gs.getBio()).build();
             res.add(gsi);
         }
         return ApiResult.success(res);

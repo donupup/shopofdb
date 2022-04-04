@@ -27,13 +27,13 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('outLineSta')">
+      <div class="card-panel" @click="handleSetLineChartData('profitLineSta')">
         <div class="card-panel-icon-wrapper icon-money">
           <i class="el-icon-sold-out" style="font-size: 50px"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            出货统计
+            利润统计
           </div>
           <count-to :start-val="0" :end-val="this.outLength" :duration="3200" class="card-panel-num" />
         </div>

@@ -96,6 +96,26 @@ const routes = [{
     }
   },
   {
+    path: '/sta/weekline',
+    name: 'weekline',
+    component: () => import('@/views/Sta/weekline'),
+    meta: {
+      title: '十日销售统计',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
+    path: '/sta/monthprice',
+    name: 'monthprice',
+    component: () => import('@/views/Sta/monthprice'),
+    meta: {
+      title: '月营销额',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta',
     name: 'statistic',
     component: () => import('@/components/dashboard/index'),
