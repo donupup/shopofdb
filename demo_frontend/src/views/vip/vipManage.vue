@@ -86,6 +86,8 @@
       </el-table-column>
       <el-table-column prop="vsex" label="性别" show-overflow-tooltip>
       </el-table-column>
+      <el-table-column prop="vage" label="年龄" show-overflow-tooltip>
+      </el-table-column>
       <el-table-column prop="vphone" label="联系方式" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
@@ -142,6 +144,9 @@
         <el-form-item label="会员卡余额" :label-width="formLabelWidth">
           <el-input v-model="form.vbalance" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="会员年龄" :label-width="formLabelWidth">
+          <el-input v-model="form.vage" autocomplete="off"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -185,6 +190,13 @@
             :placeholder="rowItem.vbalance"
           ></el-input>
         </el-form-item>
+        <el-form-item label="年龄" :label-width="formLabelWidth">
+          <el-input
+            v-model="formEdit.vage"
+            autocomplete="off"
+            :placeholder="rowItem.vage"
+          ></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
@@ -225,6 +237,7 @@ export default {
         vphone: "",
         vaddress: "",
         vbalance: "",
+        vage:'',
       },
       formEdit: {
         id: "",
@@ -233,6 +246,7 @@ export default {
         vphone: "",
         vaddress: "",
         vbalance: "",
+        vage:'',
       },
       multipleSelection: [],
       rules: {
@@ -306,6 +320,7 @@ export default {
       this.$set(this.formEdit, "vaddress", this.rowItem["vaddress"]);
       this.$set(this.formEdit, "vsex", this.rowItem["vsex"]);
       this.$set(this.formEdit, "vbalance", this.rowItem["vbalance"]);
+      this.$set(this.formEdit, "vage", this.rowItem["vage"]);
       console.log(this.formEdit);
       this.dialogFormVisibleEdit = true;
     },

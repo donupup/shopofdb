@@ -17,4 +17,6 @@ public class VipAddDTO {
     private Float vbalance;
 
     private String vsex;
+
+    private int vage;
 }

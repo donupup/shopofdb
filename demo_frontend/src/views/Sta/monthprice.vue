@@ -15,15 +15,20 @@
       <bar-chart :barName="barName" :barNum="barNum" :barPrice="barPrice" />
     </div>
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
+      <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <circle-in :salePineNum="inCircleNum" />
         </div>
       </el-col>
 
-      <el-col :xs="24" :sm="24" :lg="12">
+      <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <pie-chart :salePineNum="salePineNum" />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pinewithtitle :salePineNum="goodsalePrice" title="商品销售额" />
         </div>
       </el-col>
     </el-row>
@@ -37,8 +42,9 @@ import BarChart from "@/components/dashboard/BarChart";
 import PieChart from "@/components/dashboard/PieChart";
 import CircleChart from "@/components/dashboard/CircleChart";
 import CircleIn from "@/components/dashboard/CircleIn";
+import Pinewithtitle from '../../components/dashboard/Pinewithtitle.vue';
 export default {
-  components: { BarChart,PieChart,CircleChart,CircleIn },
+  components: { BarChart,PieChart,CircleChart,CircleIn,Pinewithtitle },
   data() {
     return {
       month: "",
@@ -49,7 +55,8 @@ export default {
       saleList:[],
       inList:[],
       salePineNum: [],
-      inCircleNum:[]
+      inCircleNum:[],
+      goodsalePrice:[]
     };
   },
   methods: {
@@ -70,6 +77,7 @@ export default {
           this.barPrice.push(data.totalProfit)
           this.saleList = data.saleList
           this.inList = data.inList
+          this.goodsalePrice = data.goodsalePrice
           this.salePine()
           this.inCircle()
         });

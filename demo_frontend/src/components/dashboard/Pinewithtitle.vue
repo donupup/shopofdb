@@ -97,6 +97,14 @@ export default {
           bottom: '10',
           data: this.key,
         },
+                title:{
+            text:this.title,
+            left:'left',
+            textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
+        },
         series: [
           {
             name: this.title,

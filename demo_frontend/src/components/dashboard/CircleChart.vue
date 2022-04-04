@@ -89,6 +89,14 @@ export default {
             },
           },
         },
+                title:{
+            text: '各商品库存统计',
+            left:'left',
+            textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
+        },
         legend: {
           left: 'center',
           bottom: '10',

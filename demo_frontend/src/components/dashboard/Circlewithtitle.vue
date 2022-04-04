@@ -1,71 +1,68 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
-import * as echarts from 'echarts'
-import resize from './mixins/resize'
-require('echarts/theme/macarons') // echarts theme
+import * as echarts from "echarts";
+import resize from "./mixins/resize";
+require("echarts/theme/macarons"); // echarts theme
 
 export default {
   mixins: [resize],
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: "chart",
     },
     width: {
       type: String,
-      default: '100%'
+      default: "100%",
     },
     height: {
       type: String,
-      default: '300px'
+      default: "300px",
     },
-    salePineNum:{
-      
+    salePineNum: {},
+    title: {
+      type: String,
     },
-    title:{
-        type:String
-    }
   },
-  data () {
+  data() {
     return {
       chart: null,
-      salePineNum1:[],
-      data:[],
-      key2:[],
-    }
+      salePineNum1: [],
+      data: [],
+      key2: [],
+    };
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      this.initChart()
-    })
+      this.initChart();
+    });
   },
-  beforeDestroy () {
+  beforeDestroy() {
     if (!this.chart) {
-      return
+      return;
     }
-    this.chart.dispose()
-    this.chart = null
+    this.chart.dispose();
+    this.chart = null;
   },
   watch: {
     salePineNum: {
       deep: true,
-      handler (val) {
+      handler(val) {
         this.salePineNum1 = val;
         this.pushData();
-      }
+      },
     },
   },
   methods: {
-    pushData(){
+    pushData() {
       let data = [];
       let obj = {};
       let key1 = [];
-      for(let key in this.salePineNum1)
-      {
-        obj = {}
+      for (let key in this.salePineNum1) {
+        obj = {};
         obj["name"] = key;
         obj["value"] = this.salePineNum1[key];
         data.push(obj);
@@ -76,13 +73,13 @@ export default {
       //console.log(this.key)
       this.initChart();
     },
-    initChart () {
-      this.chart = echarts.init(this.$el, 'macarons')
+    initChart() {
+      this.chart = echarts.init(this.$el, "macarons");
 
       this.chart.setOption({
         tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)",
         },
         toolbox: {
           feature: {
@@ -92,25 +89,33 @@ export default {
             },
           },
         },
+        title: {
+          text: this.title,
+          left: "left",
+          textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
+        },
         legend: {
-          left: 'center',
-          bottom: '10',
+          left: "center",
+          bottom: "10",
           data: this.key,
         },
         series: [
           {
             name: this.title,
-            type: 'pie',
+            type: "pie",
             //roseType: 'radius',
-            radius: ['15%', '30%'],
-            center: ['50%', '38%'],
+            radius: ["15%", "30%"],
+            center: ["50%", "38%"],
             data: this.data,
-            animationEasing: 'cubicInOut',
-            animationDuration: 2600
-          }
-        ]
-      })
-    }
-  }
-}
+            animationEasing: "cubicInOut",
+            animationDuration: 2600,
+          },
+        ],
+      });
+    },
+  },
+};
 </script>

@@ -19,4 +19,6 @@ public class VipEditDTO {
     private Float vbalance;
 
     private String vsex;
+
+    private int vage;
 }

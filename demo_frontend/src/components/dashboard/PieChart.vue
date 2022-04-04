@@ -94,6 +94,14 @@ export default {
           bottom: '10',
           data: this.key,
         },
+                title:{
+            text:'各商品销量统计',
+            left:'left',
+            textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
+        },
         series: [
           {
             name: '各商品销量统计',

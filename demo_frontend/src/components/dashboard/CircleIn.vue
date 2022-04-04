@@ -90,9 +90,17 @@ export default {
           },
         },
         legend: {
-          left: 'center',
+          left: '该月各商品进货统计',
           bottom: '10',
           data: this.key,
+        },
+        title:{
+            text:'该月各商品进货统计',
+            left:'left',
+            textStyle: {
+            //文字颜色
+            color: "#ccc",
+          },
         },
         series: [
           {

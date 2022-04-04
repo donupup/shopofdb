@@ -41,6 +41,7 @@ public class StaController {
     ApiResult<Object> getMonthData(@Valid @RequestBody Date d)
     {
         System.out.println(d);
+        Map<String,Object> goodsalePrice = new HashMap<>();
         Map<String,Object> map = new HashMap<>();
         QueryWrapper<GoodSale> salew = new QueryWrapper<>();
         LambdaQueryWrapper<GoodSale> salel = salew.lambda();
@@ -60,6 +61,15 @@ public class StaController {
              ) {
             saleSum += gs.getNum();
             salePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+            Good g1 = igoodService.getById(gs.getGoodId());
+            if(!goodsalePrice.containsKey(g1.getGoodname()))
+            {
+                goodsalePrice.put(g1.getGoodname(),g1.getPricesell() * gs.getNum());
+            }
+            else{
+                Object value = goodsalePrice.get(g1.getGoodname());
+                goodsalePrice.put(g1.getGoodname(),(int)value + (g1.getPricesell() * gs.getNum()));
+            }
         }
         List<GoodSaleInfo> resInfo = new ArrayList<>();
         for (GoodSale gs:goodsale){
@@ -103,6 +113,7 @@ public class StaController {
         map.put("salePrice",salePrice);
         map.put("inPrice",inPrice);
         map.put("totalProfit",totalProfit);
+        map.put("goodsalePrice",goodsalePrice);
         return ApiResult.success(map);
     }
 
@@ -127,7 +138,6 @@ public class StaController {
         int  totalSaleNum = 0; //总件数
         int totalSalePrice = 0; //总售价
         int totalSaleProfit = 0; //总销售利润
-
         for (GoodSale gs:goodsale
              ) {
             totalSaleNum += gs.getNum();

@@ -36,4 +36,7 @@ public class Vip {
 
     @TableField("vsex")
     private String vsex;
+
+    @TableField("vage")
+    private int vage;
 }

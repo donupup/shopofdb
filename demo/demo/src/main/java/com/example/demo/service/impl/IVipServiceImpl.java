@@ -35,6 +35,7 @@ public class IVipServiceImpl extends ServiceImpl<VipMapper, Vip> implements IVip
                 .vbalance(dto.getVbalance())
                 .vsex(dto.getVsex())
                 .vaddress(dto.getVaddress())
+                .vage(dto.getVage())
                 .build();
         this.baseMapper.insert(v);
         return v;
@@ -54,6 +55,7 @@ public class IVipServiceImpl extends ServiceImpl<VipMapper, Vip> implements IVip
                 .vbalance(dto.getVbalance())
                 .vaddress(dto.getVaddress())
                 .vsex(dto.getVsex())
+                .vage(dto.getVage())
                 .build();
         return this.baseMapper.updateById(v);
     }
