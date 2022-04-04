@@ -235,6 +235,7 @@ public class StaController {
         map.put("totalSaleProfit",totalSaleProfit);
         map.put("totalInNum",totalInNum);
         map.put("totalInPrice",totalInPrice);
+        map.put("goodInfo",g);
         return ApiResult.success(map);
     }
 
@@ -303,4 +304,136 @@ public class StaController {
         return ApiResult.success(map);
     }
 
+    @RequestMapping(value = "/numofvip",method = RequestMethod.POST)
+    ApiResult<Object> getNumOfVip(@Valid @RequestBody String vid)
+    {
+        String[] arr = vid.split("=");
+        vid = arr[0];
+        System.out.println(vid);
+        Vip v = vipService.getBaseMapper().selectById(vid);
+        QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
+        salelam.eq(GoodSale::getVipId,vid);
+        List<GoodSale> goodsale = goodSaleService.getBaseMapper().selectList(salelam);
+        int buyNum = 0;
+        int buyPrice = 0;
+        int buyTimes = goodsale.size();
+        for (GoodSale gs:goodsale
+             ) {
+            buyNum += gs.getNum();
+            buyPrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("buyNum",buyNum);
+        map.put("buyPrice",buyPrice);
+        map.put("buyTimes",buyTimes);
+        map.put("vip",v);
+        return ApiResult.success(map);
+    }
+
+    @RequestMapping(value = "/vip",method = RequestMethod.POST)
+    ApiResult<Object> getVipSta()
+    {
+        return ApiResult.success();
+    }
+
+    @RequestMapping(value = "/day",method = RequestMethod.POST)
+    ApiResult<Object> getDaySta()
+    {
+        Date d = DateUtil.beginOfDay(new Date());
+        Date next = DateUtil.offsetDay(d,1);
+        int saleNum = 0;
+        int salePrice = 0;
+        int inNum = 0;
+        int inPrice = 0;
+        int saleProfit = 0;
+        int totalProfit = 0;
+        QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
+        QueryWrapper<GoodIn> inwra = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodIn> inlam = inwra.lambda();
+
+        salelam.ge(GoodSale::getGoodSoldTime,d);
+        salelam.lt(GoodSale::getGoodSoldTime,next);
+
+        inlam.ge(GoodIn::getGoodInTime,d);
+        inlam.lt(GoodIn::getGoodInTime,next);
+
+        List<GoodSale> goodsale = this.goodSaleService.getBaseMapper().selectList(salelam);
+        List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inlam);
+
+        List<Category> categories = categoryService.getBaseMapper().selectList(null);
+        List<String> cname = new ArrayList<>();
+        for (Category ca:categories
+             ) {
+            cname.add(ca.getCname());
+        }
+        Map<String,Object> catsalenummap = new HashMap<>();
+        Map<String,Object> catsalepricemap = new HashMap<>();
+        Map<String,Object> catsaleprofit = new HashMap<>();
+
+        Map<String,Object> map = new HashMap<>();
+
+        for (GoodSale gs: goodsale
+        ) {
+            Good g = igoodService.getById(gs.getGoodId());
+            Category cat = categoryService.getBaseMapper().selectById(g.getCategoryId());
+            saleNum += gs.getNum();
+            salePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+            saleProfit += gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein());
+
+            if(!catsalenummap.containsKey(cat.getCname()))
+            {
+                catsalenummap.put(cat.getCname(),gs.getNum());
+                catsalepricemap.put(cat.getCname(),gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+                catsaleprofit.put(cat.getCname(),gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein()));
+            }
+            else
+            {
+                Object value1 = catsalenummap.get(cat.getCname());
+                Object value2 = catsalepricemap.get(cat.getCname());
+                Object value3 = catsaleprofit.get(cat.getCname());
+                catsalenummap.put(cat.getCname(),(int)value1 + gs.getNum());
+                catsalepricemap.put(cat.getCname(),(int)value2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+                catsaleprofit.put(cat.getCname(),(int)value3 + gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein()));
+            }
+        }
+        List<Integer> catsaleNum = new ArrayList<>();
+        List<Integer> catsalePrice = new ArrayList<>();
+        List<Integer> catsaleProfit = new ArrayList<>();
+        for (Category c:categories
+             ) {
+            if(catsalenummap.containsKey(c.getCname()))
+            {
+                catsaleNum.add((int)catsalenummap.get(c.getCname()));
+                catsalePrice.add((int)catsalepricemap.get(c.getCname()));
+                catsaleProfit.add((int)catsaleprofit.get(c.getCname()));
+            }
+            else{
+                catsaleNum.add(0);
+                catsalePrice.add(0);
+                catsaleProfit.add(0);
+            }
+
+        }
+        map.put("catsaleNum",catsaleNum);
+        map.put("catsalePrice",catsalePrice);
+        map.put("catsaleProfit",catsaleProfit);
+        for (GoodIn gi: goodin
+        ) {
+            inNum += gi.getNum();
+            inPrice += gi.getNum() * igoodService.getById(gi.getGoodId()).getPricein();
+        }
+        totalProfit = saleProfit - inPrice;
+        map.put("saleNum",saleNum);
+        map.put("inNum",inNum);
+        map.put("salePrice",salePrice);
+        map.put("inPrice",inPrice);
+        map.put("saleProfit",saleProfit);
+        map.put("totalProfit",totalProfit);
+        map.put("cnames",cname);
+
+
+        return ApiResult.success(map);
+    }
 }

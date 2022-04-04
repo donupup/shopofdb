@@ -40,6 +40,20 @@ Vue.use(ElementUI);
 
 Vue.config.productionTip = false
 
+//高德插件
+
+import VueAMap from 'vue-amap';
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  // 高德key
+  key: '7ce21834d080ec5fee6e4beb0e2b6fe9',
+  // 插件集合 （插件按需引入）
+  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.Autocomplete',
+    'AMap.MapType', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Geocoder'],
+  uiVersion:'1.1',//一定不要忘记了
+  v:"1.4.15"
+});
+
 new Vue({
   router,
   store,

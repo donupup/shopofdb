@@ -50,6 +50,11 @@
           <i class="el-icon-setting"></i>
           <span>统计信息</span>
         </template>
+        <el-menu-item index="4-8"
+          ><router-link to="/sta/staday">
+            本日统计
+          </router-link></el-menu-item
+        >
         <el-menu-item index="4-7"
           ><router-link to="/sta/weekline">
             十日进销存
@@ -61,8 +66,10 @@
         <el-menu-item index="4-2"><router-link to="/sta/stagood">
             商品分析
           </router-link></el-menu-item>
-        <el-menu-item index="4-3">客户分析</el-menu-item>
-        <el-menu-item index="4-5">供货商分布</el-menu-item>
+        <el-menu-item index="4-3"><router-link to="/sta/stavip">
+            客户分析
+          </router-link></el-menu-item>
+        <el-menu-item index="4-5">员工分析</el-menu-item>
         <el-menu-item index="4-6">排行榜</el-menu-item>
       </el-submenu>
     </el-menu>

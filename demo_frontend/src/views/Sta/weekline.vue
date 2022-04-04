@@ -186,7 +186,7 @@ export default {
           if (
             this.dateInDay(
               now,
-              new Date(this.saleList[j].goodsoldtime.substr(0, 10)),
+              new Date(this.saleList[j].goodsoldtime),
               i
             )
           ) {

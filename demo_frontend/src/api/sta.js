@@ -23,3 +23,25 @@ export function getGoodSta(){
         method: 'post',
     })
 }
+
+export function getNumOfVip(vip){
+    return request({
+        url: '/sta/numofvip',
+        method: 'post',
+        data: vip
+    })
+}
+
+export function getVipSta(){
+    return request({
+        url: '/sta/vip',
+        method: 'post',
+    })
+}
+
+export function getDaySta(){
+    return request({
+        url: '/sta/day',
+        method: 'post',
+    })
+}

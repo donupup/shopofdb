@@ -126,6 +126,26 @@ const routes = [{
     }
   },
   {
+    path: '/sta/stavip',
+    name: 'vipsta',
+    component: () => import('@/views/Sta/vipsta'),
+    meta: {
+      title: '各会员分析',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
+    path: '/sta/staday',
+    name: 'daysta',
+    component: () => import('@/views/Sta/daysta'),
+    meta: {
+      title: '当日分析',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta',
     name: 'statistic',
     component: () => import('@/components/dashboard/index'),

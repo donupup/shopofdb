@@ -53,14 +53,14 @@
           <i class="el-icon-mobile-phone"></i>
           总售价
         </template>
-        {{ chosengoodInfo.totalSalePrice }}
+        {{ chosengoodInfo.totalSalePrice }}￥
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-location-outline"></i>
           总销售利润
         </template>
-        {{ chosengoodInfo.totalSaleProfit }}
+        {{ chosengoodInfo.totalSaleProfit }}￥
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
@@ -74,7 +74,7 @@
           <i class="el-icon-office-building"></i>
           总进价
         </template>
-        {{ chosengoodInfo.totalInPrice }} </el-descriptions-item
+        {{ chosengoodInfo.totalInPrice }}￥ </el-descriptions-item
       ><el-descriptions-item>
         <template slot="label">
           <i class="el-icon-office-building"></i>
