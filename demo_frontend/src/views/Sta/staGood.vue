@@ -85,22 +85,24 @@
     </el-descriptions>
     <el-divider></el-divider>
 
-    
- 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
-          <barchart-per-good :barName="barName" :barNum="barNum" :barPrice="barPrice"/>
+          <barchart-per-good
+            :barName="barName"
+            :barNum="barNum"
+            :barPrice="barPrice"
+          />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
-          <bar-sex :barNum="barNumSex"/>
+          <bar-sex :barNum="barNumSex" />
         </div>
       </el-col>
     </el-row>
 
-<el-divider></el-divider>
+    <el-divider></el-divider>
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -151,9 +153,9 @@ import CircleChart from "@/components/dashboard/CircleChart";
 import CircleIn from "@/components/dashboard/CircleIn";
 import Pinewithtitle from "../../components/dashboard/Pinewithtitle.vue";
 import Circlewithtitle from "../../components/dashboard/Circlewithtitle.vue";
-import BarChart from '../../components/dashboard/BarChart.vue';
-import BarSex from '../../components/dashboard/BarSex.vue';
-import BarchartPerGood from '../../components/dashboard/BarchartPerGood.vue';
+import BarChart from "../../components/dashboard/BarChart.vue";
+import BarSex from "../../components/dashboard/BarSex.vue";
+import BarchartPerGood from "../../components/dashboard/BarchartPerGood.vue";
 export default {
   components: {
     BarChart,
@@ -172,10 +174,10 @@ export default {
       goodid: "",
       chosengoodInfo: [],
       monthInfo: "",
-      barName: ["销售", "进货", "销售利润","净利润"],
+      barName: ["销售", "进货", "销售利润", "净利润"],
       barNum: [],
       barPrice: [],
-      barNumSex:[],
+      barNumSex: [],
       saleList: [],
       inList: [],
       salePineNum: [],
@@ -208,16 +210,16 @@ export default {
       getGoodNumSta(this.goodid).then((response) => {
         const { data } = response;
         this.chosengoodInfo = data;
-        this.barNum.push(data.totalSaleNum)
-        this.barNum.push(data.totalInNum)
-        this.barNum.push(data.saleNum)
-        this.barNum.push(data.inNum)
-        this.barPrice.push(data.totalSalePrice)
-        this.barPrice.push(data.totalInPrice)
-        this.barPrice.push(data.totalSaleProfit)
-        this.barPrice.push(data.totalSaleProfit - data.totalInPrice)
-        this.barNumSex.push(data.maleSale)
-        this.barNumSex.push(data.femaleSale)
+        this.barNum.push(data.totalSaleNum);
+        this.barNum.push(data.totalInNum);
+        this.barNum.push(data.saleNum);
+        this.barNum.push(data.inNum);
+        this.barPrice.push(data.totalSalePrice);
+        this.barPrice.push(data.totalInPrice);
+        this.barPrice.push(data.totalSaleProfit);
+        this.barPrice.push(data.totalSaleProfit - data.totalInPrice);
+        this.barNumSex.push(data.maleSale);
+        this.barNumSex.push(data.femaleSale);
         console.log(this.chosengoodInfo);
       });
     },

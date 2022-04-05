@@ -2,6 +2,15 @@
   <div>
     <el-page-header @back="headBack" content="当日交易信息"> </el-page-header>
     <el-divider></el-divider>
+     <el-card class="filter-container" shadow="never">
+      <div class="block">
+        <span class="demonstration"></span>
+        <el-date-picker v-model="day" type="date" placeholder="选择日期">
+        </el-date-picker>
+        <el-button @click="handleSearch()" type="primary"> 查询结果 </el-button>
+      </div>
+    </el-card>
+    <el-divider></el-divider>
     <el-descriptions class="margin-top" :column="3" border>
       <el-descriptions-item>
         <template slot="label">
@@ -75,15 +84,24 @@ export default {
   },
   data() {
     return {
-     dayInfo:''
+     dayInfo:'',
+     day:''
     };
   },
   mounted() {
       this.fetchDaySta();
   },
   methods: {
+    handleSearch(){
+      getDaySta(this.day).then((response) => {
+        const { data } = response;
+        this.dayInfo = data;
+        console.log(data);
+      });
+
+    },
     fetchDaySta(){
-        getDaySta().then((response) => {
+        getDaySta(new Date()).then((response) => {
         const { data } = response;
         this.dayInfo = data;
         console.log(data);

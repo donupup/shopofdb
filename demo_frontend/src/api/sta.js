@@ -39,9 +39,10 @@ export function getVipSta(){
     })
 }
 
-export function getDaySta(){
+export function getDaySta(day){
     return request({
         url: '/sta/day',
         method: 'post',
+        data: day
     })
 }

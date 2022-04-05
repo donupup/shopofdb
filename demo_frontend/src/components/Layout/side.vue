@@ -52,7 +52,7 @@
         </template>
         <el-menu-item index="4-8"
           ><router-link to="/sta/staday">
-            本日统计
+            日统计
           </router-link></el-menu-item
         >
         <el-menu-item index="4-7"

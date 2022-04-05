@@ -402,9 +402,9 @@ public class StaController {
     }
 
     @RequestMapping(value = "/day",method = RequestMethod.POST)
-    ApiResult<Object> getDaySta()
+    ApiResult<Object> getDaySta(@Valid @RequestBody Date d)
     {
-        Date d = DateUtil.beginOfDay(new Date());
+        System.out.println(d);
         Date next = DateUtil.offsetDay(d,1);
         int saleNum = 0;
         int salePrice = 0;
