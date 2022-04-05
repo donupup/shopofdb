@@ -90,6 +90,14 @@ export default {
       saleList:[],
       inList:[],
       salePineNum: [],
+
+      seasonInNum:[0,0,0,0],
+      seasonInPrice:[0,0,0,0],
+      seasonSaleNum:[0,0,0,0],
+      seasonSalePrice:[0,0,0,0],
+      seasonSaleProfit:[0,0,0,0],
+      seasontotalProfit:[0,0,0,0],
+
       inCircleNum:[],
       goodsalePrice:[]
     };
@@ -129,8 +137,38 @@ export default {
           this.goodsalePrice = data.goodsalePrice
           this.salePine()
           this.inCircle()
+          this.season(data)
         });
       }
+    },
+    season(data){
+      for(let i = 0; i < 4;i ++)
+      {
+        let sum1 = 0;
+        let sum2 = 0;
+        let sum3 = 0;
+        let sum4 = 0;
+        let sum5 = 0;
+        let sum6 = 0;
+        for(let j = 3 * i;j < 3 * i + 3; j ++)
+        {
+          console.log(j)
+          sum1 += data.yearinNum[j];
+          sum2 += data.yearinPrice[j];
+          sum3 += data.yearsaleNum[j];
+          sum4 += data.yearsalePrice[j];
+          sum5 += data.yearsaleProfit[j];
+          sum6 += data.yeartotalProfit[j];
+        }
+        this.seasonInNum[i] = sum1;
+        this.seasonInPrice[i] = sum2;
+        this.seasonSaleNum[i] = sum3;
+        this.seasonSalePrice[i] = sum4;
+        this.seasonSaleProfit[i] = sum5;
+        this.seasontotalProfit[i] = sum6;
+      }
+      console.log(this.seasonInNum)
+
     },
     salePine(){
       let arrNum = new Array();

@@ -75,6 +75,26 @@
         {{ chosenvipInfo.buyTimes }}
       </el-descriptions-item>
     </el-descriptions>
+    <el-divider></el-divider>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <circlewithtitle :salePineNum="vsexNum" title="用户性别组成" />
+        </div>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <circlewithtitle :salePineNum="vsexSaleNum" title="男女用户购买量" />
+        </div>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <circlewithtitle :salePineNum="vsexSalePrice" title="男女用户购买金额" />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -100,7 +120,10 @@ export default {
     return {
       vipid: "",
       chosenvipInfo: "",
-      vipInfo:''
+      vipInfo:'',
+      vsexNum:'',
+      vsexSaleNum:'',
+      vsexSalePrice:''
     };
   },
   mounted() {
@@ -110,6 +133,9 @@ export default {
     fetchVipSta(){
         getVipSta().then((response) => {
         const { data } = response;
+        this.vsexNum = data.vsexNum;
+        this.vsexSaleNum = data.vsexSaleNum;
+        this.vsexSalePrice = data.vsexSalePrice;
         console.log(data);
       });
       },

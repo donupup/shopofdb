@@ -9,6 +9,7 @@ import com.example.demo.model.entity.*;
 import com.example.demo.model.vo.GoodInInfo;
 import com.example.demo.model.vo.GoodSaleInfo;
 import com.example.demo.service.*;
+import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -204,13 +205,24 @@ public class StaController {
         int  totalSaleNum = 0; //总件数
         int totalSalePrice = 0; //总售价
         int totalSaleProfit = 0; //总销售利润
+        int maleSale = 0;
+        int femaleSale = 0;
         for (GoodSale gs:goodsale
              ) {
             totalSaleNum += gs.getNum();
             totalSalePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
             totalSaleProfit += gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein());
+            Vip v = vipService.getById(gs.getVipId());
+            if(v.getVsex().equals("男"))
+            {
+                maleSale += gs.getNum();
+            }
+            else{
+                femaleSale += gs.getNum();
+            }
         }
         //System.out.println(saleNum);
+
 
         QueryWrapper<GoodIn> inw = new QueryWrapper<>();
         LambdaQueryWrapper<GoodIn> inl = inw.lambda();
@@ -236,6 +248,8 @@ public class StaController {
         map.put("totalInNum",totalInNum);
         map.put("totalInPrice",totalInPrice);
         map.put("goodInfo",g);
+        map.put("maleSale",maleSale);
+        map.put("femaleSale",femaleSale);
         return ApiResult.success(map);
     }
 
@@ -304,6 +318,7 @@ public class StaController {
         return ApiResult.success(map);
     }
 
+    //todo: 该用户购买的商品种类的柱图
     @RequestMapping(value = "/numofvip",method = RequestMethod.POST)
     ApiResult<Object> getNumOfVip(@Valid @RequestBody String vid)
     {
@@ -334,7 +349,56 @@ public class StaController {
     @RequestMapping(value = "/vip",method = RequestMethod.POST)
     ApiResult<Object> getVipSta()
     {
-        return ApiResult.success();
+        Map<String,Object> map = new HashMap<>();
+        QueryWrapper<Vip> vipw1 = new QueryWrapper<>();
+        LambdaQueryWrapper<Vip> vipl1 = vipw1.lambda();
+        vipl1.eq(Vip::getVsex,"男");
+        List<Vip> maleVip = vipService.getBaseMapper().selectList(vipl1);
+        //System.out.println(maleVip);
+        int maleNum = maleVip.size();
+        //System.out.println(maleNum);
+        QueryWrapper<Vip> vipw2 = new QueryWrapper<>();
+        LambdaQueryWrapper<Vip> vipl2 = vipw2.lambda();
+        vipl2.eq(Vip::getVsex,"女");
+        List<Vip> femaleVip = vipService.getBaseMapper().selectList(vipl2);
+        //System.out.println(femaleVip);
+        int femaleNum = femaleVip.size();
+        //System.out.println(femaleNum);
+        Map<String,Object> vsexNum = new HashMap<>();
+        vsexNum.put("男会员",maleNum);
+        vsexNum.put("女会员",femaleNum);
+
+
+        int maleSaleNum = 0;
+        int femaleSaleNum = 0;
+        int maleSalePrice = 0;
+        int femaleSalePrice = 0;
+        List<GoodSale> goodsale = goodSaleService.getBaseMapper().selectList(null);
+        for (GoodSale gs:goodsale
+             ) {
+            String vid = gs.getVipId();
+            Vip vgs = vipService.getById(vid);
+            Good g = igoodService.getById(gs.getGoodId());
+            if(vgs.getVsex().equals("男")){
+                maleSaleNum += gs.getNum();
+                maleSalePrice += gs.getNum() * g.getPricesell();
+            }
+            else{
+                femaleSaleNum += gs.getNum();
+                femaleSalePrice += gs.getNum() * g.getPricesell();
+            }
+        }
+        Map<String,Object> vsexSaleNum = new HashMap<>();
+        vsexSaleNum.put("男会员",maleSaleNum);
+        vsexSaleNum.put("女会员",femaleSaleNum);
+        Map<String,Object> vsexSalePrice = new HashMap<>();
+        vsexSalePrice.put("男会员",maleSalePrice);
+        vsexSalePrice.put("女会员",femaleSalePrice);
+
+        map.put("vsexNum",vsexNum);
+        map.put("vsexSaleNum",vsexSaleNum);
+        map.put("vsexSalePrice",vsexSalePrice);
+        return ApiResult.success(map);
     }
 
     @RequestMapping(value = "/day",method = RequestMethod.POST)
