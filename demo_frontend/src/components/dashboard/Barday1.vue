@@ -36,19 +36,14 @@ export default {
       type: Array,
       default: [80, 52, 200, 334, 390, 330, 220],
     },
-    barProfit:{
-        type: Array,
-        default: [80, 52, 200, 334, 390, 330, 220],
-
-    }
+    
   },
   data() {
     return {
       chart: null,
-      barName1: ["休闲零食","酒水饮料","电子数码"],
+      barName1: ["销售","进货","销售利润","净利润"],
       barNum1: [79, 52, 200, 334, 390, 330, 220],
       barPrice1: [80, 52, 200, 334, 390, 330, 220],
-      barProfit1:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     };
   },
   mounted() {
@@ -85,13 +80,7 @@ export default {
         this.initChart();
       },
     },
-    barProfit:{
-        deep: true,
-      handler(val) {
-        this.barProfit1 = val;
-        this.initChart();
-      },
-    }
+   
   },
   methods: {
     initChart() {
@@ -138,14 +127,14 @@ export default {
           containLabel: true,
         },
                 title: {
-          text: "各种类统计",
+          text: "日销售统计",
           left: "center",
           textStyle: {
             //文字颜色
             color: "#ccc",
           },
         },
-        xAxis: [
+        yAxis: [
           {
             type: "category",
             data: this.barName1,
@@ -154,7 +143,7 @@ export default {
             },
           },
         ],
-        yAxis: [
+        xAxis: [
           {
             type: "value",
             axisTick: {
@@ -172,21 +161,14 @@ export default {
             animationDuration,
           },
           {
-            name: "销售金额",
+            name: "金额",
             type: "bar",
             //stack: "vistors",
             barWidth: "20%",
             data: this.barPrice1,
             animationDuration,
           },
-          {
-            name: '销售利润',
-            type: 'bar',
-            //stack: 'vistors',
-            barWidth: '20%',
-            data: this.barProfit1,
-            animationDuration
-          }
+          
         ],
       });
     },

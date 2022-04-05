@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-page-header @back="headBack" content="会员信息"> </el-page-header>
+    <el-page-header @back="headBack" content="员工信息"> </el-page-header>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
-        <span>输入会员ID获得用户数据</span>
+        <span>输入员工用户名进行查询</span>
         <el-button
           style="float: right"
           @click="handleSearchList()"
@@ -25,7 +25,7 @@
       <div style="margin-top: 15px">
         <el-input
           style="width: 203px"
-          v-model="vipid"
+          v-model="username"
           placeholder="名称"
         ></el-input>
       </div>
@@ -34,91 +34,55 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-tickets"></i>
-          会员姓名
+          员工用户名
         </template>
-        {{ vipInfo.vname }}
+        {{ userInfo.username}}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-location-outline"></i>
-          性别
+          员工姓名
         </template>
-        <el-tag size="small">{{ vipInfo.vsex }}</el-tag>
+        {{ userInfo.alias }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-location-outline"></i>
-          年龄
+          总售出商品数
         </template>
-        {{ vipInfo.vage }}
+        {{ chosenuserInfo.saleNum }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
-          总购买商品数
+          总售出商品价格
         </template>
-        {{ chosenvipInfo.buyNum }}
+        {{ chosenuserInfo.salePrice }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-mobile-phone"></i>
-          购买商品总价值
+          总进货数
         </template>
-        {{ chosenvipInfo.buyPrice }}￥
+        {{ chosenuserInfo.inNum }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-location-outline"></i>
-          购买次数
+          总进货价格
         </template>
-        {{ chosenvipInfo.buyTimes }}
+        {{ chosenuserInfo.inPrice }}
       </el-descriptions-item>
     </el-descriptions>
     <el-divider></el-divider>
-    <barvip
-      :barName="chosenvipInfo.cnames"
-      :barNum="chosenvipInfo.catNum"
-      :barPrice="chosenvipInfo.catPrice"
-    />
-    <el-divider></el-divider>
-    <el-divider content-position="center">顾客群体分析</el-divider>
-    <el-divider></el-divider>
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <circlewithtitle :salePineNum="vsexNum" title="用户性别组成" />
-        </div>
-      </el-col>
-
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <circlewithtitle :salePineNum="agemap" title="用户年龄组成"/>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <circlewithtitle :salePineNum="vsexSaleNum" title="男女用户购买量" />
-        </div>
-      </el-col>
-
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <circlewithtitle
-            :salePineNum="vsexSalePrice"
-            title="男女用户购买金额"
-          />
-        </div>
-      </el-col>
-    </el-row>
+    <baruser :barName="barName" :barNum="barNum" :barPrice="barPrice"/>
     
   </div>
 </template>
 
 
 <script>
-import { getNumOfVip, getVipSta } from "@/api/sta";
+import { getNumOfVip, getVipSta,getNumOfUser,getUserSta } from "@/api/sta";
 import BarChart from "@/components/dashboard/BarChart";
 import PieChart from "@/components/dashboard/PieChart";
 import CircleChart from "@/components/dashboard/CircleChart";
@@ -127,6 +91,7 @@ import Pinewithtitle from "../../components/dashboard/Pinewithtitle.vue";
 import Circlewithtitle from "../../components/dashboard/Circlewithtitle.vue";
 import BarChartDay from "../../components/dashboard/BarChartDay.vue";
 import Barvip from "../../components/dashboard/Barvip.vue";
+import Baruser from '../../components/dashboard/Baruser.vue';
 export default {
   components: {
     BarChart,
@@ -137,47 +102,50 @@ export default {
     Circlewithtitle,
     BarChartDay,
     Barvip,
+    Baruser,
   },
   data() {
     return {
-      vipid: "",
-      chosenvipInfo: "",
-      vipInfo: "",
-      vsexNum: "",
-      vsexSaleNum: "",
-      vsexSalePrice: "",
-      agemap:""
+      username: "",
+      chosenuserInfo:'',
+      userInfo:'',
+      barName: ["销售","进货"],
+      barNum:[],
+      barPrice:[],
+
     };
   },
   mounted() {
-    this.fetchVipSta();
+    this.fetchUserSta();
   },
   methods: {
-    fetchVipSta() {
-      getVipSta().then((response) => {
+    fetchUserSta() {
+      getUserSta().then((response) => {
         const { data } = response;
-        this.vsexNum = data.vsexNum;
-        this.vsexSaleNum = data.vsexSaleNum;
-        this.vsexSalePrice = data.vsexSalePrice;
-        this.agemap = data.agemap
         console.log(data);
       });
     },
     handleSearchList() {
-      console.log(this.vipid);
-      if (this.vipid == "") {
+      console.log(this.username);
+      if (this.username == "") {
         this.$message.error("请输入会员卡号");
       } else {
-        getNumOfVip(this.vipid).then((response) => {
+                this.barNum = []
+                this.barPrice = []
+        getNumOfUser(this.username).then((response) => {
           const { data } = response;
-          this.chosenvipInfo = data;
-          this.vipInfo = data.vip;
-          console.log(this.chosenvipInfo);
+          this.userInfo = data.user;
+          this.chosenuserInfo = data;
+          this.barNum.push(data.saleNum)
+          this.barNum.push(data.inNum)
+          this.barPrice.push(data.salePrice)
+          this.barPrice.push(data.inPrice)
+          console.log(data);
         });
       }
     },
     handleResetSearch() {
-      this.vipid = "";
+      this.username = "";
     },
     headBack() {
       console.log(this.$router);

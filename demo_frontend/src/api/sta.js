@@ -46,3 +46,18 @@ export function getDaySta(day){
         data: day
     })
 }
+
+export function getNumOfUser(user){
+    return request({
+        url: '/sta/numofuser',
+        method: 'post',
+        data: user
+    })
+}
+
+export function getUserSta(){
+    return request({
+        url: '/sta/user',
+        method: 'post',
+    })
+}

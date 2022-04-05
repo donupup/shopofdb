@@ -6,6 +6,7 @@
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
+      :default-openeds="openeds"
     >
       <el-submenu index="1">
         <template slot="title">
@@ -69,8 +70,10 @@
         <el-menu-item index="4-3"><router-link to="/sta/stavip">
             客户分析
           </router-link></el-menu-item>
-        <el-menu-item index="4-5">员工分析</el-menu-item>
-        <el-menu-item index="4-6">排行榜</el-menu-item>
+        <el-menu-item index="4-5"><router-link to="/sta/stauser">
+            员工分析
+          </router-link></el-menu-item>
+        <!-- <el-menu-item index="4-6">排行榜</el-menu-item> -->
       </el-submenu>
     </el-menu>
   </el-col>
@@ -78,6 +81,12 @@
 </template>
 <script>
 export default {
+  data () {
+    return {
+      openeds: ['1','4'],
+      uniqueOpened: false
+    }
+},
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

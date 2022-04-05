@@ -146,6 +146,16 @@ const routes = [{
     }
   },
   {
+    path: '/sta/stauser',
+    name: 'usersta',
+    component: () => import('@/views/Sta/usersta'),
+    meta: {
+      title: '员工分析',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta',
     name: 'statistic',
     component: () => import('@/components/dashboard/index'),

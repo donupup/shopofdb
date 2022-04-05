@@ -9,6 +9,7 @@ import com.example.demo.model.entity.*;
 import com.example.demo.model.vo.GoodInInfo;
 import com.example.demo.model.vo.GoodSaleInfo;
 import com.example.demo.service.*;
+import com.sun.corba.se.spi.ior.ObjectKey;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.jws.Oneway;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -326,10 +328,23 @@ public class StaController {
         vid = arr[0];
         System.out.println(vid);
         Vip v = vipService.getBaseMapper().selectById(vid);
+        if(ObjectUtils.isEmpty(v))
+        {
+            return  ApiResult.failed("没有对应的会员");
+        }
         QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
         LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
         salelam.eq(GoodSale::getVipId,vid);
         List<GoodSale> goodsale = goodSaleService.getBaseMapper().selectList(salelam);
+
+        List<Category> categories = categoryService.getBaseMapper().selectList(null);
+        List<String> cnames = new ArrayList<>();
+        for (Category cat:categories
+             ) {
+            cnames.add(cat.getCname());
+        }
+        Map<String,Object> catSaleNum = new HashMap<>();
+        Map<String,Object> catSalePrice = new HashMap<>();
         int buyNum = 0;
         int buyPrice = 0;
         int buyTimes = goodsale.size();
@@ -337,12 +352,43 @@ public class StaController {
              ) {
             buyNum += gs.getNum();
             buyPrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+            Category c = categoryService.getById(igoodService.getById(gs.getGoodId()).getCategoryId());
+            if(!catSaleNum.containsKey(c.getCname()))
+            {
+                catSaleNum.put(c.getCname(),gs.getNum());
+                catSalePrice.put(c.getCname(),gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+            }
+            else
+            {
+                Object val1 = catSaleNum.get(c.getCname());
+                catSaleNum.put(c.getCname(),(int)val1 + gs.getNum());
+
+                Object val2 = catSalePrice.get(c.getCname());
+                catSalePrice.put(c.getCname(),(int)val2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+            }
+        }
+        List<Object> catNum = new ArrayList<>();
+        List<Object> catPrice = new ArrayList<>();
+        for (String s: cnames
+             ) {
+            if(catSaleNum.containsKey(s))
+            {
+                catNum.add(catSaleNum.get(s));
+                catPrice.add(catSalePrice.get(s));
+            }
+            else{
+                catNum.add(0);
+                catPrice.add(0);
+            }
         }
         Map<String,Object> map = new HashMap<>();
         map.put("buyNum",buyNum);
         map.put("buyPrice",buyPrice);
         map.put("buyTimes",buyTimes);
         map.put("vip",v);
+        map.put("cnames",cnames);
+        map.put("catNum",catNum);
+        map.put("catPrice",catPrice);
         return ApiResult.success(map);
     }
 
@@ -368,6 +414,19 @@ public class StaController {
         vsexNum.put("男会员",maleNum);
         vsexNum.put("女会员",femaleNum);
 
+
+        Map<Object,Object> agemap = new HashMap<>();
+        for(int i = 10;i < 81; i = i + 10)
+        {
+            QueryWrapper<Vip> vipw3 = new QueryWrapper<>();
+            LambdaQueryWrapper<Vip> vipl3 = vipw3.lambda();
+            vipl3.ge(Vip::getVage,i);
+            vipl3.lt(Vip::getVage,i + 10);
+            List<Vip> vipage = vipService.getBaseMapper().selectList(vipl3);
+            int len = vipage.size();
+            agemap.put(String.valueOf(i) + "-" + String.valueOf(i + 9),len);
+        }
+        map.put("agemap",agemap);
 
         int maleSaleNum = 0;
         int femaleSaleNum = 0;
@@ -500,4 +559,56 @@ public class StaController {
 
         return ApiResult.success(map);
     }
+
+    @RequestMapping(value = "/numofuser",method = RequestMethod.POST)
+    ApiResult<Object> getNumofUser(@Valid @RequestBody String uname)
+    {
+        String[] arr = uname.split("=");
+        uname = arr[0];
+        //System.out.println(uname);
+        User user = userService.getUserByUsername(uname);
+        if(ObjectUtils.isEmpty(user))
+        {
+            return ApiResult.failed("未搜索到该用户");
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("user",user);
+
+        QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
+        salelam.eq(GoodSale::getUserId,user.getId());
+        List<GoodSale> goodsale = goodSaleService.getBaseMapper().selectList(salelam);
+
+        QueryWrapper<GoodIn> salein = new QueryWrapper<>();
+        LambdaQueryWrapper<GoodIn> salelin = salein.lambda();
+        salelin.eq(GoodIn::getUserId,user.getId());
+        List<GoodIn> goodin = goodInService.getBaseMapper().selectList(salelin);
+        int saleNum = 0;
+        int salePrice = 0;
+        int inNum = 0;
+        int inPrice = 0;
+        for (GoodSale gs:goodsale
+             ) {
+            saleNum += gs.getNum();
+            salePrice += gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell();
+        }
+        for (GoodIn gi: goodin
+             ) {
+            inNum += gi.getNum();
+            inPrice += gi.getNum() * igoodService.getById(gi.getGoodId()).getPricein();
+        }
+        map.put("saleNum",saleNum);
+        map.put("salePrice",salePrice);
+        map.put("inNum",inNum);
+        map.put("inPrice",inPrice);
+        return ApiResult.success(map);
+    }
+
+    @RequestMapping(value = "/user",method = RequestMethod.POST)
+    ApiResult<Object> getUserSta()
+    {
+        return ApiResult.success();
+    }
+
+
 }

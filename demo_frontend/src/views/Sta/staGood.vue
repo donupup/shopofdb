@@ -102,6 +102,8 @@
       </el-col>
     </el-row>
 
+       <el-divider></el-divider>
+    <el-divider content-position="center">商品总体分析</el-divider>
     <el-divider></el-divider>
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
@@ -207,7 +209,12 @@ export default {
       });
     },
     handleSearchList() {
-      getGoodNumSta(this.goodid).then((response) => {
+      if(this.goodid == "")
+      {
+        this.$message.error("请输入商品ID");
+      }
+      else{
+        getGoodNumSta(this.goodid).then((response) => {
         const { data } = response;
         this.chosengoodInfo = data;
         this.barNum.push(data.totalSaleNum);
@@ -222,6 +229,7 @@ export default {
         this.barNumSex.push(data.femaleSale);
         console.log(this.chosengoodInfo);
       });
+      } 
     },
     handleResetSearch() {
       this.goodid = "";

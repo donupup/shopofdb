@@ -38,7 +38,7 @@
               登录
             </b-button>
           </div>
-        </b-navbar-item>
+          </b-navbar-item>
 
           <b-navbar-item v-else tag="a" @click="logout"> 退出登录 </b-navbar-item>
 
