@@ -195,7 +195,7 @@
       </el-tab-pane>
       <el-tab-pane label="购物车" name="second">
         <el-table
-          ref="multipleTable"
+          ref="multipleTableCart"
           :data="
             cartList.slice((this.page - 1) * this.size, this.page * this.size)
           "
@@ -203,7 +203,7 @@
           style="width: 100%"
           border
           id="export"
-          @selection-change="handleSelectionChange"
+          @selection-change="handleSelectionChangeCart"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="id" label="ID" width="150"> </el-table-column>
@@ -247,6 +247,23 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="page"
+          :page-size="size"
+          :page-sizes="pageSizes"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="this.cartList.length"
+        >
+        </el-pagination>
+        <el-divider></el-divider>
+        <el-button size="small" type="primary" @click="checkMulti()"
+          >批量结算</el-button
+        >
+        <el-button size="small" type="primary" @click="deleteMulti()"
+          >批量删除</el-button
+        >
       </el-tab-pane>
     </el-tabs>
     <el-dialog title="加入购物车的数量" :visible.sync="dialogFormVisible">
@@ -305,7 +322,14 @@ const defaultListQuery = {
   pricesell: null,
 };
 import { getNumOfVip } from "@/api/sta";
-import { getCartList, addCart, deleteCartOne } from "@/api/cart";
+import {
+  getCartList,
+  addCart,
+  deleteCartOne,
+  editCartOne,
+  deleteCartMulti,
+  checkCart,
+} from "@/api/cart";
 import { getUserId } from "@/utils/auth";
 export default {
   name: "goodManage",
@@ -327,6 +351,7 @@ export default {
       searchKey: "",
       goodInfo: {},
       multipleSelection: [],
+      multipleTableCart: [],
       categoryInfo: {},
       providerInfo: {},
       rules: {
@@ -355,6 +380,55 @@ export default {
     this.fetchProviderList();
   },
   methods: {
+    deleteMulti() {
+      //这里面存着选中行的信息
+      console.log(this.multipleTableCart);
+      deleteCartMulti(this.multipleTableCart)
+        .then((value) => {
+          const { code, message } = value;
+          getCartList(this.vipid).then((response) => {
+            const { data } = response;
+            this.cartList = data;
+            console.log(this.cartList);
+          });
+          //console.log(value)
+          if (code === 200) {
+            this.$message({
+              message: "删除成功",
+              type: "success",
+            });
+          } else {
+            this.$message.error("添加失败，" + message);
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    checkMulti() {
+      console.log(this.multipleTableCart);
+      checkCart(this.multipleTableCart)
+        .then((value) => {
+          const { code, message } = value;
+          getCartList(this.vipid).then((response) => {
+            const { data } = response;
+            this.cartList = data;
+            console.log(this.cartList);
+          });
+          //console.log(value)
+          if (code === 200) {
+            this.$message({
+              message: "添加成功",
+              type: "success",
+            });
+          } else {
+            this.$message.error("添加失败，" + message);
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
     AddToCart(formName) {
       this.dialogFormVisible = false;
       this.$refs[formName].validate((valid) => {
@@ -413,27 +487,27 @@ export default {
         if (valid) {
           this.loading = true;
           console.log(this.editform);
-          //   addCart(this.addform)
-          //     .then((value) => {
-          //       const { code, message } = value;
-          //       getCartList(this.vipid).then((response) => {
-          //         const { data } = response;
-          //         this.cartList = data;
-          //         console.log(this.cartList);
-          //       });
-          //       //console.log(value)
-          //       if (code === 200) {
-          //         this.$message({
-          //           message: "添加成功",
-          //           type: "success",
-          //         });
-          //       } else {
-          //         this.$message.error("添加失败，" + message);
-          //       }
-          //     })
-          //     .catch(() => {
-          //       this.loading = false;
-          //     });
+          editCartOne(this.editform)
+            .then((value) => {
+              const { code, message } = value;
+              getCartList(this.vipid).then((response) => {
+                const { data } = response;
+                this.cartList = data;
+                console.log(this.cartList);
+              });
+              //console.log(value)
+              if (code === 200) {
+                this.$message({
+                  message: "编辑成功",
+                  type: "success",
+                });
+              } else {
+                this.$message.error("编辑失败，" + message);
+              }
+            })
+            .catch(() => {
+              this.loading = false;
+            });
         }
       });
     },
@@ -541,6 +615,9 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    handleSelectionChangeCart(val) {
+      this.multipleTableCart = val;
     },
     getTabelData() {
       //allData为全部数据

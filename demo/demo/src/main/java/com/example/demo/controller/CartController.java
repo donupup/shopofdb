@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.common.api.ApiResult;
 import com.example.demo.model.dto.CartAddDTO;
+import com.example.demo.model.dto.CartEditDTO;
 import com.example.demo.model.entity.Cart;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.GoodSale;
@@ -93,6 +95,34 @@ public class CartController {
         return ApiResult.failed("删除失败");
     }
 
+    @RequestMapping(value="/editOne",method = RequestMethod.POST)
+    public ApiResult<Object> editOneItem(@Valid @RequestBody CartEditDTO dto) {
 
+        Cart cartItem = cartService.getById(dto.getId());
+        Good g = goodService.getById(cartItem.getGoodId());
+        if(dto.getNum() > g.getStorage())
+        {
+            return ApiResult.failed("库存不够了");
+        }
+        cartItem.setNum(dto.getNum());
+        cartItem.setPrice(dto.getNum() * g.getPricesell());
+        cartService.getBaseMapper().updateById(cartItem);
+        return ApiResult.success("编辑成功");
+
+    }
+
+    @RequestMapping(value="/deleteMulti",method = RequestMethod.POST)
+    public ApiResult<Object> deleteMulti(@Valid @RequestBody JSONArray jsonArray) {
+        System.out.println(jsonArray);
+        return ApiResult.success();
+
+    }
+
+    @RequestMapping(value="/check",method = RequestMethod.POST)
+    public ApiResult<Object> Check(@Valid @RequestBody JSONArray jsonArray) {
+        System.out.println(jsonArray);
+        return ApiResult.success();
+
+    }
 
 }

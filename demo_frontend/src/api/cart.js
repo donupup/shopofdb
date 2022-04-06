@@ -25,3 +25,30 @@ export function deleteCartOne(id)
         data: id
     })
 }
+
+export function editCartOne(dto)
+{
+    return request({
+        url: '/cart/editOne',
+        method: 'post',
+        data: dto
+    })
+}
+
+export function deleteCartMulti(dto)
+{
+    return request({
+        url: '/cart/deleteMulti',
+        method: 'post',
+        data: dto
+    })
+}
+
+export function checkCart(dto)
+{
+    return request({
+        url: '/cart/check',
+        method: 'post',
+        data: dto
+    })
+}
