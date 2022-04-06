@@ -40,5 +40,5 @@ public class Cart {
     private Date addTime;
 
     @TableField("price")
-    private int price;
+    private float price;
 }

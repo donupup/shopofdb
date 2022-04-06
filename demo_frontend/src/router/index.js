@@ -96,6 +96,16 @@ const routes = [{
     }
   },
   {
+    path: '/good/cart',
+    name: 'goodcart',
+    component: () => import('@/views/good/goodCart'),
+    meta: {
+      title: '购物车',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta/weekline',
     name: 'weekline',
     component: () => import('@/views/Sta/weekline'),

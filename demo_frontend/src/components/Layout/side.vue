@@ -46,6 +46,10 @@
         <i class="el-icon-document"></i>
         <router-link to="/sale/manage"> 销售管理 </router-link>
       </el-menu-item>
+       <el-menu-item index="5">
+        <i class="el-icon-document"></i>
+        <router-link to="/good/cart"> 商品结算 </router-link>
+      </el-menu-item>
       <el-submenu index="4">
         <template slot="title">
           <i class="el-icon-setting"></i>

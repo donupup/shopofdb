@@ -346,7 +346,8 @@ export default {
               } else {
                 this.$message.error("修改失败，" + message);
               }
-              this.$router.go(0);
+              this.fetchGoodList();
+              //this.$router.go(0);
             })
             .catch(() => {
               this.loading = false;
