@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.common.api.ApiResult;
@@ -9,11 +10,9 @@ import com.example.demo.model.dto.CartEditDTO;
 import com.example.demo.model.entity.Cart;
 import com.example.demo.model.entity.Good;
 import com.example.demo.model.entity.GoodSale;
+import com.example.demo.model.entity.Vip;
 import com.example.demo.model.vo.CartInfo;
-import com.example.demo.service.ICartService;
-import com.example.demo.service.IGoodService;
-import com.example.demo.service.IUserService;
-import com.example.demo.service.IVipService;
+import com.example.demo.service.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +36,8 @@ public class CartController {
     IGoodService goodService;
     @Resource
     IVipService vipService;
+    @Resource
+    IGoodSaleService goodSaleService;
 
     @RequestMapping(value="/list",method = RequestMethod.POST)
     public ApiResult<Object> getCartList(@Valid @RequestBody String vid)
@@ -74,6 +75,15 @@ public class CartController {
         if(dto.getNum() > g.getStorage())
         {
             return ApiResult.failed("没有这么多库存了哦");
+        }
+        QueryWrapper<Cart> cartwra = new QueryWrapper<>();
+        LambdaQueryWrapper<Cart> cartlam = cartwra.lambda();
+        cartlam.eq(Cart::getGoodId,g.getId());
+        cartlam.eq(Cart::getVipId,dto.getVipid());
+        List<Cart> carts = cartService.getBaseMapper().selectList(cartlam);
+        if(!carts.isEmpty())
+        {
+            return ApiResult.failed("该用户已经有此商品在购物车，请去购物车查看~");
         }
         int price = dto.getNum() * g.getPricesell();
         Cart cart = Cart.builder().addTime(new Date()).num(dto.getNum()).price(price).goodId(dto.getGoodid()).userId(dto.getUserid()).vipId(dto.getVipid()).build();
@@ -114,14 +124,65 @@ public class CartController {
     @RequestMapping(value="/deleteMulti",method = RequestMethod.POST)
     public ApiResult<Object> deleteMulti(@Valid @RequestBody JSONArray jsonArray) {
         System.out.println(jsonArray);
-        return ApiResult.success();
+        for(int i = 0;i < jsonArray.size(); i ++)
+        {
+           JSONObject jsonObj = jsonArray.getJSONObject(i);
+           String id = jsonObj.get("id").toString();
+           int num = Integer.parseInt(jsonObj.get("num").toString());
+//         System.out.println(id);
+//         System.out.println(num);
+//         System.out.println(jsonObj);
+            int result = cartService.getBaseMapper().deleteById(id);
+        }
+        return ApiResult.success("删除成功");
 
     }
 
     @RequestMapping(value="/check",method = RequestMethod.POST)
     public ApiResult<Object> Check(@Valid @RequestBody JSONArray jsonArray) {
         System.out.println(jsonArray);
-        return ApiResult.success();
+        int sum = 0;
+        JSONObject jsonZero = jsonArray.getJSONObject(0);
+        String idZEro = jsonZero.get("id").toString();
+        Cart cartZero = cartService.getById(idZEro);
+        Vip vZero = vipService.getById(cartZero.getVipId());
+        for(int i = 0;i < jsonArray.size(); i ++)
+        {
+            JSONObject jsonObj = jsonArray.getJSONObject(i);
+            String id = jsonObj.get("id").toString();
+            Cart cartItem = cartService.getById(id);
+            sum += cartItem.getPrice();
+        }
+        if(vZero.getVbalance() < sum){
+            return ApiResult.failed("会员余额不足");
+        }
+        for(int i = 0;i < jsonArray.size(); i ++)
+        {
+            JSONObject jsonObj = jsonArray.getJSONObject(i);
+            String id = jsonObj.get("id").toString();
+//         System.out.println(id);
+//         System.out.println(num);
+//         System.out.println(jsonObj);
+            Cart cartItem = cartService.getById(id);
+            int num = cartItem.getNum();
+            String goodid = cartItem.getGoodId();
+            String userid = cartItem.getUserId();
+            String vipid = cartItem.getVipId();
+
+            Vip v = vipService.getById(vipid);
+            v.setVbalance(v.getVbalance() - cartItem.getPrice());
+            vipService.updateById(v);
+
+            Good g = goodService.getById(goodid);
+            g.setStorage(g.getStorage() - cartItem.getNum());
+            goodService.updateById(g);
+
+            GoodSale gs = GoodSale.builder().goodId(goodid).num(num).userId(userid).vipId(vipid).goodSoldTime(new Date()).bio(v.getVname() + "购物车结算").build();
+            goodSaleService.getBaseMapper().insert(gs);
+
+            cartService.getBaseMapper().deleteById(id);
+        }
+        return ApiResult.success("售卖成功");
 
     }
 

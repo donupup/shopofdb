@@ -197,7 +197,7 @@
         <el-table
           ref="multipleTableCart"
           :data="
-            cartList.slice((this.page - 1) * this.size, this.page * this.size)
+            cartList
           "
           tooltip-effect="dark"
           style="width: 100%"
@@ -247,7 +247,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
+        <!-- <el-pagination
           @size-change="sizeChange"
           @current-change="currentChange"
           :current-page="page"
@@ -256,7 +256,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="this.cartList.length"
         >
-        </el-pagination>
+        </el-pagination> -->
         <el-divider></el-divider>
         <el-button size="small" type="primary" @click="checkMulti()"
           >批量结算</el-button
@@ -398,7 +398,7 @@ export default {
               type: "success",
             });
           } else {
-            this.$message.error("添加失败，" + message);
+            this.$message.error("删除失败，" + message);
           }
         })
         .catch(() => {
@@ -418,11 +418,11 @@ export default {
           //console.log(value)
           if (code === 200) {
             this.$message({
-              message: "添加成功",
+              message: "购买成功",
               type: "success",
             });
           } else {
-            this.$message.error("添加失败，" + message);
+            this.$message.error("购买失败，" + message);
           }
         })
         .catch(() => {
@@ -470,6 +470,7 @@ export default {
         this.getUser();
         this.$set(this.addform, "userid", this.userId);
         this.dialogFormVisible = true;
+        console.log(this.dialogFormVisible)
       }
     },
     getUser() {
@@ -556,6 +557,7 @@ export default {
       if (this.vipid == "") {
         this.$message.error("请输入会员卡号");
       } else {
+        console.log(this.vipid)
         getNumOfVip(this.vipid).then((response) => {
           const { data } = response;
           this.chosenvipInfo = data;

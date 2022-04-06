@@ -92,7 +92,7 @@ public class StaController {
             yearinNum.add(inSum);
             yearinPrice.add(inPrice);
 
-            yeartotalProfit.add(saleProfit - inPrice);
+            yeartotalProfit.add(salePrice - inPrice);
         }
 
 
@@ -160,7 +160,7 @@ public class StaController {
             res.add(gii);
 
         }
-        int totalProfit = saleProfit - inPrice;
+        int totalProfit = salePrice - inPrice;
         map.put("saleList", resInfo);
         map.put("inList", res);
         map.put("saleSum", saleSum);
@@ -305,7 +305,7 @@ public class StaController {
         return ApiResult.success(map);
     }
 
-    //todo: 该用户购买的商品种类的柱图
+    //todo: 该用户购买的商品种类的柱图 done
     @RequestMapping(value = "/numofvip", method = RequestMethod.POST)
     ApiResult<Object> getNumOfVip(@Valid @RequestBody String vid) {
         String[] arr = vid.split("=");
