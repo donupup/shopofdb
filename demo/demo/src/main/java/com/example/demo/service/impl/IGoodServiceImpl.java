@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.CategoryMapper;
 import com.example.demo.mapper.GoodMapper;
+import com.example.demo.mapper.ProviderMapper;
 import com.example.demo.mapper.SaleGoodMapper;
 import com.example.demo.model.dto.GoodAddDTO;
 import com.example.demo.model.dto.GoodConditionDTO;
@@ -37,6 +38,8 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
     private SaleGoodMapper saleGoodMapper;
     @Resource
     private CategoryMapper categoryMapper;
+    @Resource
+    private ProviderMapper providerMapper;
 
     public IGoodServiceImpl(SaleGoodMapper saleGoodMapper) {
         this.saleGoodMapper = saleGoodMapper;
@@ -62,17 +65,26 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
 
     @Override
     public int executeEdit(GoodEditDTO dto) {
-        Good good = new Good();
+        System.out.println(dto);
+        Good good = goodMapper.selectById(dto.getId());
         good.setGoodname(dto.getGoodname());
-        good.setPricein(dto.getPricein());
-        good.setPricesell(dto.getPricesell());
+        //good.setPricein(dto.getPricein());
+        //good.setPricesell(dto.getPricesell());
         //good.setStorage(dto.getStorage());
         good.setModifyTime(new Date());
         good.setBio(dto.getBio());
-        good.setCategoryId(dto.getCategoryId());
-        good.setProviderId(dto.getProviderId());
-        LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Good::getId,dto.getId());
+        String catName = dto.getCategoryId();
+        String proName = dto.getProviderId();
+        if(!StrUtil.isBlank(dto.getCategoryId()))
+        {
+            good.setCategoryId(dto.getCategoryId());
+        }
+        if(!StrUtil.isBlank(dto.getProviderId()))
+        {
+            good.setProviderId(dto.getProviderId());
+        }
+//        LambdaQueryWrapper<Good> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(Good::getId,dto.getId());
         //Good good_old = this.baseMapper.selectOne(wrapper);
 //        int change_num = good.getStorage() - good_old.getStorage();
 //        if(change_num < 0){
@@ -88,7 +100,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
 //        else{
 //            int res = inGood(good.getGoodname(),Math.abs(change_num),good_old.getId(), dto.getBio(),good.getModifyTime(),dto.getPricein());
 //        }
-        int result = this.baseMapper.update(good,wrapper);
+        int result = this.baseMapper.updateById(good);
         return result;
     }
 

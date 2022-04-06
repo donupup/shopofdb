@@ -10,12 +10,12 @@
             <el-form-item label="商品名" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.goodname" autocomplete="off" :placeholder="item.goodname"></el-input>
             </el-form-item>
-            <el-form-item label="进价" :label-width="formLabelWidth" v-if="role != 2">
+            <!-- <el-form-item label="进价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricein" autocomplete="off" :placeholder="item.pricein"></el-input>
             </el-form-item>
             <el-form-item label="售价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricesell" autocomplete="off" :placeholder="item.pricesell"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <!-- <el-form-item label="库存" :label-width="formLabelWidth" >
               <el-input-number v-model="form.storage" controls-position="right"  :min="0" ></el-input-number>
             </el-form-item> -->
@@ -146,7 +146,9 @@ export default {
         pricesell: '',
         storage: '',
         status: '',
-        bio:''
+        bio:'',
+        categoryId:'',
+        providerId:''
       },
       providerInfo:{},
       categoryInfo:{},
@@ -196,7 +198,7 @@ export default {
       this.$set(this.form,'goodname',this.item.goodname)
       this.$set(this.form,'pricein',this.item.pricein)
       this.$set(this.form,'pricesell',this.item.pricesell)
-      //this.$set(this.form,'storage',this.item.storage)
+      this.$set(this.form,'storage',this.item.storage)
       this.$set(this.form,'status',this.item.status)
     },
     deleteGoodInfo() {
