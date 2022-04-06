@@ -119,7 +119,7 @@
         id = "export"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
+    
         <el-table-column prop="id" label="ID" width="150"> </el-table-column>
         <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
         </el-table-column>

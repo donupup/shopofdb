@@ -66,7 +66,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         good.setGoodname(dto.getGoodname());
         good.setPricein(dto.getPricein());
         good.setPricesell(dto.getPricesell());
-        good.setStorage(dto.getStorage());
+        //good.setStorage(dto.getStorage());
         good.setModifyTime(new Date());
         good.setBio(dto.getBio());
         good.setCategoryId(dto.getCategoryId());

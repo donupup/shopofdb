@@ -84,7 +84,7 @@
       id="export"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+     
       <el-table-column prop="id" label="会员卡号" width="200">
       </el-table-column>
       <el-table-column prop="vname" label="会员姓名" show-overflow-tooltip>
@@ -374,7 +374,7 @@ export default {
           } else {
             this.$message.error("删除失败，" + message);
           }
-          this.$router.go(0);
+          this.getList()
         })
         .catch(() => {
           this.loading = false;
@@ -398,7 +398,7 @@ export default {
               } else {
                 this.$message.error("添加失败，" + message);
               }
-              this.$router.go(0);
+              this.getList()
             })
             .catch(() => {
               this.loading = false;
@@ -425,7 +425,7 @@ export default {
               } else {
                 this.$message.error("修改失败，" + message);
               }
-              this.$router.go(0);
+              this.getList()
             })
             .catch(() => {
               this.loading = false;

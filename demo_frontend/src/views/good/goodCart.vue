@@ -196,9 +196,7 @@
       <el-tab-pane label="购物车" name="second">
         <el-table
           ref="multipleTableCart"
-          :data="
-            cartList
-          "
+          :data="cartList"
           tooltip-effect="dark"
           style="width: 100%"
           border
@@ -382,7 +380,12 @@ export default {
   methods: {
     deleteMulti() {
       //这里面存着选中行的信息
-      console.log(this.multipleTableCart);
+       if(this.multipleTableCart.length == 0)
+      {
+        this.$message("请选择商品");
+      }
+      else{
+        console.log(this.multipleTableCart);
       deleteCartMulti(this.multipleTableCart)
         .then((value) => {
           const { code, message } = value;
@@ -404,9 +407,30 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+      }
+      
     },
     checkMulti() {
       console.log(this.multipleTableCart);
+
+
+      if(this.multipleTableCart.length == 0)
+      {
+        this.$message("请选择商品");
+      }
+      else{
+              //json打印
+      //   this.$print({
+      //   printable: this.multipleTableCart,
+      //   properties: [
+      //     { field: "goodName", displayName: "商品名" },
+      //     { field: "num", displayName: "数量" },
+      //     { field: "price", displayName: "金额" },
+      //   ],
+      //   header: '<h3 class="custom-h3">欢迎来到Don超市</h3><h5>================================</h5><h4>收款时间</h4><span>' + new Date() + '</span><h5>================================</h5>',
+      //   type: "json",
+      // });
+
       checkCart(this.multipleTableCart)
         .then((value) => {
           const { code, message } = value;
@@ -428,6 +452,8 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+      }
+      
     },
     AddToCart(formName) {
       this.dialogFormVisible = false;
@@ -470,7 +496,7 @@ export default {
         this.getUser();
         this.$set(this.addform, "userid", this.userId);
         this.dialogFormVisible = true;
-        console.log(this.dialogFormVisible)
+        console.log(this.dialogFormVisible);
       }
     },
     getUser() {
@@ -557,7 +583,7 @@ export default {
       if (this.vipid == "") {
         this.$message.error("请输入会员卡号");
       } else {
-        console.log(this.vipid)
+        console.log(this.vipid);
         getNumOfVip(this.vipid).then((response) => {
           const { data } = response;
           this.chosenvipInfo = data;

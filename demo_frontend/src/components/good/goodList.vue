@@ -16,9 +16,9 @@
             <el-form-item label="售价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricesell" autocomplete="off" :placeholder="item.pricesell"></el-input>
             </el-form-item>
-            <el-form-item label="库存" :label-width="formLabelWidth" >
+            <!-- <el-form-item label="库存" :label-width="formLabelWidth" >
               <el-input-number v-model="form.storage" controls-position="right"  :min="0" ></el-input-number>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="选择种类" :label-width="formLabelWidth">
           <el-select v-model="form.categoryId" placeholder="请选择种类">
             <el-option v-for="(item,index) in categoryInfo" :key="index" :label="item.cname" :value="item.cid"></el-option>
@@ -196,7 +196,7 @@ export default {
       this.$set(this.form,'goodname',this.item.goodname)
       this.$set(this.form,'pricein',this.item.pricein)
       this.$set(this.form,'pricesell',this.item.pricesell)
-      this.$set(this.form,'storage',this.item.storage)
+      //this.$set(this.form,'storage',this.item.storage)
       this.$set(this.form,'status',this.item.status)
     },
     deleteGoodInfo() {

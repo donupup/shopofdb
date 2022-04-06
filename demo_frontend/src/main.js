@@ -40,6 +40,13 @@ Vue.use(ElementUI);
 
 Vue.config.productionTip = false
 
+//printjs插件
+import printjs from 'print-js'
+
+import 'print-js/dist/print.css';
+
+Vue.prototype.$print = printjs;
+
 //高德插件
 
 import VueAMap from 'vue-amap';

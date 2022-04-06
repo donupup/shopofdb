@@ -175,6 +175,7 @@ public class CartController {
 
             Good g = goodService.getById(goodid);
             g.setStorage(g.getStorage() - cartItem.getNum());
+            g.setSalenum(g.getSalenum() + cartItem.getNum());
             goodService.updateById(g);
 
             GoodSale gs = GoodSale.builder().goodId(goodid).num(num).userId(userid).vipId(vipid).goodSoldTime(new Date()).bio(v.getVname() + "购物车结算").build();

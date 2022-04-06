@@ -108,7 +108,7 @@
       id="export"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+     
       <el-table-column prop="id" label="ID" width="150"> </el-table-column>
       <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
       </el-table-column>
@@ -465,7 +465,7 @@ export default {
           } else {
             this.$message.error("删除失败，" + message);
           }
-          this.$router.go(0);
+          this.getList()
         })
         .catch(() => {
           this.loading = false;
@@ -489,7 +489,7 @@ export default {
               } else {
                 this.$message.error("添加失败，" + message);
               }
-              this.$router.go(0);
+              this.getList()
             })
             .catch(() => {
               this.loading = false;
@@ -516,7 +516,7 @@ export default {
               } else {
                 this.$message.error("修改失败，" + message);
               }
-              this.$router.go(0);
+              this.getList()
             })
             .catch(() => {
               this.loading = false;

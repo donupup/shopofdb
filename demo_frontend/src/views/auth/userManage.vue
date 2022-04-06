@@ -81,7 +81,6 @@
       id="export"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="职工ID" width="200"> </el-table-column>
       <el-table-column prop="username" label="职工用户名" show-overflow-tooltip>
       </el-table-column>
@@ -342,14 +341,14 @@ export default {
           } else {
             this.$message.error("删除失败，" + message);
           }
-          this.$router.go(0);
+           this.getList()
         })
         .catch(() => {
           this.loading = false;
         });
     },
     editUserInfo(formName) {
-      this.dialogFormVisible = false;
+      this.dialogFormVisibleEdit = false;
       //this.$set(this.form,'username',this.item.username)
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -367,7 +366,7 @@ export default {
               } else {
                 this.$message.error("修改失败，" + message);
               }
-              this.$router.go(0);
+              this.getList();
             })
             .catch(() => {
               this.loading = false;
