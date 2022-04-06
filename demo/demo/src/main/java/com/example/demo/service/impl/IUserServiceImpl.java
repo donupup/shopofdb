@@ -76,6 +76,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
                 .stuNo(dto.getStuNo())
                 .roleId(dto.getRole())
                 .createTime(new Date())
+                .mobile(dto.getMobile())
                 .status(true)
                 .build();
         baseMapper.insert(addUser);

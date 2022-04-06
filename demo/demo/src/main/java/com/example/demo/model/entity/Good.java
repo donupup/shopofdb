@@ -31,10 +31,10 @@ public class Good implements Serializable {
     private String categoryId;
 
     @TableField("pricein")
-    private int pricein;
+    private float pricein;
 
     @TableField("pricesell")
-    private int pricesell;
+    private float pricesell;
 
     @TableField("salenum")
     private int salenum;

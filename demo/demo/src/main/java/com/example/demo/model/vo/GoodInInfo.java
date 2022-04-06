@@ -15,7 +15,7 @@ public class GoodInInfo {
 
     private String goodName;
 
-    private int goodPrice;
+    private float goodPrice;
 
     private String providerName;
 

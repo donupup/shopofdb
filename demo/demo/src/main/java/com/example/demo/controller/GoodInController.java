@@ -46,7 +46,7 @@ public class GoodInController {
             String username = this.userService.getUserById(g.getUserId()).getUsername();
             String goodname = this.igoodService.getById(g.getGoodId()).getGoodname();
             String date = DateUtil.formatDateTime(g.getGoodInTime());
-            int goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
+            float goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
             GoodInInfo gii =  GoodInInfo.builder().goodPrice(goodprice).providerName(pname).goodName(goodname).id(g.getId()).bio(g.getBio())
                     .num(g.getNum()).userName(username).goodInTime(date).build();
             res.add(gii);
@@ -113,7 +113,7 @@ public class GoodInController {
             String username = this.userService.getUserById(g.getUserId()).getUsername();
             String goodname = this.igoodService.getById(g.getGoodId()).getGoodname();
             String date = DateUtil.formatDateTime(g.getGoodInTime());
-            int goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
+            float goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
             GoodInInfo gii =  GoodInInfo.builder().goodPrice(goodprice).providerName(pname).goodName(goodname).id(g.getId()).bio(g.getBio())
                     .num(g.getNum()).userName(username).goodInTime(date).build();
             list.add(gii);
@@ -134,6 +134,7 @@ public class GoodInController {
             String bio = good.get("备注").toString();
             String goodNum = good.get("数量").toString();
             Date d = DateUtil.parse(time,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            d = DateUtil.offsetHour(d,8);
             System.out.println(d);
 
             QueryWrapper<Provider> prowra = new QueryWrapper<>();

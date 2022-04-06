@@ -95,7 +95,7 @@ export default {
                 setTimeout(() => {
                   this.loading = false;
                   this.$router.push({path: this.redirect || "/"});
-                }, 0.1 * 1000);
+                }, 0.1 * 100);
               })
               .catch(() => {
                 this.loading = false;

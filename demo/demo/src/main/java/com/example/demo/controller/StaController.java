@@ -45,11 +45,11 @@ public class StaController {
         System.out.println(d);
         Date beginofyear = DateUtil.beginOfYear(d);
         List<Integer> yearsaleNum = new ArrayList<>();
-        List<Integer> yearsalePrice = new ArrayList<>();
-        List<Integer> yearsaleProfit = new ArrayList<>();
+        List<Float> yearsalePrice = new ArrayList<>();
+        List<Float> yearsaleProfit = new ArrayList<>();
         List<Integer> yearinNum = new ArrayList<>();
-        List<Integer> yearinPrice = new ArrayList<>();
-        List<Integer> yeartotalProfit = new ArrayList<>();
+        List<Float> yearinPrice = new ArrayList<>();
+        List<Float> yeartotalProfit = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             Date perMonth = DateUtil.offsetMonth(beginofyear, i);
             Date pernext = DateUtil.offsetMonth(perMonth, 1);
@@ -69,8 +69,8 @@ public class StaController {
             List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inlam);
 
             int saleSum = 0;
-            int salePrice = 0;
-            int saleProfit = 0;
+            float salePrice = 0;
+            float saleProfit = 0;
             for (GoodSale gs : goodsale
             ) {
                 saleSum += gs.getNum();
@@ -83,7 +83,7 @@ public class StaController {
             yearsaleProfit.add(saleProfit);
 
             int inSum = 0;
-            int inPrice = 0;
+            float inPrice = 0;
             for (GoodIn gi : goodin
             ) {
                 inSum += gi.getNum();
@@ -111,8 +111,8 @@ public class StaController {
         inl.lt(GoodIn::getGoodInTime, next);
         List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inl);
         int saleSum = 0;
-        int salePrice = 0;
-        int saleProfit = 0;
+        float salePrice = 0;
+        float saleProfit = 0;
         for (GoodSale gs : goodsale
         ) {
             saleSum += gs.getNum();
@@ -123,7 +123,7 @@ public class StaController {
                 goodsalePrice.put(g1.getGoodname(), g1.getPricesell() * gs.getNum());
             } else {
                 Object value = goodsalePrice.get(g1.getGoodname());
-                goodsalePrice.put(g1.getGoodname(), (int) value + (g1.getPricesell() * gs.getNum()));
+                goodsalePrice.put(g1.getGoodname(), (float)value + (g1.getPricesell() * gs.getNum()));
             }
         }
         List<GoodSaleInfo> resInfo = new ArrayList<>();
@@ -132,16 +132,16 @@ public class StaController {
             String username = this.userService.getUserById(gs.getUserId()).getUsername();
             String date = DateUtil.formatDateTime(gs.getGoodSoldTime());
             String vipname = this.vipService.getById(gs.getVipId()).getVname();
-            int oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
-            int totalprice = gs.getNum() * oneprice;
-            int inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
+            float oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
+            float totalprice = gs.getNum() * oneprice;
+            float inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
             GoodSaleInfo gsi = GoodSaleInfo.builder().id(gs.getId()).num(gs.getNum()).oneprice(oneprice).totalprice(totalprice)
                     .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).inprice(inprice).
                     username(username).goodsoldtime(date).bio(gs.getBio()).build();
             resInfo.add(gsi);
         }
         int inSum = 0;
-        int inPrice = 0;
+        float inPrice = 0;
         for (GoodIn gi : goodin
         ) {
             inSum += gi.getNum();
@@ -154,13 +154,13 @@ public class StaController {
             String username = this.userService.getUserById(g.getUserId()).getUsername();
             String goodname = this.igoodService.getById(g.getGoodId()).getGoodname();
             String date = DateUtil.formatDateTime(g.getGoodInTime());
-            int goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
+            float goodprice = this.igoodService.getById(g.getGoodId()).getPricein();
             GoodInInfo gii = GoodInInfo.builder().goodPrice(goodprice).providerName(pname).goodName(goodname).id(g.getId()).bio(g.getBio())
                     .num(g.getNum()).userName(username).goodInTime(date).build();
             res.add(gii);
 
         }
-        int totalProfit = salePrice - inPrice;
+        float totalProfit = salePrice - inPrice;
         map.put("saleList", resInfo);
         map.put("inList", res);
         map.put("saleSum", saleSum);
@@ -199,8 +199,8 @@ public class StaController {
         List<GoodSale> goodsale = this.goodSaleService.getBaseMapper().selectList(salel);
 
         int totalSaleNum = 0; //总件数
-        int totalSalePrice = 0; //总售价
-        int totalSaleProfit = 0; //总销售利润
+        float totalSalePrice = 0; //总售价
+        float totalSaleProfit = 0; //总销售利润
         int maleSale = 0;
         int femaleSale = 0;
         for (GoodSale gs : goodsale
@@ -226,7 +226,7 @@ public class StaController {
         int inNum = this.goodInService.getBaseMapper().selectList(inl).size();
         List<GoodIn> goodin = this.goodInService.getBaseMapper().selectList(inl);
         int totalInNum = 0;
-        int totalInPrice = 0;
+        float totalInPrice = 0;
         for (GoodIn gi : goodin
         ) {
             totalInNum += gi.getNum();
@@ -267,7 +267,7 @@ public class StaController {
                 Object value = goodsaleMap.get(g.getGoodname());
                 Object value1 = goodsaleprice.get(g.getGoodname());
                 goodsaleMap.put(g.getGoodname(), gs.getNum() + (int) value);
-                goodsaleprice.put(g.getGoodname(), (int) value1 + (gs.getNum() * g.getPricesell()));
+                goodsaleprice.put(g.getGoodname(), (float) value1 + (gs.getNum() * g.getPricesell()));
             }
             Category cat = categoryService.getById(g.getCategoryId());
             if (!catsaleMap.containsKey(cat.getCname())) {
@@ -277,7 +277,7 @@ public class StaController {
                 Object value2 = catsaleMap.get(cat.getCname());
                 Object value3 = catsaleprice.get(cat.getCname());
                 catsaleMap.put(cat.getCname(), (int) value2 + gs.getNum());
-                catsaleprice.put(cat.getCname(), (int) value3 + (gs.getNum() * g.getPricesell()));
+                catsaleprice.put(cat.getCname(), (float) value3 + (gs.getNum() * g.getPricesell()));
             }
         }
         map.put("goodsale", goodsaleMap);
@@ -329,7 +329,7 @@ public class StaController {
         Map<String, Object> catSaleNum = new HashMap<>();
         Map<String, Object> catSalePrice = new HashMap<>();
         int buyNum = 0;
-        int buyPrice = 0;
+        float buyPrice = 0;
         int buyTimes = goodsale.size();
         for (GoodSale gs : goodsale
         ) {
@@ -344,7 +344,7 @@ public class StaController {
                 catSaleNum.put(c.getCname(), (int) val1 + gs.getNum());
 
                 Object val2 = catSalePrice.get(c.getCname());
-                catSalePrice.put(c.getCname(), (int) val2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+                catSalePrice.put(c.getCname(), (float) val2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
             }
         }
         List<Object> catNum = new ArrayList<>();
@@ -406,8 +406,8 @@ public class StaController {
 
         int maleSaleNum = 0;
         int femaleSaleNum = 0;
-        int maleSalePrice = 0;
-        int femaleSalePrice = 0;
+        float maleSalePrice = 0;
+        float femaleSalePrice = 0;
         List<GoodSale> goodsale = goodSaleService.getBaseMapper().selectList(null);
         for (GoodSale gs : goodsale
         ) {
@@ -440,11 +440,11 @@ public class StaController {
         System.out.println(d);
         Date next = DateUtil.offsetDay(d, 1);
         int saleNum = 0;
-        int salePrice = 0;
+        float salePrice = 0;
         int inNum = 0;
-        int inPrice = 0;
-        int saleProfit = 0;
-        int totalProfit = 0;
+        float inPrice = 0;
+        float saleProfit = 0;
+        float totalProfit = 0;
         QueryWrapper<GoodSale> salewra = new QueryWrapper<>();
         LambdaQueryWrapper<GoodSale> salelam = salewra.lambda();
         QueryWrapper<GoodIn> inwra = new QueryWrapper<>();
@@ -488,23 +488,23 @@ public class StaController {
                 Object value2 = catsalepricemap.get(cat.getCname());
                 Object value3 = catsaleprofit.get(cat.getCname());
                 catsalenummap.put(cat.getCname(), (int) value1 + gs.getNum());
-                catsalepricemap.put(cat.getCname(), (int) value2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
-                catsaleprofit.put(cat.getCname(), (int) value3 + gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein()));
+                catsalepricemap.put(cat.getCname(), (float) value2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+                catsaleprofit.put(cat.getCname(), (float) value3 + gs.getNum() * (igoodService.getById(gs.getGoodId()).getPricesell() - igoodService.getById(gs.getGoodId()).getPricein()));
             }
         }
         List<Integer> catsaleNum = new ArrayList<>();
-        List<Integer> catsalePrice = new ArrayList<>();
-        List<Integer> catsaleProfit = new ArrayList<>();
+        List<Float> catsalePrice = new ArrayList<>();
+        List<Float> catsaleProfit = new ArrayList<>();
         for (Category c : categories
         ) {
             if (catsalenummap.containsKey(c.getCname())) {
                 catsaleNum.add((int) catsalenummap.get(c.getCname()));
-                catsalePrice.add((int) catsalepricemap.get(c.getCname()));
-                catsaleProfit.add((int) catsaleprofit.get(c.getCname()));
+                catsalePrice.add((float) catsalepricemap.get(c.getCname()));
+                catsaleProfit.add((float) catsaleprofit.get(c.getCname()));
             } else {
                 catsaleNum.add(0);
-                catsalePrice.add(0);
-                catsaleProfit.add(0);
+                catsalePrice.add((float)0);
+                catsaleProfit.add((float)0);
             }
 
         }
@@ -551,9 +551,9 @@ public class StaController {
         salelin.eq(GoodIn::getUserId, user.getId());
         List<GoodIn> goodin = goodInService.getBaseMapper().selectList(salelin);
         int saleNum = 0;
-        int salePrice = 0;
+        float salePrice = 0;
         int inNum = 0;
-        int inPrice = 0;
+        float inPrice = 0;
         for (GoodSale gs : goodsale
         ) {
             saleNum += gs.getNum();
@@ -593,7 +593,7 @@ public class StaController {
                 userSaleNum.put(u.getUsername(),(int)val1 + gs.getNum());
 
                 Object val2 = userSalePrice.get(u.getUsername());
-                userSalePrice.put(u.getUsername(),(int)val2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
+                userSalePrice.put(u.getUsername(),(float)val2 + gs.getNum() * igoodService.getById(gs.getGoodId()).getPricesell());
             }
         }
         Map<String,Object> saleNumPerUser = new HashMap<>();

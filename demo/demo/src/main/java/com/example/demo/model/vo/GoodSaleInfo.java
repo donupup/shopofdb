@@ -11,11 +11,11 @@ public class GoodSaleInfo {
 
     int num;
 
-    int oneprice;
+    float oneprice;
 
-    int totalprice;
+    float totalprice;
 
-    int inprice;
+    float inprice;
 
     String goodname;
 

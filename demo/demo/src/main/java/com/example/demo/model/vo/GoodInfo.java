@@ -21,9 +21,9 @@ public class GoodInfo {
 
     private String categoryName;
 
-    private int pricein;
+    private float pricein;
 
-    private int pricesell;
+    private float pricesell;
 
     private int salenum;
 

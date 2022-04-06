@@ -42,6 +42,9 @@
             <el-form-item label="学号" prop="stuNo">
               <el-input v-model="ruleForm.stuNo" autocomplete="off"/>
             </el-form-item>
+            <el-form-item label="手机号" prop="mobile">
+              <el-input v-model="ruleForm.mobile" autocomplete="off"/>
+            </el-form-item>
 
             <el-form-item label="职责" prop="role">
               <el-select v-model="ruleForm.role" placeholder="Select">
@@ -105,7 +108,8 @@ export default {
         pass: '',
         checkPass: '',
         stuNo: '',
-        role: ''
+        role: '',
+        mobile:''
       },
       rules: {
         name: [

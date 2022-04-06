@@ -29,5 +29,7 @@ public class RegisterDTO {
     @NotEmpty(message = "请输入职责")
     private String role;
 
+    private String mobile;
+
 
 }

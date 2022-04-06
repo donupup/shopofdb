@@ -85,7 +85,7 @@ public class CartController {
         {
             return ApiResult.failed("该用户已经有此商品在购物车，请去购物车查看~");
         }
-        int price = dto.getNum() * g.getPricesell();
+        float price = dto.getNum() * g.getPricesell();
         Cart cart = Cart.builder().addTime(new Date()).num(dto.getNum()).price(price).goodId(dto.getGoodid()).userId(dto.getUserid()).vipId(dto.getVipid()).build();
         cartService.getBaseMapper().insert(cart);
 //        Good g = goodService.getById(dto.getGoodid());

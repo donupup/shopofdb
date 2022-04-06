@@ -67,9 +67,9 @@ public class GoodSaleController {
             String username = this.userService.getUserById(gs.getUserId()).getUsername();
             String date = DateUtil.formatDateTime(gs.getGoodSoldTime());
             String vipname = this.vipService.getById(gs.getVipId()).getVname();
-            int oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
-            int totalprice = gs.getNum() * oneprice;
-            int inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
+            float oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
+            float totalprice = gs.getNum() * oneprice;
+            float inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
             GoodSaleInfo gsi = GoodSaleInfo.builder().id(gs.getId()).num(gs.getNum()).oneprice(oneprice).totalprice(totalprice)
                     .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).username(username).goodsoldtime(date)
                     .inprice(inprice).bio(gs.getBio()).build();
@@ -123,9 +123,9 @@ public class GoodSaleController {
             String username = this.userService.getUserById(gs.getUserId()).getUsername();
             String date = DateUtil.formatDateTime(gs.getGoodSoldTime());
             String vipname = this.vipService.getById(gs.getVipId()).getVname();
-            int oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
-            int totalprice = gs.getNum() * oneprice;
-            int inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
+            float oneprice = this.igoodService.getById(gs.getGoodId()).getPricesell();
+            float totalprice = gs.getNum() * oneprice;
+            float inprice = this.igoodService.getById(gs.getGoodId()).getPricein();
             GoodSaleInfo gsi = GoodSaleInfo.builder().id(gs.getId()).num(gs.getNum()).oneprice(oneprice).totalprice(totalprice)
                     .goodname(goodname).vipname(vipname).vipid(gs.getVipId()).inprice(inprice).
             username(username).goodsoldtime(date).bio(gs.getBio()).build();
@@ -142,7 +142,7 @@ public class GoodSaleController {
         if (ObjectUtils.isEmpty(v)) {
             return ApiResult.failed("添加失败,请输入正确的ID");
         }
-        int totalSum = dto.getNum() * igoodService.getById(dto.getGoodid()).getPricesell();
+        float totalSum = dto.getNum() * igoodService.getById(dto.getGoodid()).getPricesell();
         if(v.getVbalance() < totalSum)
         {
             return ApiResult.failed("会员卡余额不足，需要进行充值~");

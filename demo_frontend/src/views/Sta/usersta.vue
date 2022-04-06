@@ -55,7 +55,7 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
-          总售出商品价格
+          总销售额
         </template>
         {{ chosenuserInfo.salePrice }}
       </el-descriptions-item>
@@ -149,7 +149,7 @@ export default {
     handleSearchList() {
       console.log(this.username);
       if (this.username == "") {
-        this.$message.error("请输入会员卡号");
+        this.$message.error("请输入员工用户名");
       } else {
                 this.barNum = []
                 this.barPrice = []

@@ -199,7 +199,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                 newGood.setSalenum(good_old.getSalenum() + good.getNum());
                 int res = baseMapper.update(newGood, wrapper);
                 if(res > 0) goodsReturn.add(newGood);
-                int res2 = sellGoodToTable(good.getGoodname(),good.getNum(),good_old.getId(),good_old.getPricein(),good_old.getPricesell(),new Date());
+                int res2 = sellGoodToTable(good.getGoodname(),good.getNum(),good_old.getId(),(int)good_old.getPricein(),(int)good_old.getPricesell(),new Date());
             }
         }
         return goodsReturn;
