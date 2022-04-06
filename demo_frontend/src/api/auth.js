@@ -63,6 +63,15 @@ export function getConditionList(UserConditionDTO){
 export function getUserById(id){
     return request({
         url: '/user/getbyid',
-        method: 'id',
+        method: 'post',
+        data:id
+    })
+}
+
+export function EditUserById(dto){
+    return request({
+        url: '/user/editbyid',
+        method: 'post',
+        data:dto
     })
 }

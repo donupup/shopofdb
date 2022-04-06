@@ -53,6 +53,13 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
+          商品ID
+        </template>
+        {{ item.id }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-user"></i>
           商品名
         </template>
         {{ item.goodname }}

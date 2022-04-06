@@ -1,14 +1,12 @@
 package com.example.demo.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
-import com.example.demo.model.dto.EditDTO;
-import com.example.demo.model.dto.LoginDTO;
-import com.example.demo.model.dto.RegisterDTO;
-import com.example.demo.model.dto.UserConditionDTO;
+import com.example.demo.model.dto.*;
 import com.example.demo.model.entity.Role;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IRoleService;
@@ -99,4 +97,44 @@ public class UserController extends BaseController{
         List<User> l =  iUserService.getCondition(dto);
         return ApiResult.success(l);
     }
+
+    @RequestMapping(value = "/getbyid",method = RequestMethod.POST)
+    public  ApiResult<Object> getUserById(@Valid @RequestBody String id)
+    {
+        String[] arr = id.split("=");
+        id = arr[0];
+        User user = iUserService.getUserById(id);
+        return ApiResult.success(user);
+    }
+
+    @RequestMapping(value = "/editbyid",method = RequestMethod.POST)
+    public  ApiResult<Object> editUserById(@Valid @RequestBody UserCenterInfoDTO dto)
+    {
+        System.out.println(dto);
+
+        User user = iUserService.getUserById(dto.getUserid());
+        if(!StrUtil.isBlank(dto.getAlias()))
+        {
+            user.setAlias(dto.getAlias());
+        }
+        if(!StrUtil.isBlank(dto.getUsername()))
+        {
+            user.setUsername(dto.getUsername());
+        }
+        if(!StrUtil.isBlank(dto.getEmail()))
+        {
+            user.setEmail(dto.getEmail());
+        }
+        if(!StrUtil.isBlank(dto.getStuNo()))
+        {
+            user.setStuNo(dto.getStuNo());
+        }
+        if(!StrUtil.isBlank(dto.getBio()))
+        {
+            user.setBio(dto.getBio());
+        }
+        iUserService.updateById(user);
+        return  ApiResult.success();
+    }
+
 }
