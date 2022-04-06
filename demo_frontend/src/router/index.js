@@ -126,6 +126,16 @@ const routes = [{
     }
   },
   {
+    path: '/msg',
+    name: 'msg',
+    component: () => import('@/views/auth/Sms'),
+    meta: {
+      title: '个人中心',
+      requireAuth: true,
+      showInbreadcrumb: true
+    }
+  },
+  {
     path: '/sta/monthprice',
     name: 'monthprice',
     component: () => import('@/views/Sta/monthprice'),
