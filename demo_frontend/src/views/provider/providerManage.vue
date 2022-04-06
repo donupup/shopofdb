@@ -4,9 +4,14 @@
 
     <div style="text-align: right">
       <!-- <import-excel /> -->
-      <el-button type="primary" @click="dialogFormVisible = true"
+      <el-button size="small" type="primary" @click="dialogFormVisible = true"
         >增加供货商</el-button
       >
+      <exportExcel
+        :id="'export'"
+        :name="'供货商'"
+        :button="'导出'"
+      ></exportExcel>
     </div>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
@@ -61,9 +66,45 @@
       </div>
     </el-card>
     <el-divider></el-divider>
+
+    <div hidden="hidden">
+      <el-table
+        :data="providerInfo"
+        tooltip-effect="dark"
+        style="width: 100%"
+        border
+        id="export"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column prop="id" label="ID" width="200"> </el-table-column>
+        <el-table-column prop="pname" label="供货商名称" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="pphone"
+          label="供货商联系方式"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="paddress"
+          label="供货商地址"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="plinkman"
+          label="供货商联系人"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+      </el-table>
+    </div>
     <el-table
       ref="multipleTable"
-      :data="providerInfo.slice((this.page - 1) * this.size, this.page * this.size)"
+      :data="
+        providerInfo.slice((this.page - 1) * this.size, this.page * this.size)
+      "
       tooltip-effect="dark"
       style="width: 100%"
       border
@@ -101,7 +142,7 @@
         </template>
       </el-table-column>
     </el-table>
-          <el-pagination
+    <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="page"
@@ -136,21 +177,39 @@
     <el-dialog title="供应商信息" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="formEdit" ref="formEdit" :rules="rules">
         <el-form-item label="供应商名" :label-width="formLabelWidth">
-          <el-input v-model="formEdit.pname" autocomplete="off" :placeholder="rowItem.pname"></el-input>
+          <el-input
+            v-model="formEdit.pname"
+            autocomplete="off"
+            :placeholder="rowItem.pname"
+          ></el-input>
         </el-form-item>
         <el-form-item label="供应商电话" :label-width="formLabelWidth">
-          <el-input v-model="formEdit.pphone" autocomplete="off" :placeholder="rowItem.pphone"></el-input>
+          <el-input
+            v-model="formEdit.pphone"
+            autocomplete="off"
+            :placeholder="rowItem.pphone"
+          ></el-input>
         </el-form-item>
         <el-form-item label="供应商地址" :label-width="formLabelWidth">
-          <el-input v-model="formEdit.paddress" autocomplete="off" :placeholder="rowItem.paddress"></el-input>
+          <el-input
+            v-model="formEdit.paddress"
+            autocomplete="off"
+            :placeholder="rowItem.paddress"
+          ></el-input>
         </el-form-item>
         <el-form-item label="供应商联系人" :label-width="formLabelWidth">
-          <el-input v-model="formEdit.plinkman" autocomplete="off" :placeholder="rowItem.plinkman"></el-input>
+          <el-input
+            v-model="formEdit.plinkman"
+            autocomplete="off"
+            :placeholder="rowItem.plinkman"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="EditProvider('formEdit')">确 定</el-button>
+        <el-button type="primary" @click="EditProvider('formEdit')"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -160,7 +219,14 @@
 
 <script>
 import goodList from "@/components/good/goodList";
-import { getProviderList, addProvider, deleteProvider,editProvider,getConditionList } from "@/api/provider";
+import ExportExcel from "@/components/ExportExcel";
+import {
+  getProviderList,
+  addProvider,
+  deleteProvider,
+  editProvider,
+  getConditionList,
+} from "@/api/provider";
 const defaultListQuery = {
   pname: null,
   paddress: null,
@@ -168,10 +234,10 @@ const defaultListQuery = {
 };
 export default {
   name: "providerManage",
-  components: { goodList },
+  components: { goodList, ExportExcel },
   data() {
     return {
-       page: 1, //第几页
+      page: 1, //第几页
       size: 3, //一页多少条
       total: 0, //总条目数
       pageSizes: [3, 5, 10, 20, 50, 100, 200, 300, 400, 500, 1000], //可选择的一页多少条
@@ -186,7 +252,7 @@ export default {
         plinkman: "",
       },
       formEdit: {
-          id:'',
+        id: "",
         ppname: "",
         pphone: "",
         paddress: "",
@@ -201,8 +267,8 @@ export default {
       dialogFormVisible: false,
       dialogFormVisibleEdit: false,
       formLabelWidth: "120px",
-      rowItem:{
-          id:"",
+      rowItem: {
+        id: "",
         pname: "",
         pphone: "",
         paddress: "",
@@ -215,7 +281,7 @@ export default {
   },
   methods: {
     getList() {
-      console.log(this.listQuery)
+      console.log(this.listQuery);
       getConditionList(this.listQuery).then((response) => {
         const { data } = response;
         this.providerInfo = data;
@@ -224,9 +290,9 @@ export default {
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);
-      this.fetchProviderList()
+      this.fetchProviderList();
     },
-    handleSearchList() {;
+    handleSearchList() {
       this.getList();
     },
     headBack() {
@@ -259,12 +325,12 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
       this.rowItem = row;
-       this.$set(this.formEdit,'id',this.rowItem["id"])
-      this.$set(this.formEdit,'pname',this.rowItem["pname"])
-      this.$set(this.formEdit,'pphone',this.rowItem["pphone"])
-        this.$set(this.formEdit,'paddress',this.rowItem["paddress"])
-    this.$set(this.formEdit,'plinkman',this.rowItem["plinkman"])
-      console.log(this.formEdit)
+      this.$set(this.formEdit, "id", this.rowItem["id"]);
+      this.$set(this.formEdit, "pname", this.rowItem["pname"]);
+      this.$set(this.formEdit, "pphone", this.rowItem["pphone"]);
+      this.$set(this.formEdit, "paddress", this.rowItem["paddress"]);
+      this.$set(this.formEdit, "plinkman", this.rowItem["plinkman"]);
+      console.log(this.formEdit);
       this.dialogFormVisibleEdit = true;
     },
     handleDelete(index, row) {
@@ -315,7 +381,7 @@ export default {
     },
     EditProvider(formName) {
       this.dialogFormVisibleEdit = false;
-      console.log(this.$refs[formName])
+      console.log(this.$refs[formName]);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
@@ -340,7 +406,7 @@ export default {
         }
       });
     },
-     getTabelData() {
+    getTabelData() {
       //allData为全部数据
       this.tableData = this.info.slice(
         (this.page - 1) * this.size,

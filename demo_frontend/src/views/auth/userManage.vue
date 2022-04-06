@@ -2,6 +2,15 @@
   <div>
     <el-page-header @back="headBack" content="职工详情"> </el-page-header>
 
+    <div style="text-align: right">
+      <!-- <import-excel /> -->
+
+      <exportExcel
+            :id="'export'"
+            :name="'职工表'"
+            :button="'导出'"
+          ></exportExcel>
+    </div>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <div>
@@ -62,6 +71,36 @@
         </el-form>
       </div>
     </el-card>
+    <div hidden="hidden">
+       <el-table
+      ref="multipleTable"
+      :data="userInfo"
+      tooltip-effect="dark"
+      style="width: 100%"
+      border
+      id="export"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="id" label="职工ID" width="200"> </el-table-column>
+      <el-table-column prop="username" label="职工用户名" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="alias" label="职工姓名" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="stuNo" label="职工工号" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="mobile" label="职工电话" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="bio" label="职工备注" show-overflow-tooltip>
+      </el-table-column>
+      <!-- <el-table-column
+        prop="vbalance"
+        label="会员卡余额"
+        show-overflow-tooltip
+      >
+      </el-table-column> -->
+    </el-table>
+    </div>
     <el-table
       ref="multipleTable"
       :data="userInfo.slice((this.page - 1) * this.size, this.page * this.size)"
@@ -179,6 +218,7 @@
 <script>
 import { userInfo } from "@/api/auth";
 import { editInfo, deleteUser, getRoleList, getConditionList } from "@/api/auth";
+import ExportExcel from "@/components/ExportExcel";
 const defaultListQuery = {
   username: null,
   stuNo: null,
@@ -186,6 +226,7 @@ const defaultListQuery = {
 };
 export default {
   name: "userManage",
+  components: { ExportExcel },
   data() {
     return {
          page: 1, //第几页

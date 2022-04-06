@@ -39,9 +39,10 @@
             </b-button>
           </div>
           </b-navbar-item>
-
-          <b-navbar-item v-else tag="a" @click="logout"> 退出登录 </b-navbar-item>
-
+          <b-navbar-dropdown v-else>
+            <b-navbar-item  tag="a" @click="logout"> 退出登录 </b-navbar-item>
+            <b-navbar-item  tag="router-link" :to="{ path: '/' }"> 个人中心 </b-navbar-item>
+          </b-navbar-dropdown>
       </template>
     </b-navbar>
   </header>

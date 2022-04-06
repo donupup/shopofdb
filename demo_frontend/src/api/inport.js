@@ -38,3 +38,11 @@ export function getConditionList(InportConditionDTO) {
         data: InportConditionDTO
     })
 }
+
+export function editGoodByFile(exceldata){
+    return request({
+        url: '/inport/file_good',
+        method: 'post',
+        data:exceldata
+    })
+}

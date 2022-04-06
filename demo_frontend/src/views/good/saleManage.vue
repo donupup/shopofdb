@@ -3,9 +3,14 @@
     <el-page-header @back="headBack" content="销售详情"> </el-page-header>
 
     <div style="text-align: right">
-      <el-button type="primary" @click="dialogFormVisible = true"
+      <el-button size="small" type="primary" @click="dialogFormVisible = true"
         >增加销售记录</el-button
       >
+       <exportExcel
+            :id="'export'"
+            :name="'销售记录'"
+            :button="'导出'"
+          ></exportExcel>
     </div>
 
     <el-divider></el-divider>
@@ -37,15 +42,7 @@
           label-width="140px"
         >
           <el-form-item label="会员">
-            <!-- <el-select v-model="listQuery.vipid" placeholder="会员" clearable>
-              <el-option
-                v-for="item in vipInfo"
-                :key="item.id"
-                :label="item.vname"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select> -->
+
             <el-input
               style="width: 203px"
               v-model="listQuery.vipid"
@@ -101,6 +98,40 @@
       </div>
     </el-card>
     <el-divider></el-divider>
+    <div hidden ="hidden">
+      <el-table
+      ref="multipleTable"
+      :data="saleInfo"
+      tooltip-effect="dark"
+      style="width: 100%"
+      border
+      id="export"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="id" label="ID" width="150"> </el-table-column>
+      <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="vipname" label="购货会员" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="username" label="操作员" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="oneprice"
+        label="单价"
+        show-overflow-tooltip
+        width="50"
+      >
+      </el-table-column>
+      <el-table-column prop="num" label="数量" show-overflow-tooltip width="70">
+      </el-table-column>
+      <el-table-column prop="goodsoldtime" label="时间" show-overflow-tooltip>
+      </el-table-column>
+
+      <el-table-column prop="bio" label="备注" show-overflow-tooltip>
+      </el-table-column>
+    </el-table>
+    </div>
     <el-table
       ref="multipleTable"
       :data="saleInfo.slice((this.page - 1) * this.size, this.page * this.size)"
@@ -250,6 +281,7 @@ import {
   getConditionList,
 } from "@/api/sale";
 import { getVipList } from "@/api/vip";
+import ExportExcel from "@/components/ExportExcel";
 const defaultListQuery = {
   goodid: null,
   vipid: null,
@@ -259,6 +291,7 @@ const defaultListQuery = {
 };
 export default {
   name: "inportManage",
+  components: { ExportExcel },
   data() {
     return {
       value1: "",

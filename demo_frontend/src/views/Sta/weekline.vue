@@ -166,7 +166,7 @@ export default {
       if (
         //
         num ==
-        Math.round((first.getTime() - second.getTime()) / 1000 / 60 / 60 / 24)
+        Math.floor((first.getTime() - second.getTime()) / 1000 / 60 / 60 / 24)
       )
         return true;
       else return false;
@@ -178,6 +178,7 @@ export default {
       this.saleLineNum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       this.saleLinePrice = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       let now = new Date();
+      now.setHours(23, 59, 59, 999);
       this.totalSale = this.saleList.length;
       for (let i = 0; i < 10; i++) {
         for (let j = 0; j < this.saleList.length; j++) {
@@ -218,9 +219,13 @@ export default {
       this.inLineNum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       this.inLinePrice = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       let now = new Date();
+      now.setHours(23, 59, 59, 999);
       this.totalIn = this.inList.length;
       for (let i = 0; i < 10; i++) {
         for (let j = 0; j < this.inList.length; j++) {
+          //console.log(new Date(this.inList[j].goodInTime))
+          //console.log((now.getTime() - new Date(this.inList[j].goodInTime).getTime())/ 1000 / 60 / 60 / 24)
+          //console.log(this.dateInDay(now, new Date(this.inList[j].goodInTime), 0))
           if (this.dateInDay(now, new Date(this.inList[j].goodInTime), i)) {
             //console.log(123);
             this.inLineNum[9 - i] += this.inList[j].num;

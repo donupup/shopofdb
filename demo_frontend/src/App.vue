@@ -3,6 +3,7 @@
     <el-container style="height: 20%">
       <el-header style="height: 58px">
         <Header></Header>
+        <!-- <new-header></new-header> -->
       </el-header>
       <el-container>
         <el-aside width="190px">
@@ -24,9 +25,10 @@ import Footer from "@/components/Layout/Footer";
 import bread from "@/components/bread";
 import Side from "./components/Layout/side.vue";
 
+
 export default {
   name: "App",
-  components: { Header, Footer, bread, Side, Footer },
+  components: { Header, Footer, bread, Side,  Footer },
   data() {
     return {
       Height: 0,

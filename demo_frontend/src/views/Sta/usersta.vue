@@ -76,6 +76,23 @@
     </el-descriptions>
     <el-divider></el-divider>
     <baruser :barName="barName" :barNum="barNum" :barPrice="barPrice"/>
+    <el-divider></el-divider>
+    <el-divider>员工经营情况</el-divider>
+    <el-divider></el-divider>
+        <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="12">
+        <div class="chart-wrapper">
+          <circlewithtitle :salePineNum="userSaleNum" title="员工经手销量" />
+        </div>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :lg="12">
+        <div class="chart-wrapper">
+          <circlewithtitle :salePineNum="userSalePrice" title="员工经手销售额" />
+        </div>
+      </el-col>
+
+    </el-row>
     
   </div>
 </template>
@@ -112,6 +129,8 @@ export default {
       barName: ["销售","进货"],
       barNum:[],
       barPrice:[],
+      userSaleNum:[],
+      userSalePrice:[]
 
     };
   },
@@ -123,6 +142,8 @@ export default {
       getUserSta().then((response) => {
         const { data } = response;
         console.log(data);
+        this.userSaleNum = data.saleNum
+        this.userSalePrice = data.salePrice
       });
     },
     handleSearchList() {

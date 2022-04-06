@@ -3,9 +3,14 @@
     <el-page-header @back="headBack" content="会员详情"> </el-page-header>
     <div style="text-align: right">
       <!-- <import-excel /> -->
-      <el-button type="primary" @click="dialogFormVisible = true"
+      <el-button type="primary" size="small" @click="dialogFormVisible = true"
         >增加会员</el-button
       >
+      <exportExcel
+            :id="'export'"
+            :name="'注册会员表'"
+            :button="'导出'"
+          ></exportExcel>
     </div>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
@@ -69,6 +74,37 @@
         </el-form>
       </div>
     </el-card>
+    <div hidden="hidden">
+      <el-table
+      ref="multipleTable"
+      :data="vipInfo"
+      tooltip-effect="dark"
+      style="width: 100%"
+      border
+      id="export"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="id" label="会员卡号" width="200">
+      </el-table-column>
+      <el-table-column prop="vname" label="会员姓名" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="vsex" label="性别" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="vage" label="年龄" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="vphone" label="联系方式" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="vaddress"
+        label="注册地址"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column prop="vbalance" label="会员卡余额" show-overflow-tooltip>
+      </el-table-column>
+    </el-table>
+    </div>
 
     <el-divider></el-divider>
     <el-table
@@ -211,7 +247,7 @@
 <script>
 import goodList from "@/components/good/goodList";
 import { getVipList, addVip, deleteVip, editVip,getConditionList } from "@/api/vip";
-
+import ExportExcel from "@/components/ExportExcel";
 const defaultListQuery = {
   id: null,
   vname: null,
@@ -220,7 +256,7 @@ const defaultListQuery = {
 };
 export default {
   name: "vipManage",
-  components: { goodList },
+  components: { goodList,ExportExcel },
   data() {
     return {
        page: 1, //第几页

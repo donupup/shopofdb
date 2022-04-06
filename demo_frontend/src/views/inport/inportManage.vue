@@ -1,14 +1,33 @@
 <template>
   <div>
     <el-page-header @back="headBack" content="进货详情"> </el-page-header>
-
     <div style="text-align: right">
       <!-- <import-excel /> -->
-      <el-button type="primary" @click="dialogFormVisible = true"
+              <el-upload
+        @key="5"
+        class="upload-demo"
+        action=""
+        :on-change="handleChange"
+        :on-remove="handleRemove"
+        :on-exceed="handleExceed"
+        accept="application/vnd.openxmlformats-    
+                    officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+        :auto-upload="false"
+      >
+        <el-button type="primary" size="small">点击上传</el-button>
+      </el-upload>
+      <el-divider></el-divider>
+      <el-button size="small" type="primary" @click="dialogFormVisible = true"
         >增加进货</el-button
       >
+      <exportExcel
+        :id="'export'"
+        :name="'进货记录'"
+        :button="'导出'"
+      ></exportExcel>
     </div>
     <el-divider></el-divider>
+    
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -61,11 +80,21 @@
               >
               </el-option>
             </el-select> -->
-             <el-input
+            <el-input
               style="width: 203px"
               v-model="listQuery.goodid"
               placeholder="商品名"
             ></el-input>
+          </el-form-item>
+          <el-form-item label="日期">
+            <el-date-picker
+              v-model="value1"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="用户">
             <el-select
@@ -82,20 +111,54 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="日期">
-            <el-date-picker
-              v-model="value1"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </el-form-item>
+          
         </el-form>
       </div>
     </el-card>
     <el-divider></el-divider>
+    <div hidden="hidden">
+      <el-table
+        ref="multipleTable"
+        :data="inportInfo"
+        tooltip-effect="dark"
+        style="width: 100%"
+        border
+        id="export"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column prop="id" label="ID" width="150"> </el-table-column>
+        <el-table-column prop="goodName" label="商品名称" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="providerName"
+          label="供货商名称"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column prop="userName" label="操作员" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="goodPrice"
+          label="单价"
+          show-overflow-tooltip
+          width="50"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="num"
+          label="数量"
+          show-overflow-tooltip
+          width="70"
+        >
+        </el-table-column>
+        <el-table-column prop="goodInTime" label="时间" show-overflow-tooltip>
+        </el-table-column>
+
+        <el-table-column prop="bio" label="备注" show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-table
       ref="multipleTable"
       :data="
@@ -125,12 +188,7 @@
         width="50"
       >
       </el-table-column>
-      <el-table-column
-        prop="num"
-        label="数量"
-        show-overflow-tooltip
-        width="70"
-      >
+      <el-table-column prop="num" label="数量" show-overflow-tooltip width="70">
       </el-table-column>
       <el-table-column prop="goodInTime" label="时间" show-overflow-tooltip>
       </el-table-column>
@@ -238,15 +296,19 @@
 </template>
 
 <script>
+import * as XLSX from "xlsx";
+import ExportExcel from "@/components/ExportExcel";
 import {
   getInportList,
   addInport,
   deleteInport,
   editInport,
   getConditionList,
+  editGoodByFile
 } from "@/api/inport";
 import { getGoodList } from "@/api/good";
 import { getCategoryList } from "@/api/category";
+import ImportExcel from "@/components/ImportExcel.vue";
 import { getProviderList } from "@/api/provider";
 import { getUserId } from "@/utils/auth";
 import { userInfo } from "@/api/auth";
@@ -259,8 +321,10 @@ const defaultListQuery = {
 };
 export default {
   name: "inportManage",
+  components: { ExportExcel, ImportExcel },
   data() {
     return {
+      fileTemp: "",
       value1: "",
       userId: "",
       page: 1, //第几页
@@ -522,6 +586,108 @@ export default {
         this.goodInfo = data;
         console.log(this.goodInfo);
       });
+    },
+    handleChange(file, fileList) {
+      this.fileTemp = file.raw;
+      if (this.fileTemp) {
+        if (
+          this.fileTemp.type ==
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+          this.fileTemp.type == "application/vnd.ms-excel"
+        ) {
+          this.importfile(this.fileTemp);
+        } else {
+          this.$message({
+            type: "warning",
+            message: "附件格式错误，请删除后重新上传！",
+          });
+        }
+      } else {
+        this.$message({
+          type: "warning",
+          message: "请上传附件！",
+        });
+      }
+    },
+    //超出最大上传文件数量时的处理方法
+    handleExceed() {
+      this.$message({
+        type: "warning",
+        message: "超出最大上传文件数量的限制！",
+      });
+      return;
+    },
+    //移除文件的操作方法
+    handleRemove(file, fileList) {
+      this.fileTemp = null;
+    },
+    importfile(obj) {
+      let _this = this;
+      let inputDOM = this.$refs.inputer;
+      // 通过DOM取文件数据
+
+      this.file = event.currentTarget.files[0];
+
+      var rABS = false; //是否将文件读取为二进制字符串
+      var f = this.file;
+
+      var reader = new FileReader();
+      //if (!FileReader.prototype.readAsBinaryString) {
+      FileReader.prototype.readAsBinaryString = function (f) {
+        var binary = "";
+        var rABS = false; //是否将文件读取为二进制字符串
+        var pt = this;
+        var wb; //读取完成的数据
+        var outdata;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var bytes = new Uint8Array(reader.result);
+          var length = bytes.byteLength;
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          //此处引入，用于解析excel
+          if (rABS) {
+            wb = XLSX.read(btoa(fixdata(binary)), {
+              //手动转化
+              type: "base64",
+              cellDates: true,
+            });
+          } else {
+            wb = XLSX.read(binary, {
+              type: "binary",
+              cellDates: true,
+            });
+          }
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+          //console.log(123);
+          console.log(outdata);
+          editGoodByFile(outdata)
+            .then((value) => {
+              const { code, message } = value;
+              //console.log(value)
+
+              if (code === 200) {
+                this.$message({
+                  message: "修改成功",
+                  type: "success",
+                });
+              } else {
+                this.$message.error("修改失败，" + message);
+              }
+              this.$router.go(0);
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        };
+        reader.readAsArrayBuffer(f);
+      };
+      if (rABS) {
+        reader.readAsArrayBuffer(f);
+      } else {
+        reader.readAsBinaryString(f);
+      }
     },
   },
 };

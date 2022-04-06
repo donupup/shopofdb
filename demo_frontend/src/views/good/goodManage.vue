@@ -4,7 +4,7 @@
 
     <div style="text-align: right">
       <!-- <import-excel /> -->
-      <el-button type="primary" @click="dialogFormVisible = true"
+      <el-button size="small" type="primary" @click="dialogFormVisible = true"
         >增加商品</el-button
       >
       <!-- <b-field position="is-centered">
@@ -21,6 +21,11 @@
           <b-button class="is-info" @click="search()">检索 </b-button>
         </p>
       </b-field> -->
+      <exportExcel
+            :id="'export'"
+            :name="'商品表'"
+            :button="'导出'"
+          ></exportExcel>
     </div>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
@@ -104,7 +109,56 @@
         </el-form>
       </div>
     </el-card>
+    <div hidden="hidden">
+      <el-table
+        ref="multipleTable"
+        :data="goodInfo"
+        tooltip-effect="dark"
+        style="width: 100%"
+        border
+        id = "export"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column prop="id" label="ID" width="150"> </el-table-column>
+        <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="providerNmae"
+          label="供货商名称"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column prop="categoryName" label="商品种类" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="pricesell"
+          label="售价"
+          show-overflow-tooltip
+          width="50"
+        >
+        </el-table-column>
+                <el-table-column
+          prop="pricein"
+          label="进价"
+          show-overflow-tooltip
+          width="50"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="storage"
+          label="库存"
+          show-overflow-tooltip
+          width="70"
+        >
+        </el-table-column>
+        <el-table-column prop="salenum" label="售出数" show-overflow-tooltip>
+        </el-table-column>
 
+        <el-table-column prop="bio" label="备注" show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
       <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="商品名" :label-width="formLabelWidth">
@@ -177,6 +231,7 @@ import { getGoodList, addGood, editGood, getConditionList } from "@/api/good";
 import { getCategoryList } from "@/api/category";
 import { getProviderList } from "@/api/provider";
 import { searchByKeyword } from "@/api/search";
+import ExportExcel from "@/components/ExportExcel";
 import ImportExcel from "../../components/ImportExcel.vue";
 const defaultListQuery = {
   goodname: null,
@@ -187,12 +242,13 @@ const defaultListQuery = {
 };
 export default {
   name: "goodManage",
-  components: { goodList, ImportExcel },
+  components: { goodList, ImportExcel , ExportExcel},
   data() {
     return {
       listQuery: Object.assign({}, defaultListQuery),
       searchKey: "",
       goodInfo: {},
+      multipleSelection:[],
       categoryInfo: {},
       providerInfo: {},
       form: {
@@ -222,7 +278,7 @@ export default {
   },
   methods: {
     getList() {
-      console.log(this.listQuery)
+      console.log(this.listQuery);
       getConditionList(this.listQuery).then((response) => {
         const { data } = response;
         this.goodInfo = data;
@@ -268,6 +324,7 @@ export default {
       getGoodList().then((response) => {
         const { data } = response;
         this.goodInfo = data;
+        console.log(111111);
         console.log(this.goodInfo);
       });
     },
@@ -300,6 +357,9 @@ export default {
     headBack() {
       console.log(this.$router);
       this.$router.back();
+    },
+        handleSelectionChange(val) {
+      this.multipleSelection = val;
     },
     search() {
       console.log(this.searchKey);

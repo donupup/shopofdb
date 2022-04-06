@@ -87,6 +87,8 @@ public class GoodSaleController {
         int oldnum = this.goodSaleService.getById(dto.getId()).getNum();
         int storage = g.getStorage();
         storage = storage + oldnum - dto.getNum();
+        int saleNum = g.getSalenum();
+        saleNum = saleNum - oldnum + dto.getNum();
         g.setStorage(storage);
         this.igoodService.updateById(g);
         int result  = goodSaleService.executeEdit(dto);
@@ -100,6 +102,7 @@ public class GoodSaleController {
     public ApiResult<Object> deleteSale(@Valid @RequestBody GoodSaleInfo gi) {
         Good g = this.igoodService.getById(this.goodSaleService.getById(gi.getId()).getGoodId());
         g.setStorage(g.getStorage() + gi.getNum());
+        g.setSalenum(g.getSalenum() - gi.getNum());
         this.igoodService.updateById(g);
         String id = gi.getId();
         System.out.println(id);
@@ -150,6 +153,8 @@ public class GoodSaleController {
         Good good = igoodService.getById(dto.getGoodid());
         int old_storage = good.getStorage();
         good.setStorage(old_storage - dto.getNum());
+        int old_sale = good.getSalenum();
+        good.setSalenum(old_sale + dto.getNum());
         igoodService.updateById(good);
         if (ObjectUtils.isEmpty(g)) {
             return ApiResult.failed("添加失败");
