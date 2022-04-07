@@ -31,7 +31,7 @@
       </div>
     </el-card>
     <el-divider></el-divider>
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
       <el-tab-pane label="商品总览" name="first">
         <div>
           <el-card class="filter-container" shadow="never">
@@ -238,7 +238,7 @@
               >
               <el-button
                 size="mini"
-                type="danger"
+                
                 @click="handleDeleteCartItem(scope.$index, scope.row)"
                 >删除</el-button
               >

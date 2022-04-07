@@ -1,6 +1,6 @@
 <template>
   <header class="header has-background-white has-text-black">
-    <b-navbar class="container" :fixed-top="true" type="is-white">
+    <b-navbar class="container" :fixed-top="true" type="is-white" >
       <!--        在调整格式时一直在-->
       <template slot="brand">
         <b-navbar-item tag="div">
@@ -22,13 +22,7 @@
       </template>
 
       <template slot="end">
-        <b-navbar-item tag="div" >
-          <b-switch v-model="darkMode" passive-type="is-warning" type="is-dark">
-            {{ darkMode ? "🌙" : "🌞" }}
-          </b-switch>
-        </b-navbar-item>
-
-        <b-navbar-item v-if="token == null || token === ''" tag="div">
+                <b-navbar-item v-if="token == null || token === ''" tag="div">
           <div class="buttons">
             <b-button
               class="is-light"
@@ -44,6 +38,11 @@
             <b-navbar-item  tag="router-link" :to="{ path: '/usercenter' }"> 个人中心 </b-navbar-item>
             <b-navbar-item  tag="router-link" :to="{ path: '/secret' }"> 修改密码 </b-navbar-item>
           </b-navbar-dropdown>
+        <b-navbar-item tag="div" >
+          <b-switch v-model="darkMode" passive-type="is-info" type="is-dark">
+            {{ darkMode ? "🌙" : "🌞" }}
+          </b-switch>
+        </b-navbar-item>
       </template>
     </b-navbar>
   </header>

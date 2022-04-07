@@ -3,6 +3,8 @@
     <el-page-header @back="headBack" content="月营销额查询"> </el-page-header>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
+      <i class="el-icon-search"></i>
+      <span>选择月份进行统计</span>
       <div class="block">
         <span class="demonstration"></span>
         <el-date-picker v-model="month" type="month" placeholder="选择月">

@@ -1,4 +1,7 @@
 <template>
+<div>
+<el-page-header @back="headBack" content="修改密码"> </el-page-header>
+    <el-divider></el-divider>
   <div class="columns py-6">
     <div class="column is-half is-offset-one-quarter">
       <el-steps :active="active" finish-status="success" align-center>
@@ -91,6 +94,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+  </div>
   </div>
 </template>
 
@@ -248,6 +252,10 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    headBack() {
+      console.log(this.$router);
+      this.$router.back();
     },
   },
 };

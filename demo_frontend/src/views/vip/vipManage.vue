@@ -136,7 +136,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
           >
           <el-button
