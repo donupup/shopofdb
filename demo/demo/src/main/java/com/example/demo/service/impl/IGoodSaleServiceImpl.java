@@ -90,6 +90,10 @@ public class IGoodSaleServiceImpl extends ServiceImpl<GoodSaleMapper, GoodSale> 
                 }
             }
         }
+        if(!StrUtil.isBlank(dto.getVipcard()))
+        {
+            lambda.eq(GoodSale::getVipId,dto.getVipcard());
+        }
         if(!StrUtil.isBlank(dto.getVipid()))
         {
             l.like(Vip::getVname,dto.getVipid());

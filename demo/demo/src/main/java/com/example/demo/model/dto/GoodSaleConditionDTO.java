@@ -15,4 +15,6 @@ public class GoodSaleConditionDTO {
     Date starttime;
 
     Date endtime;
+
+    String vipcard;
 }

@@ -4,13 +4,12 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
 import com.example.demo.model.dto.*;
-import com.example.demo.model.entity.Good;
-import com.example.demo.model.entity.Provider;
-import com.example.demo.model.entity.SaleGood;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.entity.*;
 import com.example.demo.model.vo.GoodInfo;
 import com.example.demo.model.vo.InGood;
 import com.example.demo.model.vo.OutGood;
@@ -87,6 +86,16 @@ public class GoodController extends  BaseController{
 
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     public  ApiResult<Object> addGood(@Valid @RequestBody GoodAddDTO dto){
+
+        String goodname = dto.getGoodname();
+        QueryWrapper<Good> goodw = new QueryWrapper<>();
+        LambdaQueryWrapper<Good> goodl = goodw.lambda();
+        goodl.eq(Good::getGoodname,goodname);
+        List<Good> goodwithname = igoodService.getBaseMapper().selectList(goodl);
+        if(!goodwithname.isEmpty())
+        {
+            return ApiResult.failed("商品名已存在，请在名称后加规格表示区分~");
+        }
         Good good = igoodService.executeAdd(dto);
         if (ObjectUtils.isEmpty(good)) {
             return ApiResult.failed("添加失败");

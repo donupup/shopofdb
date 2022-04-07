@@ -91,6 +91,7 @@ export default {
     async logout() {
       this.$store.dispatch("user/logout").then(() => {
         this.$message.info("退出登录成功");
+        this.$router.go(0)
         setTimeout(() => {
           this.$router.push({ path: this.redirect || "/" });
         }, 500);

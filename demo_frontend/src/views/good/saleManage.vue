@@ -49,6 +49,14 @@
               placeholder="姓名"
             ></el-input>
           </el-form-item>
+          <el-form-item label="会员卡号">
+
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.vipcard"
+              placeholder="姓名"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="商品">
             <!-- <el-select
               v-model="listQuery.goodid"
@@ -143,6 +151,8 @@
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="150"> </el-table-column>
       <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="vipid" label="购货会员卡号" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="vipname" label="购货会员" show-overflow-tooltip>
       </el-table-column>
@@ -288,6 +298,7 @@ const defaultListQuery = {
   userid: null,
   starttime: null,
   endtime: null,
+  vipcard:null
 };
 export default {
   name: "inportManage",
