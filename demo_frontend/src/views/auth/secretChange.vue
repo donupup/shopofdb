@@ -1,12 +1,16 @@
 <template>
   <div class="columns py-6">
     <div class="column is-half is-offset-one-quarter">
-      <el-card shadow="never">
-        <div slot="header" class="has-text-centered has-text-weight-bold">
-          用户登录
-        </div>
-        <el-tabs v-model="activeName" @tab-click="handleClick" stretch>
-          <el-tab-pane label="短信验证码登录" name="first">
+      <el-steps :active="active" finish-status="success" align-center>
+        <el-step title="验证身份"></el-step>
+        <el-step title="修改密码"></el-step>
+      </el-steps>
+      <el-tabs v-model="activeName" @tab-click="handleClick" stretch>
+        <el-tab-pane name="first">
+          <el-card shadow="never">
+            <div slot="header" class="has-text-centered has-text-weight-bold">
+              用户密码修改
+            </div>
             <div>
               <el-form :model="msgForm" :rules="rules" ref="msgForm">
                 <el-form-item prop="phoneNumber">
@@ -28,9 +32,7 @@
                       </el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-button
-                        @click="submitFormMsg('msgForm')"                
-                      >
+                      <el-button @click="submitFormCheckMsg('msgForm')">
                         发送验证码
                       </el-button>
                     </el-col>
@@ -40,73 +42,87 @@
                   <el-button
                     type="primary"
                     style="width: 100%"
-                    @click="submitLogin('msgForm')"
-                    >登录</el-button
+                    @click="submitCheck('msgForm')"
+                    >验证身份</el-button
                   >
                 </el-form-item>
               </el-form>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="密码登录" name="second">
+          </el-card>
+        </el-tab-pane>
+        <el-tab-pane name="second">
+          <el-card shadow="never">
+            <div slot="header" class="has-text-centered has-text-weight-bold">
+              重置密码
+            </div>
             <div>
               <el-form
-                v-loading="loading"
+                ref="ruleForm"
+                v-loading="secretLoading"
                 :model="ruleForm"
                 status-icon
                 :rules="rules"
-                ref="ruleForm"
                 label-width="100px"
                 class="demo-ruleForm"
               >
-                <el-form-item label="账号" prop="name">
-                  <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-
-                <el-form-item label="密码" prop="pass">
+                <el-form-item label="新密码" prop="pass">
                   <el-input
-                    type="password"
                     v-model="ruleForm.pass"
+                    type="password"
                     autocomplete="off"
-                  ></el-input>
+                  />
                 </el-form-item>
-
-                <el-form-item label="记住" prop="delivery">
-                  <el-switch v-model="ruleForm.rememberMe"></el-switch>
+                <el-form-item label="确认密码" prop="checkPass">
+                  <el-input
+                    v-model="ruleForm.checkpass"
+                    type="password"
+                    autocomplete="off"
+                  />
                 </el-form-item>
-
                 <el-form-item>
                   <el-button type="primary" @click="submitForm('ruleForm')"
-                    >提交
+                    >修改密码
                   </el-button>
                   <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
               </el-form>
             </div>
-          </el-tab-pane>
-        </el-tabs>
-      </el-card>
+          </el-card>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import { sendMsg } from "@/api/msg";
-import { sendLogin } from "@/api/auth";
+import { changeSecretCheck } from "@/api/msg";
+import { getUserId } from "@/utils/auth";
+import { sendCheck, sendChange } from "@/api/auth";
 export default {
-  name: "Login",
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
-      activeName: "second",
-      redirect: undefined,
+      active: 1,
       loading: false,
+      secretLoading: true,
+      activeName: "first",
       ruleForm: {
-        name: "",
         pass: "",
-        rememberMe: true,
+        checkpass: "",
+        userid: "",
       },
       msgForm: {
         phoneNumber: "",
         code: "",
+        userid: "",
       },
       rules: {
         name: [
@@ -127,12 +143,19 @@ export default {
             trigger: "blur",
           },
         ],
+        checkpass: [
+          { required: true, message: "请再次输入密码", trigger: "blur" },
+          { validator: validatePass, trigger: "blur" },
+        ],
       },
     };
   },
+  mounted() {
+    this.msgForm.userid = getUserId();
+    this.ruleForm.userid = getUserId();
+  },
   methods: {
-    submitLogin(formName) {
-      this.dialogFormVisible = false;
+    submitFormCheckMsg(formName) {
       //this.$set(this.form, "userid", this.userId);
       //this.$set(this.form,'username',this.item.username)
       this.$refs[formName].validate((valid) => {
@@ -140,42 +163,7 @@ export default {
           this.loading = true;
           console.log(this.msgForm);
           console.log(123);
-          sendLogin(this.msgForm)
-            .then((value) => {
-              const { code, message } = value;
-              console.log(value);
-              if (code === 200) {
-                this.$message({
-                  message: "登录成功",
-                  type: "success",
-                });
-                this.$store.dispatch("user/loginWithMsg", value).then(() => {
-                  setTimeout(() => {
-                    this.loading = false;
-                    this.$router.push({ path: this.redirect || "/" });
-                  }, 0.1 * 100);
-                  this.$router.go(0);
-                });
-              } else {
-                this.$message.error("登录失败，" + message);
-              }
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        }
-      });
-    },
-    submitFormMsg(formName) {
-      this.dialogFormVisible = false;
-      //this.$set(this.form, "userid", this.userId);
-      //this.$set(this.form,'username',this.item.username)
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          console.log(this.msgForm);
-          console.log(123);
-          sendMsg(this.msgForm)
+          changeSecretCheck(this.msgForm)
             .then((value) => {
               const { code, message } = value;
               console.log(value);
@@ -194,24 +182,61 @@ export default {
         }
       });
     },
+    submitCheck(formName) {
+      //this.$set(this.form, "userid", this.userId);
+      //this.$set(this.form,'username',this.item.username)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          console.log(this.msgForm);
+          console.log(123);
+          sendCheck(this.msgForm)
+            .then((value) => {
+              const { code, message } = value;
+              console.log(value);
+              if (code === 200) {
+                this.$message({
+                  message: "验证成功",
+                  type: "success",
+                });
+                this.active = 2;
+                this.activeName = "second";
+                this.secretLoading = false;
+              } else {
+                this.$message.error("验证失败，" + message);
+              }
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        }
+      });
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$store
-            .dispatch("user/login", this.ruleForm)
-            .then(() => {
-              this.$message({
-                message: "恭喜你，登录成功",
-                type: "success",
-                duration: 2000,
-              });
-              setTimeout(() => {
-                this.loading = false;
-
-                this.$router.push({ path: this.redirect || "/" });
-              }, 0.1 * 100);
-              this.$router.go(0);
+          console.log(this.ruleForm);
+          sendChange(this.ruleForm)
+            .then((value) => {
+              const { code, message } = value;
+              if (code === 200) {
+                this.$message({
+                  message: "密码修改成功,请重新登录",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  this.$store.dispatch("user/logout").then(() => {
+                    this.$message.info("退出登录成功");
+                    this.$router.go(0);
+                    setTimeout(() => {
+                      this.$router.push({ path: this.redirect || "/" });
+                    }, 500);
+                  });
+                }, 2000);
+              } else {
+                this.$message.error("注册失败，" + message);
+              }
             })
             .catch(() => {
               this.loading = false;
@@ -224,12 +249,8 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
   },
 };
 </script>
-
-<style scoped>
+<style>
 </style>

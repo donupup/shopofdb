@@ -55,7 +55,7 @@ public class GoodController extends  BaseController{
                     .bio(g.getBio())
                     .createTime(g.getCreateTime())
                     .modifyTime(g.getModifyTime())
-                    .ProviderNmae(pname).build();
+                    .ProviderNmae(pname).specification(g.getSpecification()).build();
             goodInfo.add(gi);
         }
         return ApiResult.success(goodInfo);
@@ -125,7 +125,7 @@ public class GoodController extends  BaseController{
                     .bio(g.getBio())
                     .createTime(g.getCreateTime())
                     .modifyTime(g.getModifyTime())
-                    .ProviderNmae(pname).build();
+                    .ProviderNmae(pname).specification(g.getSpecification()).build();
             goodInfo.add(gi);
         }
         return ApiResult.success(goodInfo);

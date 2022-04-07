@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.common.api.ApiResult;
+import com.example.demo.model.dto.SecretChangeDTO;
 import com.example.demo.model.entity.Sms;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IUserService;
@@ -57,6 +59,35 @@ public class SmsController {
             ServletContext servletContext = request.getServletContext();
             servletContext.setAttribute(sms.getPhoneNumber(), params[0]);
 
+
+            SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", sms.getPhoneNumber(), templateId,
+                    params, smsSign, "", "");
+            System.out.println(result);
+            return ApiResult.success("发送成功，请在手机查看");
+        } catch (Exception e) {
+            return ApiResult.failed();
+        }
+    }
+
+    @RequestMapping(value = "/changeSecret", method = RequestMethod.POST)
+    public ApiResult<Object> sendSecret(@RequestBody SecretChangeDTO sms){
+        System.out.println(sms);
+        int appid = 1400657052;
+        String appkey = "be9efef993ad4fbc5354abdf93ee5da6";
+        int templateId = 1357982; //模板ID
+        String smsSign = "NUDTDon个人公众号";
+        try {
+            User thisuser = userService.getUserById(sms.getUserid());
+            if(!StrUtil.equals(thisuser.getMobile(),sms.getPhoneNumber()))
+            {
+                return ApiResult.failed("请输入注册时的联系方式");
+            }
+            String[] params = {String.valueOf(new Random().nextInt(899999) + 100000)}; //短信中的参数
+            System.out.println(params[0]);
+            //把验证码存在servletContext中
+            ServletContext servletContext = request.getServletContext();
+            servletContext.setAttribute(sms.getPhoneNumber(), params[0]);
 
             SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
             SmsSingleSenderResult result = ssender.sendWithParam("86", sms.getPhoneNumber(), templateId,

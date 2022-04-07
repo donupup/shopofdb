@@ -86,8 +86,45 @@ public class UserController extends BaseController{
             return ApiResult.failed("请重新发送验证码~");
         }
 
+    }
 
+    @RequestMapping(value = "/msgcheck", method = RequestMethod.POST)
+    public ApiResult<Object> Msgcheck(@Valid @RequestBody SecretChangeDTO sms) {
 
+        String phoneNumber = sms.getPhoneNumber();
+        String code = sms.getCode();
+        ServletContext servletContext = request.getServletContext();
+        try{
+            String verifyCode = servletContext.getAttribute(phoneNumber).toString();
+            System.out.println(verifyCode);
+            if (!StrUtil.equals(code,verifyCode)) {
+                return ApiResult.failed("验证码不正确，请输入正确的验证码");
+            } else {
+                servletContext.removeAttribute(phoneNumber);
+
+                User user = iUserService.getUserById(sms.getUserid());
+                //LoginDTO loginDTO = LoginDTO.builder().username(user.getUsername()).password(user.getPassword()).rememberMe(true).build();
+
+                return ApiResult.success("身份已验证，可修改密码~");
+            }
+        }catch (Exception e){
+            return ApiResult.failed("请重新发送验证码~");
+        }
+    }
+
+    @RequestMapping(value = "/secretchange", method = RequestMethod.POST)
+    public ApiResult<Object> changeSecret(@Valid @RequestBody PassDTO dto)
+    {
+        System.out.println(dto);
+        if(!StrUtil.equals(dto.getPass(),dto.getCheckpass()))
+        {
+            return ApiResult.failed("两次输入的密码不一致");
+        }
+        User user = iUserService.getUserById(dto.getUserid());
+        String newpass = MD5Utils.getPwd(dto.getPass());
+        user.setPassword(newpass);
+        iUserService.updateById(user);
+        return ApiResult.success("修改成功！");
     }
 
 

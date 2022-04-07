@@ -26,9 +26,19 @@
       <el-descriptions-item label="学号">{{
         userInfo.stuNo
       }}</el-descriptions-item>
+      <el-descriptions-item label="入职时间">
+        {{ dayjs(userInfo.createTime).format("YYYY/MM/DD dddd ") }}
+        
+      </el-descriptions-item>
       <el-descriptions-item label="个人描述">{{
         userInfo.bio
       }}</el-descriptions-item>
+        <el-descriptions-item label="职位">
+          <el-tag v-if="userId == 1">管理员</el-tag>
+          <el-tag v-else-if="userId == 2">售货员</el-tag>
+          <el-tag v-else-if="userId == 3">进货员</el-tag>
+          <el-tag v-else-if="userId == 4">数据分析员</el-tag>
+      </el-descriptions-item>
     </el-descriptions>
 
     <el-dialog title="个人信息" :visible.sync="dialogFormVisible">

@@ -57,4 +57,7 @@ public class Good implements Serializable {
 
     @TableField("provider_id")
     private String ProviderId;
+
+    @TableField("specification")
+    private  String specification;
 }

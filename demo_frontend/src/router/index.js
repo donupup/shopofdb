@@ -126,11 +126,11 @@ const routes = [{
     }
   },
   {
-    path: '/msg',
-    name: 'msg',
-    component: () => import('@/views/auth/Sms'),
+    path: '/secret',
+    name: 'secret',
+    component: () => import('@/views/auth/secretChange'),
     meta: {
-      title: '个人中心',
+      title: '修改密码',
       requireAuth: true,
       showInbreadcrumb: true
     }

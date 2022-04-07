@@ -7,3 +7,11 @@ export function sendMsg(dto){
         data:dto
     })
 }
+
+export function changeSecretCheck(DTO) {
+    return request({
+        url: '/sms/changeSecret',
+        method: 'post',
+        data: DTO
+    })
+}

@@ -42,6 +42,7 @@
           <b-navbar-dropdown v-else>
             <b-navbar-item  tag="a" @click="logout"> 退出登录 </b-navbar-item>
             <b-navbar-item  tag="router-link" :to="{ path: '/usercenter' }"> 个人中心 </b-navbar-item>
+            <b-navbar-item  tag="router-link" :to="{ path: '/secret' }"> 修改密码 </b-navbar-item>
           </b-navbar-dropdown>
       </template>
     </b-navbar>

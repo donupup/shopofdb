@@ -53,14 +53,14 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
-          商品ID
+          序号
         </template>
         {{ item.id }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
-          商品名
+          商品名称
         </template>
         {{ item.goodname }}
       </el-descriptions-item>
@@ -111,9 +111,10 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-date"></i>
-          最近一次修改时间
+          规格
         </template>
-        {{ dayjs(item.modifyTime).format("YYYY/MM/DD dddd HH:mm:ss.SSS A") }}
+        <!-- {{ dayjs(item.modifyTime).format("YYYY/MM/DD dddd HH:mm:ss.SSS A") }} -->
+        {{item.specification}}
       </el-descriptions-item>
 
     </el-descriptions>

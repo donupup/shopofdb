@@ -83,3 +83,20 @@ export function sendLogin(DTO) {
         data: DTO
     })
 }
+
+export function sendCheck(DTO) {
+    return request({
+        url: '/user/msgcheck',
+        method: 'post',
+        data: DTO
+    })
+}
+
+export function sendChange(DTO) {
+    return request({
+        url: '/user/secretchange',
+        method: 'post',
+        data: DTO
+    })
+}
+

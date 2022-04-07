@@ -39,4 +39,6 @@ public class GoodInfo {
 
     private String ProviderNmae;
 
+    private String specification;
+
 }
