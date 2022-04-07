@@ -128,6 +128,7 @@ export default {
     fetchDaySta() {
       this.barNum = [];
       this.barPrice = [];
+      //console.log(new Date())
       getDaySta(new Date()).then((response) => {
         const { data } = response;
         this.dayInfo = data;

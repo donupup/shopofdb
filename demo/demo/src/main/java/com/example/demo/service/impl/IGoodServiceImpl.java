@@ -152,6 +152,11 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         {
             lambda.eq(Good::getPricesell,dto.getPricesell());
         }
+        if(!StrUtil.isBlank(dto.getStorage()))
+        {
+            int storage = Integer.parseInt(dto.getStorage());
+            lambda.le(Good::getStorage,storage);
+        }
 
         List<Good> gs = this.baseMapper.selectList(lambda);
         return  gs;

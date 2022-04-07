@@ -76,6 +76,13 @@
               placeholder="价格"
             ></el-input>
           </el-form-item>
+                    <el-form-item label="库存">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.storage"
+              placeholder="查询库存小于该数的商品"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="供货商">
             <el-select
               v-model="listQuery.providerId"
@@ -242,6 +249,7 @@ const defaultListQuery = {
   categoryId: null,
   pricein: null,
   pricesell: null,
+  storage:null
 };
 export default {
   name: "goodManage",

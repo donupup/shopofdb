@@ -9,4 +9,5 @@ public class GoodConditionDTO {
     String categoryId;
     String pricein;
     String pricesell;
+    String storage;
 }

@@ -31,7 +31,7 @@
       </div>
     </el-card>
     <el-divider></el-divider>
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="商品总览" name="first">
         <div>
           <el-card class="filter-container" shadow="never">
@@ -238,7 +238,6 @@
               >
               <el-button
                 size="mini"
-                
                 @click="handleDeleteCartItem(scope.$index, scope.row)"
                 >删除</el-button
               >
@@ -380,80 +379,73 @@ export default {
   methods: {
     deleteMulti() {
       //这里面存着选中行的信息
-       if(this.multipleTableCart.length == 0)
-      {
+      if (this.multipleTableCart.length == 0) {
         this.$message("请选择商品");
-      }
-      else{
+      } else {
         console.log(this.multipleTableCart);
-      deleteCartMulti(this.multipleTableCart)
-        .then((value) => {
-          const { code, message } = value;
-          getCartList(this.vipid).then((response) => {
-            const { data } = response;
-            this.cartList = data;
-            console.log(this.cartList);
-          });
-          //console.log(value)
-          if (code === 200) {
-            this.$message({
-              message: "删除成功",
-              type: "success",
+        deleteCartMulti(this.multipleTableCart)
+          .then((value) => {
+            const { code, message } = value;
+            getCartList(this.vipid).then((response) => {
+              const { data } = response;
+              this.cartList = data;
+              console.log(this.cartList);
             });
-          } else {
-            this.$message.error("删除失败，" + message);
-          }
-        })
-        .catch(() => {
-          this.loading = false;
-        });
+            //console.log(value)
+            if (code === 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success",
+              });
+            } else {
+              this.$message.error("删除失败，" + message);
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+          });
       }
-      
     },
     checkMulti() {
       console.log(this.multipleTableCart);
 
-
-      if(this.multipleTableCart.length == 0)
-      {
+      if (this.multipleTableCart.length == 0) {
         this.$message("请选择商品");
-      }
-      else{
-              //json打印
-      //   this.$print({
-      //   printable: this.multipleTableCart,
-      //   properties: [
-      //     { field: "goodName", displayName: "商品名" },
-      //     { field: "num", displayName: "数量" },
-      //     { field: "price", displayName: "金额" },
-      //   ],
-      //   header: '<h3 class="custom-h3">欢迎来到Don超市</h3><h5>================================</h5><h4>收款时间</h4><span>' + new Date() + '</span><h5>================================</h5>',
-      //   type: "json",
-      // });
+      } else {
+        //json打印
+        //   this.$print({
+        //   printable: this.multipleTableCart,
+        //   properties: [
+        //     { field: "goodName", displayName: "商品名" },
+        //     { field: "num", displayName: "数量" },
+        //     { field: "price", displayName: "金额" },
+        //   ],
+        //   header: '<h3 class="custom-h3">欢迎来到Don超市</h3><h5>================================</h5><h4>收款时间</h4><span>' + new Date() + '</span><h5>================================</h5>',
+        //   type: "json",
+        // });
 
-      checkCart(this.multipleTableCart)
-        .then((value) => {
-          const { code, message } = value;
-          getCartList(this.vipid).then((response) => {
-            const { data } = response;
-            this.cartList = data;
-            console.log(this.cartList);
-          });
-          //console.log(value)
-          if (code === 200) {
-            this.$message({
-              message: "购买成功",
-              type: "success",
+        checkCart(this.multipleTableCart)
+          .then((value) => {
+            const { code, message } = value;
+            getCartList(this.vipid).then((response) => {
+              const { data } = response;
+              this.cartList = data;
+              console.log(this.cartList);
             });
-          } else {
-            this.$message.error("购买失败，" + message);
-          }
-        })
-        .catch(() => {
-          this.loading = false;
-        });
+            //console.log(value)
+            if (code === 200) {
+              this.$message({
+                message: "购买成功",
+                type: "success",
+              });
+            } else {
+              this.$message.error("购买失败，" + message);
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+          });
       }
-      
     },
     AddToCart(formName) {
       this.dialogFormVisible = false;
@@ -593,6 +585,11 @@ export default {
         getCartList(this.vipid).then((response) => {
           const { data } = response;
           this.cartList = data;
+          this.$message({
+            message: "购物车获取成功",
+            type: "success",
+          });
+
           console.log(this.cartList);
         });
       }
