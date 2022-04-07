@@ -7,8 +7,11 @@
           <el-form :model="form"
                    ref="form"
                    :rules="rules">
-            <el-form-item label="商品名" :label-width="formLabelWidth" v-if="role != 2">
+            <el-form-item label="商品名" :label-width="formLabelWidth" v-if="role != 5">
               <el-input v-model="form.goodname" autocomplete="off" :placeholder="item.goodname"></el-input>
+            </el-form-item>
+             <el-form-item label="规格" :label-width="formLabelWidth" v-if="role != 5">
+              <el-input v-model="form.specification" autocomplete="off" :placeholder="item.specification"></el-input>
             </el-form-item>
             <!-- <el-form-item label="进价" :label-width="formLabelWidth" v-if="role != 2">
               <el-input v-model="form.pricein" autocomplete="off" :placeholder="item.pricein"></el-input>
@@ -29,7 +32,7 @@
             <el-option v-for="(item,index) in providerInfo" :key="index" :label="item.pname" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-            <el-form-item label="备注" :label-width="formLabelWidth" v-if="role != 2">
+            <el-form-item label="备注" :label-width="formLabelWidth" v-if="role != 5">
               <el-input v-model="form.bio"  placeholder="请输入原因"  type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             </el-form-item>
@@ -40,7 +43,7 @@
           </div>
         </el-dialog>
 
-        <el-popconfirm v-if="role != 2 && needOpera"
+        <el-popconfirm v-if="role != 5 && needOpera"
             confirm-button-text='是'
             cancel-button-text='否'
             title="确定删除该商品吗？"
@@ -156,7 +159,8 @@ export default {
         status: '',
         bio:'',
         categoryId:'',
-        providerId:''
+        providerId:'',
+        specification:''
       },
       providerInfo:{},
       categoryInfo:{},

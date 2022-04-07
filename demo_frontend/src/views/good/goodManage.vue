@@ -176,6 +176,9 @@
         <el-form-item label="保质期" :label-width="formLabelWidth">
           <el-input v-model="form.shelflife" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="规格" :label-width="formLabelWidth">
+          <el-input v-model="form.specification" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="选择种类" :label-width="formLabelWidth">
           <el-select v-model="form.categoryId" placeholder="请选择种类">
             <el-option
@@ -261,6 +264,7 @@ export default {
         providerId: "",
         shelflife: "",
         bio: "",
+        specification:""
       },
       rules: {
         goodname: [

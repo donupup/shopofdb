@@ -73,6 +73,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
         //good.setStorage(dto.getStorage());
         good.setModifyTime(new Date());
         good.setBio(dto.getBio());
+        good.setSpecification(dto.getSpecification());
         String catName = dto.getCategoryId();
         String proName = dto.getProviderId();
         if(!StrUtil.isBlank(dto.getCategoryId()))
@@ -115,6 +116,7 @@ public class IGoodServiceImpl extends ServiceImpl<GoodMapper, Good> implements I
                         .storage(dto.getStorage())
                         .createTime(new Date())
                         .modifyTime(new Date())
+                .specification(dto.getSpecification())
                 .categoryId(dto.getCategoryId())
                 .ProviderId(dto.getProviderId())
                         .build();

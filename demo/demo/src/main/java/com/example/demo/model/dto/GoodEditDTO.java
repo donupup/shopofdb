@@ -23,4 +23,6 @@ public class GoodEditDTO {
     String categoryId;
 
     String providerId;
+
+    String specification;
 }

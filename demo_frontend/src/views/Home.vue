@@ -13,9 +13,11 @@
       ></iframe>
     </div>
 
-        <div v-if="role == 0">尊敬的店长，欢迎登陆！</div>
-    <div v-if="role == 1">尊敬的管理员，欢迎登陆！</div>
-    <div v-if="role == 2">尊敬的采购员，欢迎登陆！</div>
+    <h1 v-if="role == 1">欢迎登陆！</h1>
+    <div v-if="role == 2">欢迎登陆！</div>
+    <div v-if="role == 3">欢迎登陆！</div>
+    <div v-if="role == 4">欢迎登陆！</div>
+    <el-skeleton :rows="6" animated />
   </div>
 </template>
 

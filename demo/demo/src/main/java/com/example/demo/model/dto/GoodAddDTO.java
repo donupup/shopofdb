@@ -22,5 +22,6 @@ public class GoodAddDTO {
 
     String providerId;
 
+    String specification;
 }
 
