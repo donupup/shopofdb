@@ -75,3 +75,11 @@ export function EditUserById(dto){
         data:dto
     })
 }
+
+export function sendLogin(DTO) {
+    return request({
+        url: '/user/msglogin',
+        method: 'post',
+        data: DTO
+    })
+}

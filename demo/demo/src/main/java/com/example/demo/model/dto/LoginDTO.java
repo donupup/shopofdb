@@ -1,11 +1,13 @@
 package com.example.demo.model.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
+@Builder
 public class LoginDTO {
 
     @NotBlank(message = "用户名不能为空")

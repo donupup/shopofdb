@@ -6,14 +6,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
+import com.example.demo.jwt.JwtUtil;
 import com.example.demo.model.dto.*;
+import com.example.demo.model.entity.GoodIn;
 import com.example.demo.model.entity.Role;
+import com.example.demo.model.entity.Sms;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.IRoleService;
 import com.example.demo.service.IUserService;
+import com.example.demo.utils.MD5Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ public class UserController extends BaseController{
 
     @Resource
     private IRoleService roleService;
+    @Resource
+    HttpServletRequest request;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ApiResult<Map<String, String>> login(@Valid @RequestBody LoginDTO dto) {
@@ -39,9 +47,55 @@ public class UserController extends BaseController{
         }
         return ApiResult.success(map, "登录成功");
     }
+    @RequestMapping(value = "/msglogin", method = RequestMethod.POST)
+    public ApiResult<Object> Msglogin(@Valid @RequestBody Sms sms) {
+
+        String phoneNumber = sms.getPhoneNumber();
+        String code = sms.getCode();
+
+        ServletContext servletContext = request.getServletContext();
+        try{
+            String verifyCode = servletContext.getAttribute(phoneNumber).toString();
+            System.out.println(verifyCode);
+            if (!StrUtil.equals(code,verifyCode)) {
+                return ApiResult.failed("验证码不正确，请输入正确的验证码");
+            } else {
+                servletContext.removeAttribute(phoneNumber);
+                QueryWrapper<User> inw = new QueryWrapper<>();
+                LambdaQueryWrapper<User> userl = inw.lambda();
+                userl.eq(User::getMobile, phoneNumber);
+                List<User> users = iUserService.getBaseMapper().selectList(userl);
+                if (users.isEmpty()) {
+                    return ApiResult.failed("该手机号无效，请联系管理员查看~");
+                } else {
+                    User user = users.get(0);
+                    //LoginDTO loginDTO = LoginDTO.builder().username(user.getUsername()).password(user.getPassword()).rememberMe(true).build();
+                    String token = null;
+                    String role;
+                    Map<String, String> map = new HashMap<>(16);
+                    token = JwtUtil.generateToken(String.valueOf(user.getUsername()));
+                    role = user.getRoleId();
+                    String userId = user.getId();
+                    map.put("token", token);
+                    map.put("role", role);
+                    map.put("userId", userId);
+                    return ApiResult.success(map,"登录成功");
+                }
+            }
+        }catch (Exception e){
+            return ApiResult.failed("请重新发送验证码~");
+        }
+
+
+
+    }
+
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ApiResult<Object> logOut() {
+//        ServletContext servletContext = request.getServletContext();
+//        String code = servletContext.getAttribute("verifyCode").toString();
+//        System.out.println(code);
         return ApiResult.success(null, "注销成功");
     }
 

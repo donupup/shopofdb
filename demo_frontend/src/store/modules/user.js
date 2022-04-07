@@ -1,5 +1,18 @@
-import {  login, logout } from "@/api/auth";
-import { getToken, setToken, removeToken, getRole, setRole, removeRole, getUserId, setUserId, removeUserId } from "@/utils/auth";
+import {
+  login,
+  logout
+} from "@/api/auth";
+import {
+  getToken,
+  setToken,
+  removeToken,
+  getRole,
+  setRole,
+  removeRole,
+  getUserId,
+  setUserId,
+  removeUserId
+} from "@/utils/auth";
 
 const state = {
   token: getToken(), // token
@@ -25,21 +38,33 @@ const mutations = {
 
 const actions = {
   // 用户登录
-  login({ commit }, userInfo) {
+  login({
+    commit
+  }, userInfo) {
     console.log(userInfo);
-    const { name, pass, rememberMe } = userInfo;
+    const {
+      name,
+      pass,
+      rememberMe
+    } = userInfo;
     return new Promise((resolve, reject) => {
-      login({ username: name.trim(), password: pass, rememberMe: rememberMe })
+      login({
+          username: name.trim(),
+          password: pass,
+          rememberMe: rememberMe
+        })
         .then((response) => {
-          const { data } = response;
+          const {
+            data
+          } = response;
           //console.log(response);
           commit("SET_TOKEN_STATE", data.token);
           setToken(data.token);
-          commit("SET_ROLE_STATE",data.role);
+          commit("SET_ROLE_STATE", data.role);
           //console.log(this.state);
           setRole(data.role)
           //console.log(data.userId)
-          commit("SET_USERID_STATE",data.userId);
+          commit("SET_USERID_STATE", data.userId);
           setUserId(data.userId)
           resolve();
         })
@@ -48,24 +73,40 @@ const actions = {
         });
     });
   },
+  loginWithMsg({
+    commit
+  }, userInfo) {
+    console.log(userInfo);
+    commit("SET_TOKEN_STATE", userInfo.data.token);
+    setToken(userInfo.data.token);
+    commit("SET_ROLE_STATE", userInfo.data.role);
+    //console.log(this.state);
+    setRole(userInfo.data.role)
+    //console.log(data.userId)
+    commit("SET_USERID_STATE", userInfo.data.userId);
+    setUserId(userInfo.data.userId);
+  },
 
-  logout({ commit, state }) {
+  logout({
+    commit,
+    state
+  }) {
     return new Promise((resolve, reject) => {
       logout(state.token)
-          .then((response) => {
-            console.log(response);
-            commit("SET_TOKEN_STATE", "");
-            commit("SET_USER_STATE", "");
-            commit("SET_ROLE_STATE", "");
-            commit("SET_USERID_STATE", "");
-            removeToken();
-            removeRole();
-            removeUserId();
-            resolve();
-          })
-          .catch((error) => {
-            reject(error);
-          });
+        .then((response) => {
+          console.log(response);
+          commit("SET_TOKEN_STATE", "");
+          commit("SET_USER_STATE", "");
+          commit("SET_ROLE_STATE", "");
+          commit("SET_USERID_STATE", "");
+          removeToken();
+          removeRole();
+          removeUserId();
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   },
 };
