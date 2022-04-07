@@ -23,11 +23,31 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-input
-          style="width: 203px"
-          v-model="goodid"
-          placeholder="名称"
-        ></el-input>
+        <el-form
+          :inline="true"
+          :model="listQuery"
+          size="small"
+          label-width="140px"
+        >
+          <el-form-item label="商品ID">
+
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.goodid"
+              placeholder="商品号"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="日期">
+            <el-date-picker
+              v-model="value1"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
       </div>
     </el-card>
     <!-- <el-table :data="chosengoodInfo" style="width: 100%">
@@ -158,6 +178,11 @@ import Circlewithtitle from "../../components/dashboard/Circlewithtitle.vue";
 import BarChart from "../../components/dashboard/BarChart.vue";
 import BarSex from "../../components/dashboard/BarSex.vue";
 import BarchartPerGood from "../../components/dashboard/BarchartPerGood.vue";
+const defaultListQuery = {
+  goodid: null,
+  starttime: null,
+  endtime: null,
+};
 export default {
   components: {
     BarChart,
@@ -172,6 +197,8 @@ export default {
   },
   data() {
     return {
+      value1: "",
+       listQuery: Object.assign({}, defaultListQuery),
       month: "",
       goodid: "",
       chosengoodInfo: [],
@@ -209,12 +236,26 @@ export default {
       });
     },
     handleSearchList() {
-      if(this.goodid == "")
+      if(this.listQuery.goodid == null)
       {
         this.$message.error("请输入商品ID");
       }
       else{
-        getGoodNumSta(this.goodid).then((response) => {
+        this.barNum = []
+        this.barPrice = []
+        this.BarNumSex = []
+        console.log(this.value1)
+        if(this.value1 != null)
+        {
+          this.listQuery.starttime = this.value1[0];
+          this.listQuery.endtime = this.value1[1];
+        }
+        else{
+          this.listQuery.starttime = null;
+          this.listQuery.endtime = null;
+        }
+        console.log(this.listQuery)
+        getGoodNumSta(this.listQuery).then((response) => {
         const { data } = response;
         this.chosengoodInfo = data;
         this.barNum.push(data.totalSaleNum);
@@ -232,7 +273,8 @@ export default {
       } 
     },
     handleResetSearch() {
-      this.goodid = "";
+      this.value1 = ''
+      this.listQuery = Object.assign({}, defaultListQuery);
     },
     salePine() {
       let arrNum = new Array();

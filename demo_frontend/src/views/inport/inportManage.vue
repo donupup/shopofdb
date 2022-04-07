@@ -420,11 +420,19 @@ export default {
     },
     handleResetSearch() {
       this.fetchInportList();
+      this.value1 = ''
       this.listQuery = Object.assign({}, defaultListQuery);
     },
     handleSearchList() {
-      this.listQuery.starttime = this.value1[0];
-      this.listQuery.endtime = this.value1[1];
+      if(this.value1 != null)
+        {
+          this.listQuery.starttime = this.value1[0];
+          this.listQuery.endtime = this.value1[1];
+        }
+        else{
+          this.listQuery.starttime = null;
+          this.listQuery.endtime = null;
+        }
       this.getList();
     },
     headBack() {

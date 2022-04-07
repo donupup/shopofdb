@@ -9,9 +9,10 @@
           placeholder="商品名称"
           value-key="id"
         >
+        <!-- v-if="good.storage" -->
           <el-option
             v-for="good in goodInfo"
-            v-if="good.storage"
+            
             :label="good.goodname"
             :value="good"
             :key="good.id"

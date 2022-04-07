@@ -6,11 +6,11 @@
       <el-button size="small" type="primary" @click="dialogFormVisible = true"
         >增加销售记录</el-button
       >
-       <exportExcel
-            :id="'export'"
-            :name="'销售记录'"
-            :button="'导出'"
-          ></exportExcel>
+      <exportExcel
+        :id="'export'"
+        :name="'销售记录'"
+        :button="'导出'"
+      ></exportExcel>
     </div>
 
     <el-divider></el-divider>
@@ -42,7 +42,6 @@
           label-width="140px"
         >
           <el-form-item label="会员">
-
             <el-input
               style="width: 203px"
               v-model="listQuery.vipid"
@@ -50,7 +49,6 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="会员卡号">
-
             <el-input
               style="width: 203px"
               v-model="listQuery.vipcard"
@@ -106,39 +104,43 @@
       </div>
     </el-card>
     <el-divider></el-divider>
-    <div hidden ="hidden">
+    <div hidden="hidden">
       <el-table
-      ref="multipleTable"
-      :data="saleInfo"
-      tooltip-effect="dark"
-      style="width: 100%"
-      border
-      id="export"
-      @selection-change="handleSelectionChange"
-    >
-     
-      <el-table-column prop="id" label="ID" width="150"> </el-table-column>
-      <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column prop="vipname" label="购货会员" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column prop="username" label="操作员" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="oneprice"
-        label="单价"
-        show-overflow-tooltip
-        width="50"
+        ref="multipleTable"
+        :data="saleInfo"
+        tooltip-effect="dark"
+        style="width: 100%"
+        border
+        id="export"
+        @selection-change="handleSelectionChange"
       >
-      </el-table-column>
-      <el-table-column prop="num" label="数量" show-overflow-tooltip width="70">
-      </el-table-column>
-      <el-table-column prop="goodsoldtime" label="时间" show-overflow-tooltip>
-      </el-table-column>
+        <el-table-column prop="id" label="ID" width="150"> </el-table-column>
+        <el-table-column prop="goodname" label="商品名称" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="vipname" label="购货会员" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="username" label="操作员" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="oneprice"
+          label="单价"
+          show-overflow-tooltip
+          width="50"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="num"
+          label="数量"
+          show-overflow-tooltip
+          width="70"
+        >
+        </el-table-column>
+        <el-table-column prop="goodsoldtime" label="时间" show-overflow-tooltip>
+        </el-table-column>
 
-      <el-table-column prop="bio" label="备注" show-overflow-tooltip>
-      </el-table-column>
-    </el-table>
+        <el-table-column prop="bio" label="备注" show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
     </div>
     <el-table
       ref="multipleTable"
@@ -219,10 +221,10 @@
             ></el-option>
           </el-select> -->
           <el-input
-              style="width: 203px"
-              v-model="form.vipid"
-              placeholder="请输入会员卡号"
-            ></el-input>
+            style="width: 203px"
+            v-model="form.vipid"
+            placeholder="请输入会员卡号"
+          ></el-input>
         </el-form-item>
         <el-form-item label="数量" :label-width="formLabelWidth">
           <el-input v-model="form.num" autocomplete="off"></el-input>
@@ -298,14 +300,14 @@ const defaultListQuery = {
   userid: null,
   starttime: null,
   endtime: null,
-  vipcard:null
+  vipcard: null,
 };
 export default {
   name: "inportManage",
   components: { ExportExcel },
   data() {
     return {
-      value1: "",
+      value1: '',
       userId: "",
       page: 1, //第几页
       size: 3, //一页多少条
@@ -419,11 +421,17 @@ export default {
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);
+      this.value1 = ''
       this.getList();
     },
     handleSearchList() {
-      this.listQuery.starttime = this.value1[0];
-      this.listQuery.endtime = this.value1[1];
+      if (this.value1 != null) {
+        this.listQuery.starttime = this.value1[0];
+        this.listQuery.endtime = this.value1[1];
+      } else {
+        this.listQuery.starttime = null;
+        this.listQuery.endtime = null;
+      }
       this.getList();
     },
     headBack() {
@@ -476,7 +484,7 @@ export default {
           } else {
             this.$message.error("删除失败，" + message);
           }
-          this.getList()
+          this.getList();
         })
         .catch(() => {
           this.loading = false;
@@ -500,7 +508,7 @@ export default {
               } else {
                 this.$message.error("添加失败，" + message);
               }
-              this.getList()
+              this.getList();
             })
             .catch(() => {
               this.loading = false;
@@ -527,7 +535,7 @@ export default {
               } else {
                 this.$message.error("修改失败，" + message);
               }
-              this.getList()
+              this.getList();
             })
             .catch(() => {
               this.loading = false;

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.demo.common.api.ApiResult;
+import com.example.demo.model.dto.GoodSaleConditionDTO;
+import com.example.demo.model.dto.GoodStaConditionDTO;
 import com.example.demo.model.entity.*;
 import com.example.demo.model.vo.GoodInInfo;
 import com.example.demo.model.vo.GoodSaleInfo;
@@ -182,9 +184,8 @@ public class StaController {
     }
 
     @RequestMapping(value = "/goodnum", method = RequestMethod.POST)
-    ApiResult<Object> getGoodData(@Valid @RequestBody String gid) {
-        String[] arr = gid.split("=");
-        gid = arr[0];
+    ApiResult<Object> getGoodData(@Valid @RequestBody GoodStaConditionDTO dto) {
+        String gid = dto.getGoodid();
         Good g = this.igoodService.getById(gid);
         if (ObjectUtils.isEmpty(g)) {
             return ApiResult.failed("没有该商品");
@@ -192,7 +193,16 @@ public class StaController {
         QueryWrapper<GoodSale> salew = new QueryWrapper<>();
         LambdaQueryWrapper<GoodSale> salel = salew.lambda();
         salel.eq(GoodSale::getGoodId, g.getId());
-
+        if(dto.getStarttime() != null)
+        {
+            System.out.println(dto.getStarttime());
+            salel.ge(GoodSale::getGoodSoldTime,dto.getStarttime());
+        }
+        if(dto.getEndtime() != null)
+        {
+            System.out.println(dto.getEndtime());
+            salel.lt(GoodSale::getGoodSoldTime,dto.getEndtime());
+        }
 
         //这是销售记录的条数
         int saleNum = this.goodSaleService.getBaseMapper().selectList(salel).size();
@@ -221,6 +231,15 @@ public class StaController {
         QueryWrapper<GoodIn> inw = new QueryWrapper<>();
         LambdaQueryWrapper<GoodIn> inl = inw.lambda();
         inl.eq(GoodIn::getGoodId, g.getId());
+        if(dto.getStarttime() != null) {
+            System.out.println(dto.getStarttime());
+            inl.ge(GoodIn::getGoodInTime, dto.getStarttime());
+        }
+        if(dto.getEndtime() != null)
+        {
+            System.out.println(dto.getEndtime());
+            inl.lt(GoodIn::getGoodInTime,dto.getEndtime());
+        }
 
         //这是进货记录的条数
         int inNum = this.goodInService.getBaseMapper().selectList(inl).size();
@@ -246,6 +265,7 @@ public class StaController {
         map.put("femaleSale", femaleSale);
         return ApiResult.success(map);
     }
+
 
     @RequestMapping(value = "/good", method = RequestMethod.POST)
     ApiResult<Object> getGoodSta() {
