@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-page-header @back="headBack" content="当日交易信息"> </el-page-header>
+    <el-page-header @back="headBack" content="日交易信息"> </el-page-header>
     <el-divider></el-divider>
     <el-card class="filter-container" shadow="never">
       <i class="el-icon-search"></i>

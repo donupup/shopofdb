@@ -325,7 +325,6 @@ public class StaController {
         return ApiResult.success(map);
     }
 
-    //todo: 该用户购买的商品种类的柱图 done
     @RequestMapping(value = "/numofvip", method = RequestMethod.POST)
     ApiResult<Object> getNumOfVip(@Valid @RequestBody String vid) {
         String[] arr = vid.split("=");
