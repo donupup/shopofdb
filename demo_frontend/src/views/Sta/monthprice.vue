@@ -155,7 +155,7 @@ export default {
     handleSearch() {
       this.barNum = [];
       this.barPrice = [];
-      if (this.month == "") {
+      if (this.month == "" || this.month == null) {
         this.$message.error("请选择日期");
       } else {
         getMonthSta(this.month).then((response) => {
