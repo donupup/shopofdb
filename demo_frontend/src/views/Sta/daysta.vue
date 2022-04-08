@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     handleSearch() {
-      if (this.day == "") {
+      if (this.day == "" || this.day == null) {
         this.$message.error("请选择日期");
       } else {
         this.barNum = [];

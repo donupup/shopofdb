@@ -101,6 +101,9 @@ public class GoodSaleController {
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ApiResult<Object> deleteSale(@Valid @RequestBody GoodSaleInfo gi) {
         Good g = this.igoodService.getById(this.goodSaleService.getById(gi.getId()).getGoodId());
+        Vip v = this.vipService.getById(gi.getVipid());
+        v.setVbalance(v.getVbalance() + gi.getNum() * g.getPricesell());
+        vipService.updateById(v);
         g.setStorage(g.getStorage() + gi.getNum());
         g.setSalenum(g.getSalenum() - gi.getNum());
         this.igoodService.updateById(g);
