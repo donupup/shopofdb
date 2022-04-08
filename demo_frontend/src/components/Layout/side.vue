@@ -68,11 +68,6 @@
         <el-menu-item index="/good/manage"> 商品信息管理 </el-menu-item>
         <el-menu-item index="/vip/manage"> 会员信息管理 </el-menu-item>
         <el-menu-item index="/provider/manage"> 供货商信息管理 </el-menu-item>
-        <el-submenu index="1-4">
-          <template slot="title">职工信息管理</template>
-          <el-menu-item index="/employ/manage"> 职工信息详情 </el-menu-item>
-          <el-menu-item index="/employ/register"> 职工注册 </el-menu-item>
-        </el-submenu>
       </el-submenu>
       <el-menu-item index="/sale/manage">
         <i class="el-icon-document"></i>
@@ -101,11 +96,6 @@
         <el-menu-item index="/good/manage"> 商品信息管理 </el-menu-item>
         <el-menu-item index="/vip/manage"> 会员信息管理 </el-menu-item>
         <el-menu-item index="/provider/manage"> 供货商信息管理 </el-menu-item>
-        <el-submenu index="1-4">
-          <template slot="title">职工信息管理</template>
-          <el-menu-item index="/employ/manage"> 职工信息详情 </el-menu-item>
-          <el-menu-item index="/employ/register"> 职工注册 </el-menu-item>
-        </el-submenu>
       </el-submenu>
       <el-menu-item index="/inport/manage">
         <i class="el-icon-menu"></i>
@@ -130,11 +120,6 @@
         <el-menu-item index="/good/manage"> 商品信息管理 </el-menu-item>
         <el-menu-item index="/vip/manage"> 会员信息管理 </el-menu-item>
         <el-menu-item index="/provider/manage"> 供货商信息管理 </el-menu-item>
-        <el-submenu index="1-4">
-          <template slot="title">职工信息管理</template>
-          <el-menu-item index="/employ/manage"> 职工信息详情 </el-menu-item>
-          <el-menu-item index="/employ/register"> 职工注册 </el-menu-item>
-        </el-submenu>
       </el-submenu>
       <el-submenu index="4">
         <template slot="title">

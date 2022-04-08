@@ -31,6 +31,7 @@ export function addGood(GoodDTO) {
     })
 }
 
+//失效
 export function sellGood(SaleDto){
     return request({
         url: '/good/sale',
@@ -60,6 +61,7 @@ export function getOutList(){
     })
 }
 
+//有效
 export function editGoodByFile(exceldata){
     return request({
         url: '/good/file_good',

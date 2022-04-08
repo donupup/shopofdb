@@ -438,6 +438,7 @@ export default {
                 message: "购买成功",
                 type: "success",
               });
+              this.fetchGoodList();
             } else {
               this.$message.error("购买失败，" + message);
             }

@@ -75,7 +75,7 @@
                     autocomplete="off"
                   />
                 </el-form-item>
-                <el-form-item label="确认密码" prop="checkPass">
+                <el-form-item label="确认密码" prop="checkpass">
                   <el-input
                     v-model="ruleForm.checkpass"
                     type="password"
@@ -112,7 +112,7 @@ export default {
       } else {
         callback();
       }
-    };
+    }
     return {
       active: 1,
       loading: false,
