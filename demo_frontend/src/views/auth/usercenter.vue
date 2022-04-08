@@ -47,28 +47,28 @@
           <el-input
             style="width: 203px"
             v-model="form.username"
-            placeholder="请输入用户名"
+            :placeholder="userInfo.username"
           ></el-input>
         </el-form-item>
         <el-form-item label="邮箱" :label-width="formLabelWidth">
           <el-input
             v-model="form.email"
             autocomplete="off"
-            placeholder="请输入邮箱"
+            :placeholder="userInfo.email"
           ></el-input>
         </el-form-item>
         <el-form-item label="学号" :label-width="formLabelWidth">
           <el-input
             v-model="form.stuNo"
             autocomplete="off"
-            placeholder="请输入学号"
+            :placeholder="userInfo.stuNo"
           ></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input
             v-model="form.alias"
             autocomplete="off"
-            placeholder="请输入姓名"
+            :placeholder="userInfo.alias"
           ></el-input>
         </el-form-item>
         <el-form-item label="个人描述" :label-width="formLabelWidth">
@@ -76,7 +76,7 @@
             v-model="form.bio"
             autocomplete="off"
             type="textarea"
-            placeholder="个人描述"
+            :placeholder="userInfo.bio"
           ></el-input>
         </el-form-item>
       </el-form>
